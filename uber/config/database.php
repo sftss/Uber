@@ -65,11 +65,10 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '51.83.36.122'),
             'port' => env('DB_PORT', '5432'),
             'database' => env('DB_DATABASE', 'uber'),
-            'username' => env('DB_USERNAME', 's231'),
+            'username' => env('DB_USERNAME', 'abdtan'),
             'password' => env('DB_PASSWORD', 'hop'),
             'charset' => 'utf8',
             'prefix' => '',
