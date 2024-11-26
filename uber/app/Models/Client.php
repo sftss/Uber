@@ -9,6 +9,6 @@ class Client extends Model
 {
     use HasFactory;
      protected $table = "client";
-     protected $primaryKey = "";
+     protected $primaryKey = "id_client";
      public $timestamps = false;
 }
