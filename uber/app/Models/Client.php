@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Client extends Model
 {
     use HasFactory;
-    // protected $table = "pizza";
-    // protected $primaryKey = "pizza_id";
-    // public $timestamps = false;
+     protected $table = "client";
+     protected $primaryKey = "";
+     public $timestamps = false;
 }
