@@ -1,152 +1,169 @@
-/* app.css */
-
-/* Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: "Source Sans Pro", sans-serif;
+    cursor: url("path/to/hand-pointer.svg") 1 1, auto;
 }
 
-/* Global Styles */
 html {
-    font-size: 16px;
+    font-size: 62.5%;
     scroll-behavior: smooth;
 }
 
 body {
-    font-family: "Roboto", sans-serif;
     line-height: 1.5;
+    font-size: 1.6rem;
     color: #333;
+    background: linear-gradient(
+                to right,
+                rgba(245, 245, 245, 0.5),
+                rgba(245, 245, 245, 0.5)
+            )
+            center,
+        url("svg/common-bg.svg") center;
 }
 
-a {
-    text-decoration: none;
-    color: inherit;
+/* Variables */
+:root {
+    --primary-color: #7843e9;
+    --text-color: #666;
+    --bg-color: #fff;
 }
 
-ul {
-    list-style-type: none;
+/* Typographie */
+.heading-primary {
+    font-size: 4rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--primary-color);
 }
 
-/* Header Styles */
+/* Header */
 .header {
-    background-color: #000;
-    color: #fff;
-    padding: 1rem;
     position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
-    z-index: 100;
+    top: 0;
+    z-index: 1000;
+    background: #fff;
+    box-shadow: 0 10px 100px rgba(0, 0, 0, 0.1);
+    transition: top 0.3s;
+}
+
+.header_content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5rem;
 }
 
 .header nav ul {
     display: flex;
-    justify-content: center;
     gap: 2rem;
 }
 
 .header nav ul a {
-    transition: color 0.3s ease;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transition: color 0.3s;
 }
 
 .header nav ul a:hover {
-    color: #ccc;
+    color: var(--primary-color);
 }
 
-/* Hero Section Styles */
+/* Hero Section */
 .hero {
-    background-image: url("/img/hero-bg.jpg");
-    background-size: cover;
-    background-position: center;
+    background: linear-gradient(
+                to right,
+                rgba(182, 182, 182, 0.4),
+                rgba(194, 194, 194, 0.4)
+            )
+            center,
+        url("svg/endless-constellation.svg") center;
     height: 100vh;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     text-align: center;
-    color: #fff;
-    padding: 2rem;
+    color: #000;
 }
 
 .hero h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
+    font-size: 5rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 800;
+    margin-bottom: 2rem;
 }
 
 .hero p {
-    font-size: 1.25rem;
-    margin-bottom: 2rem;
+    font-size: 2rem;
+    margin-bottom: 3rem;
 }
 
-.hero a.btn {
-    background-color: #3b82f6;
+.hero .btn {
+    background-color: var(--primary-color);
     color: #fff;
-    padding: 0.75rem 1.5rem;
-    border-radius: 9999px;
-    transition: background-color 0.3s ease;
+    padding: 1.5rem 5rem;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    border-radius: 5px;
+    transition: transform 0.3s, background 0.3s;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
-.hero a.btn:hover {
-    background-color: #2563eb;
+.hero .btn:hover {
+    transform: translateY(-3px);
+    background-color: #6741c1;
 }
 
-/* Why Uber Section Styles */
-.why-uber {
-    padding: 4rem 2rem;
+/* Sections Génériques */
+.section {
+    padding: 12rem 0;
 }
 
-.why-uber h2 {
-    font-size: 2.25rem;
-    font-weight: 700;
-    margin-bottom: 2rem;
+.section-title {
     text-align: center;
+    font-size: 4rem;
+    margin-bottom: 5rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
-.why-uber .feature {
-    text-align: center;
+.section-title::after {
+    content: "";
+    display: block;
+    height: 5px;
+    width: 3rem;
+    background: var(--primary-color);
+    margin: 1.5rem auto 0;
+    border-radius: 5px;
 }
 
-.why-uber .feature i {
-    font-size: 2.5rem;
-    color: #3b82f6;
-    margin-bottom: 1rem;
-}
-
-.why-uber .feature h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.why-uber .feature p {
-    color: #6b7280;
-}
-
-/* Footer Styles */
+/* Footer */
 .footer {
-    background-color: #1f2937;
+    background-color: #000;
     color: #fff;
-    padding: 2rem;
+    padding: 4rem 0;
     text-align: center;
 }
 
-.footer p {
-    font-size: 0.875rem;
-    margin-bottom: 1rem;
-}
-
-.footer nav ul {
+.footer-content {
+    max-width: 120rem;
+    margin: 0 auto;
     display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    font-size: 0.875rem;
+    justify-content: space-between;
 }
 
-.footer nav ul a {
-    transition: color 0.3s ease;
+.footer-social a {
+    margin: 0 1rem;
+    transition: color 0.3s;
 }
 
-.footer nav ul a:hover {
-    color: #ccc;
+.footer-social a:hover {
+    color: var(--primary-color);
 }

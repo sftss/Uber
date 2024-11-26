@@ -3,68 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uber</title>
+    <title>Uber - Transportation Moderne</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('style/app.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <header id="header" class="bg-black text-white py-4 fixed top-0 left-0 w-full z-50">
-        <div class="container mx-auto flex items-center justify-between">
-            <a href="#" class="text-2xl font-bold">Uber</a>
+    <header class="header" id="header">
+        <div class="header_content">
+            <a href="#" class="header_logo">Uber</a>
             <nav>
-                <ul class ="flex space-x-4">
-                    <li><a href="#" class="hover:text-gray-400">Ride</a></li>
-                    <li><a href="#" class="hover:text-gray-400">Drive</a></li>
-                    <li><a href="#" class="hover:text-gray-400">Eat</a></li>
-                    <li><a href="#" class="hover:text-gray-400">Help</a></li>
+                <ul>
+                    <li><a href="#ride">Ride</a></li>
+                    <li><a href="#drive">Drive</a></li>
+                    <li><a href="#eat">Eat</a></li>
+                    <li><a href="#help">Help</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
     <main>
-        <section class="hero bg-cover bg-center h-screen flex items-center justify-center text-center text-white">
-            <div>
-                <h1 class="text-4xl font-bold mb-4">Ride with Uber</h1>
-                <p class="text-lg mb-8">Get a ride in minutes with the Uber app.</p>
-                <a href="#" class="bg-indigo-500 hover:bg-indigo-600 text-white py-3 px-6 rounded-full">Order Now</a>
+        <section class="hero" id="home">
+            <div class="hero_content">
+                <h1>Ride with Uber</h1>
+                <p>Votre transport moderne et fiable à portée de clic</p>
+                <a href="#" class="btn">Commander Maintenant</a>
             </div>
         </section>
 
-        <section class="bg-gray-100 py-12">
-            <div class="container mx-auto">
-                <h2 class="text-3xl font-bold mb-8">Why Uber?</h2>
-                <div class="grid grid-cols-3 gap-8">
-                    <div>
-                        <i class="fas fa-clock text-indigo-500 text-3xl mb-4"></i>
-                        <h3 class="text-xl font-bold mb-2">Fast and Convenient</h3>
-                        <p>Get a ride in minutes with the Uber app.</p>
-                    </div>
-                    <div>
-                        <i class="fas fa-car text-indigo-500 text-3xl mb-4"></i>
-                        <h3 class="text-xl font-bold mb-2">Reliable Transportation</h3>
-                        <p>Ride with confidence in a safe and reliable vehicle.</p>
-                    </div>
-                    <div>
-                        <i class="fas fa-wallet text-indigo-500 text-3xl mb-4"></i>
-                        <h3 class="text-xl font-bold mb-2">Affordable Prices</h3>
-                        <p>Enjoy competitive pricing with no hidden fees.</p>
-                    </div>
+        <section class="section" id="why-uber">
+            <h2 class="section-title">Pourquoi Uber ?</h2>
+            <div class="why-uber_content">
+                <div class="feature">
+                    <i class="fas fa-clock"></i>
+                    <h3>Rapide et Pratique</h3>
+                    <p>Commandez un trajet en quelques secondes</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-car"></i>
+                    <h3>Transport Fiable</h3>
+                    <p>Des chauffeurs professionnels et vérifiés</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-wallet"></i>
+                    <h3>Prix Compétitifs</h3>
+                    <p>Tarifs transparents sans frais cachés</p>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="bg-gray-800 text-white py-8">
-        <div class="container mx-auto flex justify-between items-center">
-            <p>&copy; 2023 Uber. All rights reserved.</p>
-            <nav>
-                <ul class="flex space-x-4">
-                    <li><a href="#" class="hover:text-gray-400">Privacy</a></li>
-                    <li><a href="#" class="hover:text-gray-400">Terms</a></li>
-                    <li><a href="#" class="hover:text-gray-400">Careers</a></li>
-                    <li><a href="#" class="hover:text-gray-400">Blog</a></li>
-                </ul>
-            </nav>
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; {{ date('Y') }} Uber. Tous droits réservés.</p>
+              <div class="footer-social">
+                <p>on met ici le plan du site</p>            
+            </div>
         </div>
     </footer>
 </body>
