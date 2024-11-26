@@ -1,13 +1,152 @@
-html {
-    font-size: 100%;
-    scroll-behavior: smooth;
-    overscroll-behavior: none;
+/* app.css */
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
+
+/* Global Styles */
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
 body {
-    overscroll-behavior: none;
-    position: relative;
+    font-family: "Roboto", sans-serif;
     line-height: 1.5;
-    font-family: sans-serif;
-    overflow-x: hidden;
-    transition: all 0.3s ease-in-out;
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style-type: none;
+}
+
+/* Header Styles */
+.header {
+    background-color: #000;
+    color: #fff;
+    padding: 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+.header nav ul {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.header nav ul a {
+    transition: color 0.3s ease;
+}
+
+.header nav ul a:hover {
+    color: #ccc;
+}
+
+/* Hero Section Styles */
+.hero {
+    background-image: url("/img/hero-bg.jpg");
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #fff;
+    padding: 2rem;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.hero a.btn {
+    background-color: #3b82f6;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    transition: background-color 0.3s ease;
+}
+
+.hero a.btn:hover {
+    background-color: #2563eb;
+}
+
+/* Why Uber Section Styles */
+.why-uber {
+    padding: 4rem 2rem;
+}
+
+.why-uber h2 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.why-uber .feature {
+    text-align: center;
+}
+
+.why-uber .feature i {
+    font-size: 2.5rem;
+    color: #3b82f6;
+    margin-bottom: 1rem;
+}
+
+.why-uber .feature h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.why-uber .feature p {
+    color: #6b7280;
+}
+
+/* Footer Styles */
+.footer {
+    background-color: #1f2937;
+    color: #fff;
+    padding: 2rem;
+    text-align: center;
+}
+
+.footer p {
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+.footer nav ul {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    font-size: 0.875rem;
+}
+
+.footer nav ul a {
+    transition: color 0.3s ease;
+}
+
+.footer nav ul a:hover {
+    color: #ccc;
 }
