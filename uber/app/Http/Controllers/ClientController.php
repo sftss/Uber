@@ -8,6 +8,6 @@ use App\Models\Client;
 class ClientController extends Controller
 {
     public function index(){
-        // return view ("pizzas-list", ['pizzas'=>pizza::all()]);
+        return view ("clients-list", ['clients'=>client::all()]);
     }
 }

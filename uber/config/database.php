@@ -69,7 +69,7 @@ return [
             'port' => env('DB_PORT', '5432'),
             'database' => env('DB_DATABASE', 's231_uber'),
             'username' => env('DB_USERNAME', 's231'),
-            'password' => env('DB_PASSWORD', 'QCqJad'),
+            'password' => env('DB_PASSWORD', 'etsmb31'),
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,

@@ -16,9 +16,10 @@
                 <li>Les pizzas</a></li>
             </ul>
         @show
-
+        
         <div class="container">
             @yield('content')
         </div>
+        
     </body>
 </html>
