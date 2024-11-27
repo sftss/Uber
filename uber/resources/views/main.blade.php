@@ -5,45 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Uber')</title>
     <link href="{{ asset('style/app.css') }}" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <header class="header" id="header">
-        <div class="header_content">
-            <a href="#" class="header_logo">Uber</a>
-            <nav>
-                <ul>
-                    <li><a href="#deplacement">Déplacez-vous avec Uber</a></li>
-                    <li><a href="#drive">Conduire</a></li>
-                    <li><a href="#eat">Professionl</a></li>
-                    <li><a href="#help">Help</a></li>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">Uber</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://www.uber.com/fr/fr/">Déplacez-vous avec Uber</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://www.uber.com/fr/fr/drive/">Conduire</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://www.uber.com/fr/fr/business/">Professionnel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://www.ubereats.com/">Uber Eats</a>
+                    </li>
                 </ul>
-            </nav>
-        </div>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light" type="button">Connexion</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-light" type="button">S'inscrire</button>
+                    </li>
+                </ul>
+            </div>
+        </nav>
     </header>
 
     <main>
-        <section class="hero" id="home">
-            <div class="hero_content">
-                <h1>Ride with Uber</h1>
-                <p>Votre transport moderne et fiable à portée de clic</p>
-                <a href="#order" class="btn">Commander Maintenant</a>
+        <section class="hero">
+            <div class="container text-center">
+                <h1 class="display-4 text-white">Ride with Uber</h1>
+                <p class="lead text-white mb-4">Votre transport moderne et fiable à portée de clic</p>
+                <a href="#order" class="btn btn-warning btn-lg">Commander Maintenant</a>
             </div>
         </section>
 
-        @yield('content')
+        <div class="container mt-5">
+            <a href="{{ url ("/restaurants/search")}}"><p>Rechercher un restaurant</p></a>
+            <a href="{{ url ("/restaurants/catPrestationSearch")}}"><p>Rechercher une prestation</p></a>
+            <a href="{{ url ("/restaurants")}}"><p>Liste des restaurants</p></a>
+            <a href="{{ url ("/clients")}}"><p>Rechercher un client</p></a>
+        </div>
     </main>
 
-    <a href="{{ url ("/restaurants")}}"><p>Rechercher un restaurant</p></a>
-    <a href="{{ url ("/clients")}}"><p>Rechercher un client</p></a>
 
-    <footer class="footer">
-        <div class="footer-content">
-            <p>© {{ date('Y') }} Uber. Tous droits réservés.</p>
-            <div class="footer-social">
-                <p>On met ici le plan du site</p>
-            </div>
-        </div>
+    <footer class="footer bg-dark text-white text-center py-4">
+        <p>© {{ date('Y') }} Uber. Tous droits réservés.</p>
+        <p>Plan du site</p>
     </footer>
+
 </body>
 </html>

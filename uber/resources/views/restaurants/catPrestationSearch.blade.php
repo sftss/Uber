@@ -1,3 +1,5 @@
+<link href="{{ asset('style/app.css') }}" rel="stylesheet">
+
 <a href="{{ url("/") }}">
     <p>arrière</p>
 </a>

@@ -1,6 +1,9 @@
+<link href="{{ asset('style/app.css') }}" rel="stylesheet">
+
 @extends('layouts.app')
 
 @section('title', 'Liste des Clients')
+
 
 @section('content')
     <h2>Les clients</h2>

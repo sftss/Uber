@@ -1,6 +1,15 @@
+<link href="{{ asset('style/app.css') }}" rel="stylesheet">
+
 @extends('layouts.app')
 
 @section('title', 'Uber course')
+
+@section('nav')
+<ul>
+    <li><a href="{{ route('restaurants.index') }}">Restaurants</a></li>
+    <li><a href="{{ route('clients.index') }}">Clients</a></li>
+</ul>
+@show
 
 @section('sidebar')
     @parent
