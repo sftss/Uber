@@ -1,20 +1,27 @@
-<a href="{{ url('/') }}">
-    <p>arrière</p>
+<link href="{{ asset('style/app.css') }}" rel="stylesheet">
+<a href="{{ url('/') }}" class="back-button">
+    <p>Retour</p>
 </a>
 
-<form action="{{ route('restaurants.search') }}" method="GET">
-    <input type="text" name="search" placeholder="Rechercher par Nom ou par ville" value="{{ $query ?? '' }}">
-    <button type="submit">Rechercher</button>
+<form action="{{ route('restaurants.search') }}" method="GET" class="search-form">
+    <input type="text" name="search" placeholder="Rechercher par Nom ou par Ville" value="{{ $query ?? '' }}"
+        class="search-input">
+    <button type="submit" class="search-button">Rechercher</button>
 </form>
 
-
-@if (isset($restaurants))
-    @foreach ($restaurants as $restaurant)
-        <div>
-            <h3>{{ $restaurant->nom_etablissement }}</h3>
-            <p>Ville: {{ $restaurant->ville }}</p>
-            <p>Livraison : {{ $restaurant->propose_livraison ? 'Oui' : 'Non' }}</p>
-            <p>À emporter : {{ $restaurant->propose_retrait ? 'Oui' : 'Non' }}</p>
-        </div>
-    @endforeach
+@if (isset($restaurants) && $restaurants->isNotEmpty())
+    <section class="restaurants-list">
+        @foreach ($restaurants as $restaurant)
+            <div class="restaurant-card">
+                <h3 class="restaurant-name">{{ $restaurant->nom_etablissement }}</h3>
+                <p><strong>Ville:</strong> {{ $restaurant->ville }}</p>
+                <p><strong>Livraison:</strong> {{ $restaurant->propose_livraison ? 'Oui' : 'Non' }}</p>
+                <p><strong>À emporter:</strong> {{ $restaurant->propose_retrait ? 'Oui' : 'Non' }}</p>
+            </div>
+        @endforeach
+    </section>
+@else
+    <p>Aucun restaurant trouvé.</p>
 @endif
+
+<!-- c qui -->
