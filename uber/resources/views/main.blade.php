@@ -34,7 +34,8 @@
         @yield('content')
     </main>
 
-    <a href="{{restaurants}}"><p>Rechercher un restaurant</p></a>
+    <a href="{{ url ("/restaurants")}}"><p>Rechercher un restaurant</p></a>
+    <a href="{{ url ("/clients")}}"><p>Rechercher un client</p></a>
 
     <footer class="footer">
         <div class="footer-content">
