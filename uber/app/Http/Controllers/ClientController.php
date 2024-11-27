@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
 use App\Models\Client;
+use Illuminate\Http\Request;
+
 
 class ClientController extends Controller
 {
-    public function index(){
-        return view ("clients-list", ['clients'=>client::all()]);
+    public function index()
+    {
+        return view('client-list', ['clients' => Client::all()]);
     }
+
 }
+

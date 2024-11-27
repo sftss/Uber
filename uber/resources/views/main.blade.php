@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uber - Transportation Moderne</title>
+    <title>Uber</title>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('style/app.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -32,6 +32,17 @@
             </div>
         </section>
 
+        {{var restaurans}}
+        @section('content')
+            <h2>Les restaurants</h2>
+                <ul>
+                    @foreach ($restaurants as $restaurant)
+                        <li>{{ $restaurant->nom_etablissement }}</li>
+                    @endforeach
+                </ul>
+        @endsection
+
+
         <section class="section" id="why-uber">
             <h2 class="section-title">Pourquoi Uber ?</h2>
             <div class="why-uber_content">
@@ -51,7 +62,7 @@
                     <p>Tarifs transparents sans frais cachés</p>
                 </div>
             </div>
-        </section>
+        </section> 
     </main>
 
     <footer class="footer">
@@ -59,7 +70,7 @@
             <p>&copy; {{ date('Y') }} Uber. Tous droits réservés.</p>
               <div class="footer-social">
                 <p>on met ici le plan du site</p>            
-            </div>
+            </div> 
         </div>
     </footer>
 </body>
