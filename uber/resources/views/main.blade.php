@@ -31,8 +31,10 @@
             </div>
         </section>
 
-        @yield('content') <!-- Intégration dynamique -->
+        @yield('content')
     </main>
+
+    <a href="{{restaurants}}"><p>Rechercher un restaurant</p></a>
 
     <footer class="footer">
         <div class="footer-content">

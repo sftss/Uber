@@ -6,7 +6,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CourseController;
 
 Route::get('/', function() {
-    return view('restaurant-list');
+    return view('main');
 });
 
 Route::get('/restaurants', [RestaurantController::class, 'index']);
