@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uber</title>
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('style/app.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>@yield('title', 'Uber')</title>
+    <link href="{{ asset('style/app.css') }}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <header class="header" id="header">
@@ -28,11 +27,25 @@
             <div class="hero_content">
                 <h1>Ride with Uber</h1>
                 <p>Votre transport moderne et fiable à portée de clic</p>
-                <a href="#" class="btn">Commander Maintenant</a>
+                <a href="#order" class="btn">Commander Maintenant</a>
             </div>
         </section>
 
-        {{var restaurans}}
+        @yield('content') <!-- Intégration dynamique -->
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>© {{ date('Y') }} Uber. Tous droits réservés.</p>
+            <div class="footer-social">
+                <p>On met ici le plan du site</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+
+        <!-- {{var restaurans}}
         @section('content')
             <h2>Les restaurants</h2>
                 <ul>
@@ -40,38 +53,4 @@
                         <li>{{ $restaurant->nom_etablissement }}</li>
                     @endforeach
                 </ul>
-        @endsection
-
-
-        <section class="section" id="why-uber">
-            <h2 class="section-title">Pourquoi Uber ?</h2>
-            <div class="why-uber_content">
-                <div class="feature">
-                    <i class="fas fa-clock"></i>
-                    <h3>Rapide et Pratique</h3>
-                    <p>Commandez un trajet en quelques secondes</p>
-                </div>
-                <div class="feature">
-                    <i class="fas fa-car"></i>
-                    <h3>Transport Fiable</h3>
-                    <p>Des chauffeurs professionnels et vérifiés</p>
-                </div>
-                <div class="feature">
-                    <i class="fas fa-wallet"></i>
-                    <h3>Prix Compétitifs</h3>
-                    <p>Tarifs transparents sans frais cachés</p>
-                </div>
-            </div>
-        </section> 
-    </main>
-
-    <footer class="footer">
-        <div class="footer-content">
-            <p>&copy; {{ date('Y') }} Uber. Tous droits réservés.</p>
-              <div class="footer-social">
-                <p>on met ici le plan du site</p>            
-            </div> 
-        </div>
-    </footer>
-</body>
-</html>
+        @endsection -->

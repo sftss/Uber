@@ -5,13 +5,7 @@
 @section('sidebar')
     @parent
 
-   
-
-
 @endsection
-
-
-
 
 @section('content')
 <h2>Les clients</h2>
