@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Client;
+use App\Models\Course;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
