@@ -22,16 +22,22 @@ class RestaurantController extends Controller {
         
         return view('restaurants.search', compact('restaurants', 'query'));
     }
-    public function prestation(Request $request) 
+
+    public function filter(Request $request)
     {
-        $query = $request->input('search');
-        
-        $prestation = Restaurant::join('prestation', 'restaurant.id_prestation', '=', 'prestation.id_prestation')
-            ->where('restaurant.nom_etablissement', 'LIKE', "%{$query}%")
-            ->orWhere('prestation.nom_prestation', 'LIKE', "%{$query}%")
-            ->select('restaurant.*', 'prestation.nom_prestation')
+        $lieu = $request->input('lieu');
+        $categorie = $request->input('categorie');
+
+        $restaurants = Restaurant::join('adresse', 'restaurant.id_adresse', '=', 'adresse.id_adresse')
+            ->when($lieu, function ($query, $lieu) {
+                return $query->where('adresse.ville', 'LIKE', "%{$lieu}%");
+            })
+            ->when($categorie, function ($query, $categorie) {
+                return $query->where('restaurant.categorie', 'LIKE', "%{$categorie}%");
+            })
+            ->select('restaurant.*', 'adresse.ville') 
             ->get();
 
-        return view('restaurants.search', compact('restaurants', 'query'));
+        return view('.restaurantsfilter', compact('restaurants', 'lieu', 'categorie'));
     }
 }

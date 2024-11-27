@@ -13,3 +13,4 @@ Route::get('/restaurants', [RestaurantController::class, 'index']);
 Route::get('/clients', [ClientController::class, 'index']);
 Route::get('/courses', [CourseController::class, 'index']);
 Route::get('/restaurants/search', [RestaurantController::class, 'search'])->name('restaurants.search');
+Route::get('/restaurants/catPrestationSearch', [RestaurantController::class, 'filter'])->name('restaurants.filter');

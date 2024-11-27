@@ -3,8 +3,8 @@
 </a>
 
 <form action="{{ route('restaurants.search') }}" method="GET">
-    <input type="text" name="search" placeholder="Search by restaurant or town" value="{{ $query ?? '' }}">
-    <button type="submit">Search</button>
+    <input type="text" name="search" placeholder="Rechercher par Nom ou par ville" value="{{ $query ?? '' }}">
+    <button type="submit">Rechercher</button>
 </form>
 
 
@@ -12,7 +12,10 @@
     @foreach($restaurants as $restaurant)
         <div>
             <h3>{{ $restaurant->nom_etablissement }}</h3>
-            <p>Town: {{ $restaurant->ville }}</p>
+            <p>Ville: {{ $restaurant->ville }}</p>
+            <p>Livraison : {{$restaurant->propose_livraison}}</p>
+            <p>À emporter : {{$restaurant->propose_retrait}}</p>
+
         </div>
     @endforeach
 @endif
