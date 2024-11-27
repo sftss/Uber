@@ -31,21 +31,7 @@
             </div>
         </section>
 
-        @yield('content') <!-- Intégration dynamique -->
-    </main>
-
-    <footer class="footer">
-        <div class="footer-content">
-            <p>© {{ date('Y') }} Uber. Tous droits réservés.</p>
-            <div class="footer-social">
-                <p>On met ici le plan du site</p>
-            </div>
-        </div>
-    </footer>
-</body>
-</html>
-
-        <!-- {{var restaurans}}
+        {{var restaurants}}
         @section('content')
             <h2>Les restaurants</h2>
                 <ul>
