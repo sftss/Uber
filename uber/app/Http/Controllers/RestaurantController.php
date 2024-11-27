@@ -24,20 +24,35 @@ class RestaurantController extends Controller {
     }
 
     public function filter(Request $request)
-    {
-        $lieu = $request->input('lieu');
-        $categorie = $request->input('categorie');
+{
+    $lieu = $request->input('lieu');
+    $livre = $request->has('livre');     // Vérifie si la case livraison est cochée
+    $emporter = $request->has('emporter'); // Vérifie si la case à emporter est cochée
 
-        $restaurants = Restaurant::join('adresse', 'restaurant.id_adresse', '=', 'adresse.id_adresse')
-            ->when($lieu, function ($query, $lieu) {
-                return $query->where('adresse.ville', 'LIKE', "%{$lieu}%");
-            })
-            ->when($categorie, function ($query, $categorie) {
-                return $query->where('restaurant.categorie', 'LIKE', "%{$categorie}%");
-            })
-            ->select('restaurant.*', 'adresse.ville') 
-            ->get();
+    $restaurants = Restaurant::join('adresse', 'restaurant.id_adresse', '=', 'adresse.id_adresse')
+        ->when($lieu, function ($query, $lieu) {
+            return $query->where('adresse.ville', 'LIKE', "%{$lieu}%");
+        })
+        ->when($livre && !$emporter, function ($query) {
+            // Filtre les restaurants qui proposent uniquement la livraison
+            return $query->where('restaurant.propose_livraison', 1)
+                         ->where('restaurant.propose_retrait', 0);
+        })
+        ->when($emporter && !$livre, function ($query) {
+            // Filtre les restaurants qui proposent uniquement le retrait
+            return $query->where('restaurant.propose_retrait', 1)
+                         ->where('restaurant.propose_livraison', 0);
+        })
+        ->when($livre && $emporter, function ($query) {
+            // Filtre les restaurants qui proposent à la fois livraison et retrait
+            return $query->where('restaurant.propose_livraison', 1)
+                         ->where('restaurant.propose_retrait', 1);
+        })
+        ->select('restaurant.*', 'adresse.ville')
+        ->get();
 
-        return view('.restaurantsfilter', compact('restaurants', 'lieu', 'categorie'));
-    }
+    return view('restaurants.filter', compact('restaurants', 'lieu'));
+}
+
+
 }
