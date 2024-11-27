@@ -1,4 +1,4 @@
-<a href="{{ url("/") }}">
+<a href="{{ url('/') }}">
     <p>arrière</p>
 </a>
 
@@ -8,8 +8,8 @@
 </form>
 
 
-@if(isset($restaurants))
-    @foreach($restaurants as $restaurant)
+@if (isset($restaurants))
+    @foreach ($restaurants as $restaurant)
         <div>
             <h3>{{ $restaurant->nom_etablissement }}</h3>
             <p>Ville: {{ $restaurant->ville }}</p>

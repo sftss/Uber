@@ -1,6 +1,6 @@
 <!--<link href="{{ asset('style/app.css') }}" rel="stylesheet">
 
-<a href="{{ url("/") }}">
+<a href="{{ url('/') }}">
     <p>arrière</p>
 </a>
 
@@ -15,23 +15,22 @@
 
     <input type="checkbox" id="Click&Collect" name="Click&Collect" />
     <label for="Click&Collect">Click&Collect</label>
+</div
 
-    </div
 
-
-@if(isset($restaurants))
-    @foreach($restaurants as $restaurant)
-        <div>
+@if (isset($restaurants))
+@foreach ($restaurants as $restaurant)
+<div>
             <h3>{{ $restaurant->nom_etablissement }}</h3>
             <p>Town: {{ $restaurant->ville }}</p>
         </div>
-    @endforeach
+@endforeach
 @endif
 -->
 
 <link href="{{ asset('style/app.css') }}" rel="stylesheet">
 
-<a href="{{ url("/") }}">
+<a href="{{ url('/') }}">
     <p>arrière</p>
 </a>
 
@@ -44,17 +43,18 @@
 
         <input type="checkbox" id="emporter" name="emporter" {{ request('emporter') ? 'checked' : '' }} />
         <label for="emporter">À emporter</label>
-    </div>  
+    </div>
 
     <button type="submit">Search</button>
 </form>
 
 
 <section class="restaurants-list">
-    @if(isset($restaurants) && $restaurants->isNotEmpty())
-        @foreach($restaurants as $restaurant)
+    @if (isset($restaurants) && $restaurants->isNotEmpty())
+        @foreach ($restaurants as $restaurant)
             <div class="restaurant-card">
-                <img src="{{ $restaurant->photo_restaurant }}" alt="Image de {{ $restaurant->nom_etablissement }}" class="restaurant-image">
+                <img src="{{ $restaurant->photo_restaurant }}" alt="Image de {{ $restaurant->nom_etablissement }}"
+                    class="restaurant-image">
                 <div class="restaurant-details">
                     <h3>{{ $restaurant->nom_etablissement }}</h3>
                     <p><strong>Ville :</strong> {{ $restaurant->ville }}</p>
