@@ -7,38 +7,40 @@
     <link href="{{ asset('style/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">Uber</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://www.uber.com/fr/fr/">Déplacez-vous avec Uber</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://www.uber.com/fr/fr/drive/">Conduire</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://www.uber.com/fr/fr/business/">Professionnel</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://www.ubereats.com/">Uber Eats</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <button class="btn btn-outline-light" type="button">Connexion</button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="btn btn-light" type="button">S'inscrire</button>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </header>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Uber</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Retirer ml-auto ici -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.uber.com/fr/fr/">Déplacez-vous avec Uber</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.uber.com/fr/fr/drive/">Conduire</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.uber.com/fr/fr/business/">Professionnel</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.ubereats.com/">Uber Eats</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <button class="btn btn-outline-light" type="button">Connexion</button>
+                </li>
+                <li class="nav-item">
+                    <button class="btn btn-light" type="button">S'inscrire</button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
 
     <main>
         <section class="hero">
