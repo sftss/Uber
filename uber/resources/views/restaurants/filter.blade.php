@@ -1,6 +1,6 @@
 <!--<link href="{{ asset('style/app.css') }}" rel="stylesheet">
 
-<a href="{{ url("/") }}">
+<a href="{{ url('/') }}">
     <p>arrière</p>
 </a>
 
@@ -19,13 +19,13 @@
     </div
 
 
-@if(isset($restaurants))
-    @foreach($restaurants as $restaurant)
-        <div>
+@if (isset($restaurants))
+    @foreach ($restaurants as $restaurant)
+<div>
             <h3>{{ $restaurant->nom_etablissement }}</h3>
             <p>Town: {{ $restaurant->ville }}</p>
         </div>
-    @endforeach
+@endforeach
 @endif
 -->
 
@@ -35,11 +35,11 @@
     <p>Retour</p>
 </a>
 
-
 <form action="{{ route('restaurants.filter') }}" method="GET" class="filter-form">
     <div class="form-group">
         <label for="lieu" class="form-label">Rechercher par ville :</label>
-        <input type="text" id="lieu" name="lieu" class="form-input" placeholder="Entrez une ville" value="{{ $lieu ?? '' }}">
+        <input type="text" id="lieu" name="lieu" class="form-input" placeholder="Entrez une ville"
+            value="{{ $lieu ?? '' }}">
     </div>
 
     <div class="form-group checkboxes">
@@ -56,13 +56,12 @@
     <button type="submit" class="btn-submit">Rechercher</button>
 </form>
 
-
-
 <section class="restaurants-list">
-    @if(isset($restaurants) && $restaurants->isNotEmpty())
-        @foreach($restaurants as $restaurant)
+    @if (isset($restaurants) && $restaurants->isNotEmpty())
+        @foreach ($restaurants as $restaurant)
             <div class="restaurant-card">
-                <img src="{{ $restaurant->photo_restaurant }}" alt="Image de {{ $restaurant->nom_etablissement }}" class="restaurant-image">
+                <img src="{{ $restaurant->photo_restaurant }}" alt="Image de {{ $restaurant->nom_etablissement }}"
+                    class="restaurant-image">
                 <div class="restaurant-details">
                     <h3>{{ $restaurant->nom_etablissement }}</h3>
                     <p><strong>Ville :</strong> {{ $restaurant->ville }}</p>

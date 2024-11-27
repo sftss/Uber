@@ -9,19 +9,31 @@
     <button type="submit" class="search-button">Rechercher</button>
 </form>
 
-@if (isset($restaurants) && $restaurants->isNotEmpty())
-    <section class="restaurants-list">
+<section class="restaurants-list">
+    @if (isset($restaurants) && $restaurants->isNotEmpty())
         @foreach ($restaurants as $restaurant)
             <div class="restaurant-card">
-                <h3 class="restaurant-name">{{ $restaurant->nom_etablissement }}</h3>
-                <p><strong>Ville:</strong> {{ $restaurant->ville }}</p>
-                <p><strong>Livraison:</strong> {{ $restaurant->propose_livraison ? 'Oui' : 'Non' }}</p>
-                <p><strong>À emporter:</strong> {{ $restaurant->propose_retrait ? 'Oui' : 'Non' }}</p>
+                <img src="{{ $restaurant->photo_restaurant }}" alt="Image de {{ $restaurant->nom_etablissement }}"
+                    class="restaurant-image">
+                <div class="restaurant-details">
+                    <h3>{{ $restaurant->nom_etablissement }}</h3>
+                    <p><strong>Ville :</strong> {{ $restaurant->ville }}</p>
+                    <p><strong>Livraison :</strong> {{ $restaurant->propose_livraison ? 'Oui' : 'Non' }}</p>
+                    <p><strong>À emporter :</strong> {{ $restaurant->propose_retrait ? 'Oui' : 'Non' }}</p>
+                </div>
             </div>
         @endforeach
-    </section>
-@else
-    <p>Aucun restaurant trouvé.</p>
-@endif
+    @elseif(isset($restaurants))
+        <p class="no-results">Aucun restaurant ne correspond à vos critères.</p>
+    @endif
+</section>
+
 
 <!-- c qui -->
+<!--  toi t'es qui-->
+<!-- sefer -->
+<!-- c berkan -->
+<!-- bg c que ta fait   mais ta niqué mon style sur les boutons retour-->
+<!-- ouais y'avais un conflit j'ai plus touché après tu peux le remettre stv-->
+<!-- on voit demain au pire jvais nehess-->
+<!-- azy il reste que le bail de période a mettre bonne nuit-->
