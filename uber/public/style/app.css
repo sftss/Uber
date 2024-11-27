@@ -33,6 +33,13 @@ nav {
 .navbar-nav {
     display: flex;
     justify-content: flex-start; /* Change ml-auto à flex-start pour aligner à gauche */
+    left: 0px;
+}
+
+.navbar-connect {
+    display: flex;
+    justify-content: flex-start; /* Change ml-auto à flex-start pour aligner à gauche */
+    left: 0px;
 }
 
 .navbar-nav .nav-item {
