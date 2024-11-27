@@ -32,7 +32,7 @@
             </div>
         </section>
 
-        {{var restaurans}}
+        {{var restaurants}}
         @section('content')
             <h2>Les restaurants</h2>
                 <ul>
