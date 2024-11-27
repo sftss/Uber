@@ -10,3 +10,6 @@
         @endforeach
     </ul>
 @endsection
+<a href="{{ url("/") }}">
+    <p>arrière</p>
+</a>

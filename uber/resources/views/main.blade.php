@@ -13,9 +13,9 @@
             <a href="#" class="header_logo">Uber</a>
             <nav>
                 <ul>
-                    <li><a href="#ride">Ride</a></li>
-                    <li><a href="#drive">Drive</a></li>
-                    <li><a href="#eat">Eat</a></li>
+                    <li><a href="#deplacement">Déplacez-vous avec Uber</a></li>
+                    <li><a href="#drive">Conduire</a></li>
+                    <li><a href="#eat">Professionl</a></li>
                     <li><a href="#help">Help</a></li>
                 </ul>
             </nav>

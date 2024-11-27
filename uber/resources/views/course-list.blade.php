@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Bière')
+@section('title', 'Uber course')
 
 @section('sidebar')
     @parent
@@ -15,3 +15,6 @@
   @endforeach
 </ul>
 @endsection
+<a href="{{ url("/") }}">
+    <p>arrière</p>
+</a>
