@@ -307,17 +307,93 @@ a:hover {
 .footer {
   background-color: #000;
   color: #fff;
-  text-align: center;
-  padding: 1.5rem 0;
-  font-size: 0.9rem;
+  padding: 20px 40px;
+  font-family: Arial, sans-serif;
 }
 
-.footer a {
-  color: #06c167;
-  margin-top: 0.5rem;
-  display: inline-block;
-  font-size: 1rem;
+.footer .container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
 }
+
+.footer-section {
+  flex: 1 1 200px;
+  margin: 10px;
+}
+
+.footer-section h4 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 8px;
+}
+
+.footer-section ul li a {
+  text-decoration: none;
+  color: #fff;
+  transition: color 0.3s;
+}
+
+.footer-section ul li a:hover {
+  color: #ccc;
+}
+
+.footer-bottom {
+  text-align: center;
+  border-top: 1px solid #333;
+  padding-top: 20px;
+}
+
+.footer-icons a {
+  color: #fff;
+  margin: 0 10px;
+  font-size: 20px;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-icons a:hover {
+  color: #ccc;
+}
+
+.app-links img {
+  width: 120px;
+  margin: 0 10px;
+  transition: transform 0.3s;
+}
+
+.app-links img:hover {
+  transform: scale(1.1);
+}
+
+.footer-meta,
+.footer-location {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.footer-meta a,
+.footer-location a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 5px;
+}
+
+.footer-meta a:hover,
+.footer-location a:hover {
+  color: #ccc;
+}
+
 
 .filter-form {
   display: flex;
@@ -422,3 +498,7 @@ a:hover {
     gap: 15px;
   }
 }
+
+
+
+
