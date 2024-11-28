@@ -27,13 +27,3 @@
         <p class="no-results">Aucun restaurant ne correspond à vos critères.</p>
     @endif
 </section>
-
-
-<!-- c qui -->
-<!--  toi t'es qui-->
-<!-- sefer -->
-<!-- c berkan -->
-<!-- bg c que ta fait   mais ta niqué mon style sur les boutons retour-->
-<!-- ouais y'avais un conflit j'ai plus touché après tu peux le remettre stv-->
-<!-- on voit demain au pire jvais nehess-->
-<!-- azy il reste que le bail de période a mettre bonne nuit-->

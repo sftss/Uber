@@ -91,12 +91,12 @@
         <div class="container">
             <h2>Explorez nos options</h2>
             <div class="links-grid">
-                <a href="{{ url('/restaurants/search') }}" class="feature-link">Rechercher un restaurant</a>
-                <a href="{{ url('/restaurants/catPrestationSearch') }}" class="feature-link">Rechercher une
-                    prestation</a>
+                <a href="{{ url('/restaurants/catPrestationSearch') }}" class="feature-link">Rechercher un
+                    restaurant</a>
             </div>
         </div>
     </section>
+
     <footer class="footer">
         <div class="container">
             <div class="footer-section">
@@ -142,7 +142,6 @@
         <div class="footer-bottom">
             <div class="footer-icons">
                 <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-x-twitter"></i></a>
                 <a href="#"><i class="fab fa-youtube"></i></a>
                 <a href="#"><i class="fab fa-linkedin-in"></i></a>
                 <a href="#"><i class="fab fa-instagram"></i></a>

@@ -1,37 +1,3 @@
-<!--<link href="{{ asset('style/app.css') }}" rel="stylesheet">
-
-<a href="{{ url('/') }}">
-    <p>arrière</p>
-</a>
-
-<form action="{{ route('restaurants.search') }}" method="GET">
-    <input type="text" name="search" placeholder="Search by restaurant or town" value="{{ $query ?? '' }}">
-    <button type="submit">Search</button>
-</form>
-
-
-<div>
-    <p>Mode de livraison</p>
-    <div>
-        <input type="checkbox" id="livre" name="livre" />
-        <label for="livre">Livraison</label>
-
-        <input type="checkbox" id="Click&Collect" name="Click&Collect" />
-        <label for="Click&Collect">Click&Collect</label>
-
-    </div>
-</div>
-
-@if (isset($restaurants))
-    @foreach ($restaurants as $restaurant)
-<div>
-            <h3>{{ $restaurant->nom_etablissement }}</h3>
-            <p>Town: {{ $restaurant->ville }}</p>
-        </div>
-@endforeach
-@endif
--->
-
 <link href="{{ asset('style/app.css') }}" rel="stylesheet">
 
 <a href="{{ url('/') }}" class="back-button">
@@ -41,12 +7,12 @@
 <form action="{{ route('restaurants.filter') }}" method="GET" class="filter-form">
     <div class="form-group">
         <label for="lieu" class="form-label">Rechercher par ville :</label>
-        <input type="text" id="lieu" name="lieu" class="form-input" placeholder="Rechercher par Nom ou par Ville"
-            value="{{ $lieu ?? '' }}">
+        <input type="text" id="lieu" name="lieu" class="form-input"
+            placeholder="Rechercher par Nom ou par Ville" value="{{ $lieu ?? '' }}">
     </div>
 
     <div class="form-group checkboxes">
-    <p> Mode de livraison</p>
+        <p> Mode de livraison</p>
         <div>
             <input type="checkbox" id="livre" name="livre" {{ request('livre') ? 'checked' : '' }}>
             <label for="livre">Livraison</label>
@@ -58,16 +24,17 @@
     </div>
 
     <div class="form-group">
-    <label for="categorie" class="form-label">Catégorie de restaurant :</label>
-    <select id="categorie" name="categorie" class="form-input">
-        <option value="">Toutes les catégories</option>
-        @foreach ($categories as $categorie)
-            <option value="{{ $categorie->id_categorie }}" {{ request('categorie') == $categorie->id_categorie ? 'selected' : '' }}>
-                {{ $categorie->lib_categorie }}
-            </option>
-        @endforeach
-    </select>
-</div>
+        <label for="categorie" class="form-label">Catégorie de restaurant :</label>
+        <select id="categorie" name="categorie" class="form-input">
+            <option value="">Toutes les catégories</option>
+            @foreach ($categories as $categorie)
+                <option value="{{ $categorie->id_categorie }}"
+                    {{ request('categorie') == $categorie->id_categorie ? 'selected' : '' }}>
+                    {{ $categorie->lib_categorie }}
+                </option>
+            @endforeach
+        </select>
+    </div>
 
     <button type="submit" class="btn-submit">Rechercher</button>
 </form>
