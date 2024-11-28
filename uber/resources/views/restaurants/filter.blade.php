@@ -1,4 +1,4 @@
-<link href="{{ asset('style/app.css') }}" rel="stylesheet">
+<link href="{{ asset('assets/style/app.css') }}" rel="stylesheet">
 
 <a href="{{ url('/') }}" class="back-button">
     <p>Retour</p>
