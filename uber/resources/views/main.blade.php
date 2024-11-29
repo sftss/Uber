@@ -6,12 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@yield('title', 'Uber')</title>
     <link href="{{ asset('assets/style/app.css') }}" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
 </head>
 
 <body>
-    <header>
+    <header id="header">
         <nav class="navbar">
             <a class="navbar-brand" href="#">Uber</a>
             <div class="navbar-links">
@@ -163,6 +161,7 @@
         </div>
     </footer>
 
+    <script src="{{ asset('js/main.js') }}"></script>
 </body>
 
 </html>
