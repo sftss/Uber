@@ -9,9 +9,9 @@
 </head>
 
 <body>
-    <header id="header">
+    <header class="header" id="header">
         <nav class="navbar">
-            <a class="navbar-brand" href="#">Uber</a>
+            <a class="navbar-brand">Uber</a>
             <div class="navbar-links">
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -161,7 +161,7 @@
         </div>
     </footer>
 
-    <script src="{{ asset('js/main.js') }}"></script>
+    <script src="{{ asset('js/main.js') }}" defer></script>
 </body>
 
 </html>

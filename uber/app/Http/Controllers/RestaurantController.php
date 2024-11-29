@@ -12,7 +12,7 @@ class RestaurantController extends Controller
         $livre = $request->has('livre');
         $emporter = $request->has('emporter');
         $categorie = $request->input('categorie');
-
+        
 
         $restaurants = DB::table('restaurant')
             ->join('adresse', 'restaurant.id_adresse', '=', 'adresse.id_adresse')

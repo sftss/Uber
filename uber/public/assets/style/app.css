@@ -95,9 +95,6 @@ a:hover {
   background-color: #f0f0f0;
 }
 
-.hidden {
-  top: -100px;
-}
 /*#endregion Navbar */
 
 .hero {
@@ -394,7 +391,6 @@ a:hover {
   color: #ccc;
 }
 
-
 .filter-form {
   display: flex;
   flex-direction: column;
@@ -403,7 +399,7 @@ a:hover {
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  max-width: 400px;
+  max-width: 800px;
   margin: 20px auto;
 }
 
@@ -438,7 +434,7 @@ a:hover {
   padding: 10px;
   font-size: 16px;
   color: #fff;
-  background-color: #007bff;
+  background-color: #06c167;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -446,7 +442,7 @@ a:hover {
 }
 
 .btn-submit:hover {
-  background-color: #0056b3;
+  background-color: #06c167;
 }
 
 .search-form {
@@ -470,12 +466,12 @@ a:hover {
 
 .search-input:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: #06c167;
 }
 
 .search-button {
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #06c167;
   color: #fff;
   font-size: 16px;
   font-weight: bold;
@@ -488,8 +484,41 @@ a:hover {
 }
 
 .search-button:hover {
-  background-color: #0056b3;
+  background-color: #06c167;
   transform: scale(1.05);
+}
+
+.jours {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  background: #f9f9f9;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  max-width: 800px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+.jours div {
+  flex: 1;
+  padding: 10px 15px;
+  font-size: 16px;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
+}
+
+.jours div:hover {
+  background-color: #06c167;
+  color: #fff;
+  transform: scale(1.03);
 }
 
 @media (max-width: 600px) {
@@ -497,8 +526,140 @@ a:hover {
     flex-direction: column;
     gap: 15px;
   }
+  .jours {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 15px;
+  }
+
+  .jours div {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+  .horraires .time-slot {
+    flex: 1 1 100%; /* Une ligne par créneau */
+    font-size: 12px;
+  }
 }
 
+.jours div.selected {
+  background-color: #06c167;
+  color: #fff;
+  transform: scale(1.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.horraires {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 20px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  max-width: 800px;
+  max-height: 400px; /* Limite la hauteur à 400px */
+  overflow-y: auto; /* Active le défilement vertical */
+  margin: 20px auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
+.horraires .time-slot {
+  flex: 1 1 calc(50% - 10px); /* Deux créneaux par ligne */
+  text-align: center;
+  padding: 10px;
+  font-size: 14px;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
+}
 
+.horraires .time-slot:hover {
+  background-color: #06c167;
+  color: #fff;
+  transform: scale(1.03);
+}
 
+.planifier {
+  position: relative;
+  margin: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.planifier h2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.toggle-arrow {
+  font-size: 18px;
+  margin-left: 10px;
+  transition: transform 0.3s ease;
+}
+
+.toggle-arrow.open {
+  transform: rotate(90deg);
+}
+
+.interface-planif {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.jours div,
+.horraires div {
+  padding: 5px;
+  margin: 5px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.jours div.selected {
+  background-color: #06c167;
+  color: white;
+}
+
+.horraires div {
+  background-color: #e9ecef;
+}
+
+.horraires div:hover {
+  background-color: #06c167;
+  color: white;
+}
+.hidden {
+  top: -100px;
+}
+.time-slot {
+  padding: 5px;
+  margin: 5px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #e9ecef;
+  text-align: center;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.time-slot:hover {
+  background-color: #06c167;
+  color: white;
+}
+
+.time-slot.selected {
+  background-color: #06c167;
+  color: white;
+  font-weight: bold;
+}
