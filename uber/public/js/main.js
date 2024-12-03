@@ -13,24 +13,24 @@ window.addEventListener("scroll", () => {
 
   dernierPoint = pointActuelle;
 });
-//#endregion
+//#endregion Header hide
 
 //#region Planification
-
-//#region Jour
 document.addEventListener("DOMContentLoaded", () => {
+  //#region Jour
+  const headerPlanification = document.querySelector(".planifier-header");
   const arrow = document.querySelector(".toggle-arrow");
   const planifSection = document.querySelector(".interface-planif");
 
-  // Gestion de l'ouverture/fermeture
-  arrow.addEventListener("click", () => {
+  // Gestion de l'ouverture/fermeture de la planification
+  headerPlanification.addEventListener("click", () => {
     const isOpen = planifSection.style.display === "block";
     planifSection.style.display = isOpen ? "none" : "block";
     arrow.classList.toggle("open", !isOpen); // Faire pivoter la flèche
   });
 
   const joursContainer = document.querySelector(".jours");
-  const options = { weekday: "long" };
+  const options = { weekday: "long" }; // Utilisation de "long" pour le nom complet du jour
   const today = new Date();
 
   // Générer les jours
@@ -42,12 +42,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const jourElement = document.createElement("div");
     if (i == 0) {
-      jourElement.textContent = "Aujourd'hui";
-    } else if (i == 1) {
-      jourElement.textContent = "Demain";
+      jourElement.textContent = "Aujourd'hui"; // Affiche "Aujourd'hui" pour aujourd'hui
     } else {
-      jourElement.textContent =
-        dayName.charAt(0).toUpperCase() + dayName.slice(1);
+      jourElement.textContent = dayName.charAt(0).toUpperCase() + dayName.slice(1); // Affiche le jour réel (ex: lundi, mardi)
     }
 
     jourElement.addEventListener("click", () => {
@@ -55,48 +52,77 @@ document.addEventListener("DOMContentLoaded", () => {
         day.classList.remove("selected");
       });
       jourElement.classList.add("selected");
+
+      // Après avoir sélectionné le jour, on génère les créneaux horaires correspondants
+      generateTimeSlots(jourElement.textContent);
     });
 
     joursContainer.appendChild(jourElement);
   }
+  //#endregion Jour
 
   //#region Heure
   const horairesContainer = document.querySelector(".horraires");
-  const horaireSelectedInput = document.getElementById("horaire-selected"); // Le champ caché pour l'horraire sélectionné
+  const horaireSelectedInput = document.getElementById("horaire-selected"); // Champ caché pour l'horaire sélectionné
 
-  let startTime = new Date();
-  startTime.setHours(8, 0, 0); // Début à 8h00
-  let endTime = new Date(startTime);
-  endTime.setHours(8 + 24, 0, 0); // Fin à 5h00 le lendemain
+  function generateTimeSlots(selectedDay) {
+    let startTime;
 
-  while (startTime < endTime) {
-    const start = `${startTime.getHours()}h${startTime.getMinutes().toString().padStart(2, "0")}`;
-    startTime.setMinutes(startTime.getMinutes() + 30); // Ajoute 30 minutes
-    const end = `${startTime.getHours()}h${startTime.getMinutes().toString().padStart(2, "0")}`;
+    // Si "Aujourd'hui" est sélectionné, commencer à l'heure actuelle
+    if (selectedDay === "Aujourd'hui") {
+      startTime = new Date();
+      startTime.setSeconds(0, 0); // On supprime les secondes et millisecondes
+      if (startTime.getMinutes() > 0) {
+        startTime.setMinutes(30 * Math.ceil(startTime.getMinutes() / 30)); // Arrondir à la demi-heure suivante
+        if (startTime.getMinutes() === 60) {
+          startTime.setHours(startTime.getHours() + 1, 0); // Changer d'heure si c'est 60 minutes
+        }
+      }
+    } else {
+      // Pour les autres jours (J+1 à J+6), on prend le jour exact
+      startTime = new Date();
+      startTime.setDate(today.getDate() + (["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"].indexOf(selectedDay)));
+      startTime.setHours(0, 0, 0, 0); // Début à minuit
+    }
 
-    // Vérifie que le prochain créneau ne dépasse pas la fin
-    if (startTime >= endTime) break;
+    let endTime = new Date();
+    endTime.setHours(24, 0, 0, 0); // Fixe la fin à minuit (24:00)
 
-    const timeSlot = document.createElement("div");
-    timeSlot.className = "time-slot";
-    timeSlot.textContent = `${start} - ${end}`;
+    horairesContainer.innerHTML = ""; // Effacer les créneaux précédents
 
-    // Ajouter l'événement click pour sélectionner un créneau
-    timeSlot.addEventListener("click", () => {
-      horairesContainer.querySelectorAll(".time-slot").forEach((slot) => {
-        slot.classList.remove("selected");
+    while (startTime < endTime) {
+      const start = `${startTime.getHours().toString().padStart(2, "0")}:${startTime.getMinutes().toString().padStart(2, "0")}`;
+      startTime.setMinutes(startTime.getMinutes() + 30); // Ajoute 30 minutes
+      const end = `${startTime.getHours().toString().padStart(2, "0")}:${startTime.getMinutes().toString().padStart(2, "0")}`;
+
+      // Vérifie que le prochain créneau ne dépasse pas la fin
+      if (startTime > endTime) {
+        break;
+      }
+
+      const timeSlot = document.createElement("div");
+      timeSlot.className = "time-slot";
+      timeSlot.textContent = `${start} - ${end}`;
+
+      // Ajouter l'événement click pour sélectionner un créneau
+      timeSlot.addEventListener("click", () => {
+        horairesContainer.querySelectorAll(".time-slot").forEach((slot) => {
+          slot.classList.remove("selected");
+        });
+        timeSlot.classList.add("selected");
+
+        // Mettre à jour le champ caché avec l'horaire sélectionné
+        horaireSelectedInput.value = `${start} - ${end}`;
       });
-      timeSlot.classList.add("selected");
 
-      // Mettre à jour le champ caché avec l'horraire sélectionné
-      horaireSelectedInput.value = `${start} - ${end}`;
-    });
-
-    horairesContainer.appendChild(timeSlot);
-
-    // Reculer de 15 minutes pour le chevauchement
-    startTime.setMinutes(startTime.getMinutes() - 15);
+      horairesContainer.appendChild(timeSlot);
+    }
   }
+
+  // Initialiser les créneaux horaires pour aujourd'hui (si aucun jour sélectionné)
+  generateTimeSlots("Aujourd'hui");
+
+  //#endregion Heure
+
 });
-//#endregion Heure
 //#endregion Planification

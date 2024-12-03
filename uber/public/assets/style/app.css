@@ -9,6 +9,7 @@ body {
   color: #333;
   background-color: #f9f9f9;
   line-height: 1.6;
+  padding-top: 80px; /* Ajustez cette valeur selon la hauteur exacte de votre header */
 }
 
 a {
@@ -22,6 +23,13 @@ a:hover {
 }
 
 /*#region Navbar */
+.header {
+  z-index: 1000;
+  top: 0;
+  position: fixed;
+  width: 100%;
+  transition: top 0.3s;
+}
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -236,46 +244,97 @@ a:hover {
   background-color: #f9f9f9;
 }
 
-.restaurant-card {
+.menus-container {
+  background-color: #f4f4f4;
+  padding: 40px 20px;
+}
+
+.menus-container h2 {
+  text-align: center;
+  color: #06c167;
+  margin-bottom: 30px;
+  font-size: 2.5em;
+}
+
+.menus {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 350px;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.menu-card {
+  width: 300px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
   overflow: hidden;
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s;
+  transition: 
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
-.restaurant-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+.menu-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
 }
 
-.restaurant-image {
+.menu-card img {
   width: 100%;
   height: 250px;
   object-fit: cover;
 }
 
-.restaurant-details {
+.menu-card h3 {
   padding: 15px;
   text-align: center;
+  background-color: #06c167;
+  color: white;
+  margin: 0;
+}
+
+.menu-card p {
+  padding: 15px;
+  text-align: center;
+  font-size: 1.2em;
+  color: #333;
+}
+.restaurant-card {
+  max-width: 800px;
+  margin: 0 auto 20px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-top: 80px; 
+}
+
+.restaurant-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+}
+
+.restaurant-image {
+  width: 100%;
+  height: 400px; /* Increased height for more impact */
+  object-fit: cover;
+}
+
+.restaurant-details {
+  padding: 20px;
+  background-color: #f9f9f9;
 }
 
 .restaurant-details h3 {
-  margin: 10px 0;
-  font-size: 1.5em;
-  color: #333;
+  color: #06c167;
+  margin-bottom: 15px;
+  font-size: 2em;
+  border-bottom: 2px solid #06c167;
+  padding-bottom: 10px;
 }
 
 .restaurant-details p {
-  margin: 5px 0;
-  font-size: 1em;
-  color: #666;
+  margin: 10px 0;
+  font-size: 1.1em;
+  color: #333;
 }
 
 .no-results {
@@ -592,7 +651,8 @@ a:hover {
 .planifier h2 {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: start;
+  gap: 10px;
   cursor: pointer;
 }
 
@@ -609,7 +669,6 @@ a:hover {
 .interface-planif {
   margin-top: 10px;
   padding: 10px;
-  border: 1px solid #ddd;
   border-radius: 5px;
   background-color: #f9f9f9;
 }
@@ -662,4 +721,16 @@ a:hover {
   background-color: #06c167;
   color: white;
   font-weight: bold;
+}
+
+.txtFilter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  line-height: 1.2;
+  font-size: 38px;
+  text-align: center;
+  margin: 7% 0 8px;
 }
