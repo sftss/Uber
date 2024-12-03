@@ -5,7 +5,7 @@
 
 <div class="txtFilter">Une envie soudaine&nbsp;?<br>Régalez-vous de suite.</div>
 
-<form action="{{ route('restaurants.filter') }}" method="GET" class="filter-form">
+<form action="{{ route('restaurants.search') }}" method="GET" class="filter-form">
     <div class="form-group">
         <label for="lieu" class="form-label">Rechercher par ville ou par nom :</label>
         <input type="text" id="lieu" name="lieu" class="form-input"

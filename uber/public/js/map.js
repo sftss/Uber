@@ -6,6 +6,7 @@
 
 // Initialisation de la carte Leaflet
 const map = L.map('map').setView([45.9207646, 6.1527482], 13); // Coordonnées de l'IUT par défaut
+var divcrée;
 
 // Ajout d'un fond de carte OpenStreetMap
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
@@ -312,103 +313,180 @@ else {
 
 //méthode pour afficher les méthodes des chauffeurs en html
 function AfficheAdresse(chauffeur) {
-  
-  if(chauffeur != "null"){
+  if (chauffeur != "null") {
 
-
-    let multiplicateurcourse=1;
-    var prixint = (durationInSeconds + chauffeur.tempsDeTrajet *60)/50;
-    console.log(prixint + 'z');
+    const div = document.createElement("div");
+    div.className = "proposition";  // Utilisez une classe, pas un ID
+    let multiplicateurcourse = 1;
+    var prixint = (durationInSeconds + chauffeur.tempsDeTrajet * 60) / 50;
 
     // Créer un élément de liste pour afficher le chauffeur proche
     const titrechauffeur = document.createElement('h4');
     const tempsDeTrajetElement = document.createElement('p');
-    const prix =document.createElement('p');
-    tempsDeTrajetElement.textContent = `${chauffeur.nom_chauffeur}, ${chauffeur.prenom_chauffeur} mettra ${chauffeur.tempsDeTrajet} minutes à arriver.`;
+    const prix = document.createElement('p');
+    tempsDeTrajetElement.textContent = `Temps estimé d'arrivée du chauffeur : ${chauffeur.tempsDeTrajet} minutes.`;
     titrechauffeur.textContent = `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}`;
-    document.getElementById('propositionsList').appendChild(titrechauffeur);
-    document.getElementById('propositionsList').appendChild(tempsDeTrajetElement);
+    document.getElementById('propositionsList').appendChild(div);
+    div.appendChild(titrechauffeur);
+    div.appendChild(tempsDeTrajetElement);
 
-
-    //Uber X , Green, Uber XL, Uber Pet, Berline, Confort
-
-    if (`${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Uber X"){
-      multiplicateurcourse=1.05;
-    }
-    else if (`${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Green"){
-      multiplicateurcourse=1;
-    }    
-    else if (`${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Uber Pet"){
-      multiplicateurcourse=1.1;
-    }
-    else if (`${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Uber XL"){
-      multiplicateurcourse=1.2;
-    }
-    else if (`${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Berline"){
-      multiplicateurcourse=1.25;
-    }
-    else if (`${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Confort"){
-      multiplicateurcourse=1.15;
+    // Uber X, Green, Uber XL, Uber Pet, Berline, Confort
+    if (`${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Uber X") {
+      multiplicateurcourse = 1.05;
+    } else if (`${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Green") {
+      multiplicateurcourse = 1;
+    } else if (`${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Uber Pet") {
+      multiplicateurcourse = 1.1;
+    } else if (`${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Uber XL") {
+      multiplicateurcourse = 1.2;
+    } else if (`${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Berline") {
+      multiplicateurcourse = 1.25;
+    } else if (`${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Confort") {
+      multiplicateurcourse = 1.15;
     }
     prixint = roundToDecimals(prixint * multiplicateurcourse, 2);
 
     console.log(multiplicateurcourse);
     console.log(prixint);
-    prix.textContent = `${prixint} €`
+    prix.textContent = `${prixint} €`;
 
-    document.getElementById('propositionsList').appendChild(prix);
-  }
-  else{
+    div.appendChild(prix);
+
+    div.style.padding = "10px";
+    div.style.margin = "10px 0";
+    div.style.border = "1px solid #ccc";
+    div.style.borderRadius = "8px";  // Coins arrondis
+    div.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.1)";
+    div.style.backgroundColor = "#f9f9f9";  // Fond gris clair
+    div.style.cursor = "pointer";  // Ajoute une indication de clic
+    div.style.transition = "all 0.3s ease";
+
+    // Ajouter position relative pour la div, afin que le bouton soit bien positionné
+    div.style.position = "relative";
+
+    div.addEventListener('mouseover', function () {
+      div.style.backgroundColor = "#e0e0e0";  // Changer la couleur de fond au survol
+      div.style.boxShadow = "0px 6px 12px rgba(0, 0, 0, 0.2)";  // Augmenter l'ombre au survol
+    });
+
+    div.addEventListener('mouseout', function () {
+      div.style.backgroundColor = "#f9f9f9";  // Rétablir la couleur de fond normale
+      div.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.1)";  // Rétablir l'ombre normale
+    });
+
+    // Ajouter un bouton "Voir détails" avec un style pour le placer à droite
+    const voirDetailsBtn = document.createElement('button');
+    voirDetailsBtn.textContent = "Voir détails";
+    voirDetailsBtn.style.marginTop = "10px";
+    voirDetailsBtn.style.padding = "5px 10px";
+    voirDetailsBtn.style.border = "none";
+    voirDetailsBtn.style.backgroundColor = "#4CAF50"; // Couleur du bouton
+    voirDetailsBtn.style.color = "white";
+    voirDetailsBtn.style.cursor = "pointer";
+    voirDetailsBtn.style.borderRadius = "5px";
+    voirDetailsBtn.style.position = "absolute";  // Positionner le bouton
+    voirDetailsBtn.style.top = "10px";
+    voirDetailsBtn.style.right = "10px";  // Placer le bouton à droite
+    div.appendChild(voirDetailsBtn);
+
+    // Créer un flag pour savoir si les détails sont déjà affichés
+    let detailsAffiches = false;
+
+    // Ajouter un événement au bouton pour afficher/fermer les détails
+    voirDetailsBtn.addEventListener('click', function (event) {
+      event.stopPropagation();  // Empêcher le clic de propager à la div principale
+
+      if (detailsAffiches) {
+        // Si les détails sont déjà affichés, on les retire
+        const vehiculeInfo = div.querySelector('.vehicule-info');
+        const chauffeurInfo = div.querySelector('.chauffeur-info');
+        if (vehiculeInfo) {
+          div.removeChild(vehiculeInfo);
+        }
+        if (chauffeurInfo) {
+          div.removeChild(chauffeurInfo);
+        }
+        voirDetailsBtn.textContent = "Voir détails";  // Réinitialiser le texte du bouton
+      } else {
+        // Si les détails ne sont pas affichés, on les ajoute
+        const vehiculeInfo = document.createElement('p');
+        vehiculeInfo.classList.add('vehicule-info');  // Ajouter une classe pour éviter les doublons
+        vehiculeInfo.textContent = `Véhicule: ${chauffeur.vehicule.marque}, Couleur: ${chauffeur.vehicule.couleur.lib_couleur}`;
+
+        const chauffeurInfo = document.createElement('p');
+        chauffeurInfo.classList.add('chauffeur-info');  // Ajouter une classe pour éviter les doublons
+        chauffeurInfo.textContent = `Chauffeur: ${chauffeur.nom_chauffeur} ${chauffeur.prenom_chauffeur}`;
+
+        // Ajouter ces informations à la div après le clic
+        div.appendChild(vehiculeInfo);
+        div.appendChild(chauffeurInfo);
+        voirDetailsBtn.textContent = "Fermer les détails";  // Modifier le texte du bouton
+      }
+
+      // Mettre à jour le flag pour savoir si les détails sont affichés
+      detailsAffiches = !detailsAffiches;
+    });
+
+  } else {
     const aucunchauffeur = document.createElement('p');
     aucunchauffeur.textContent = `Il n'y a pas de chauffeur disponible`;
     document.getElementById('propositionsList').appendChild(aucunchauffeur);
   }
+}
 
-  }
+
+
+
 
   function AfficheCategorie(categorie) {
-      
-      let multiplicateurcourse=1;
-      var prixint = (durationInSeconds)/50;
-      
-  
-      // Créer un élément de liste pour afficher le chauffeur proche
-      const titreCategorie = document.createElement('h4');
-      const prix =document.createElement('p');
-      titreCategorie.textContent = `${categorie.lib_categorie_vehicule}`;
-      document.getElementById('propositionsList').appendChild(titreCategorie);
-  
-  
-      //Uber X , Green, Uber XL, Uber Pet, Berline, Confort
-  
-      if (`${categorie.lib_categorie_vehicule}` == "Uber X"){
-        multiplicateurcourse=1.05;
-      }
-      else if (`${categorie.lib_categorie_vehicule}` == "Green"){
-        multiplicateurcourse=1;
-      }    
-      else if (`${categorie.lib_categorie_vehicule}` == "Uber Pet"){
-        multiplicateurcourse=1.1;
-      }
-      else if (`${categorie.lib_categorie_vehicule}` == "Uber XL"){
-        multiplicateurcourse=1.2;
-      }
-      else if (`${categorie.lib_categorie_vehicule}` == "Berline"){
-        multiplicateurcourse=1.25;
-      }
-      else if (`${categorie.lib_categorie_vehicule}` == "Confort"){
-        multiplicateurcourse=1.15;
-      }
-      prixint = roundToDecimals(prixint * multiplicateurcourse, 2);
-  
-      console.log(multiplicateurcourse);
-      console.log(prixint);
-      prix.textContent = `${prixint} €`
-  
-      document.getElementById('propositionsList').appendChild(prix);
+    let multiplicateurcourse = 1;
+    var prixint = (durationInSeconds) / 50;
+
+    // Créer un élément de liste pour afficher le chauffeur proche
+    
+
+    const titreCategorie = document.createElement('h4');
+    const prix = document.createElement('p');
+    titreCategorie.textContent = `${categorie.lib_categorie_vehicule}`;
+    document.getElementById('propositionsList').appendChild(div);
+    div.appendChild(titreCategorie);
+
+    // Uber X, Green, Uber XL, Uber Pet, Berline, Confort
+    if (`${categorie.lib_categorie_vehicule}` == "Uber X") {
+        multiplicateurcourse = 1.05;
     }
+    else if (`${categorie.lib_categorie_vehicule}` == "Green") {
+        multiplicateurcourse = 1;
+    }
+    else if (`${categorie.lib_categorie_vehicule}` == "Uber Pet") {
+        multiplicateurcourse = 1.1;
+    }
+    else if (`${categorie.lib_categorie_vehicule}` == "Uber XL") {
+        multiplicateurcourse = 1.2;
+    }
+    else if (`${categorie.lib_categorie_vehicule}` == "Berline") {
+        multiplicateurcourse = 1.25;
+    }
+    else if (`${categorie.lib_categorie_vehicule}` == "Confort") {
+        multiplicateurcourse = 1.15;
+    }
+    prixint = roundToDecimals(prixint * multiplicateurcourse, 2);
+
+    console.log(multiplicateurcourse);
+    console.log(prixint);
+    prix.textContent = `${prixint} €`;
+
+    div.appendChild(prix);
+
+}
+
 
   function roundToDecimals(number, decimals) {
     const factor = Math.pow(10, decimals);
     return Math.round(number * factor) / factor;
   }
+
+
+
+
+

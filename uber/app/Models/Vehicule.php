@@ -22,4 +22,13 @@ class Vehicule extends Model
             "id_categorie_vehicule"
         );
     }
+
+    public function couleur(): HasOne
+    {
+        return $this->hasOne(
+            Couleur::class,
+            "id_couleur",
+            "id_couleur"
+        );
+    }
 }
