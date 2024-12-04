@@ -3,7 +3,7 @@
 <link href="{{ asset('assets/style/app.css') }}" rel="stylesheet">
 <link rel="icon" href="{{ URL::asset('assets/svg/uber-logo.svg') }}" type="image/svg+xml">
 
-<div class="txtFilter">Une envie soudaine&nbsp;?<br>Régalez-vous de suite.</div>
+<div class="txtFilter">Une envie soudaine&nbsp;?<br>Régalez-vous de suite 🍔</div>
 
 <form action="{{ route('restaurants.search') }}" method="GET" class="filter-form">
     <div class="form-group">

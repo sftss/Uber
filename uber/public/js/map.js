@@ -49,13 +49,11 @@ let isProcessing = false;
 //ajout de trouverchauffeur au clic du bouton valider de la view
 document.getElementById("boutonValider").addEventListener("click", function () {
   if (isProcessing) {
-    return; // Si le flag est true, on ignore le clic
+    return;
   }
-  isProcessing = true; // Active le flag pour indiquer que le traitement est en cours
+  isProcessing = true;
 
-  // Appel de la fonction principale pour trouver les chauffeurs
   trouverChauffeurs();
-  // Adaptez le temps en fonction de la durée de votre traitement
 });
 
 // Appliquer la fonction pour les deux inputs
@@ -64,7 +62,7 @@ geocodeAddress(inputArrivee, suggestionsArrivee, markerArrivee, false);
 
 function getDate(date) {
   const day = String(date.getDate()).padStart(2, "0"); //padstart pour ajouter un 0 si le jour n'a qu'un chiffre
-  const month = String(date.getMonth() + 1).padStart(2, "0"); // Le mois commence à 0, donc on ajoute 1
+  const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = date.getFullYear();
 
   return `${day}/${month}/${year}`;
@@ -112,7 +110,6 @@ function calculDistanceChauffeur(chauffeur, callback) {
 }
 
 //méthode pour trouver et afficher le meilleur itinéraire entre les deux marqueurs en utilisant l'API OSRM
-// Variable globale pour stocker la route affichée
 var currentRouteLayer = null;
 
 function getRoute(marker1, marker2) {
@@ -134,7 +131,6 @@ function getRoute(marker1, marker2) {
         map.removeLayer(currentRouteLayer);
       }
 
-      // Ajouter la nouvelle route à la carte
       currentRouteLayer = L.geoJSON(route).addTo(map);
 
       // on récupère la durée du trajet en secondes
@@ -147,7 +143,6 @@ function getRoute(marker1, marker2) {
 
       // Vérification du temps de trajet
       if (durationInSeconds < 0) {
-
       }
 
       if (durationInSeconds < 3600) {
@@ -211,25 +206,22 @@ function geocodeAddress(inputElement, suggestionsBox, marker, isdepart) {
                 const postalCode = address.postcode || ""; // Code postal
                 const country = address.country || ""; // Pays
 
-                const departmentCode = address["ISO3166-2-lvl6"].substring(3, 5) || ""; // Code du département
-//0652402353
-
+                const departmentCode =
+                  address["ISO3166-2-lvl6"].substring(3, 5) || ""; // Code du département //0652402353
 
                 // on construit la suggestion avec les détails pour améliorer la lisibilité
-                const suggestionText = `${number} ${street}, ${postalCode} ${city}, ${country}`
+                const suggestionText = `${number} ${street}, ${postalCode} ${city}, ${country}`;
 
                 const div = document.createElement("div");
-                div.textContent = suggestionText.trim(); // Afficher l'adresse formatée
+                div.textContent = suggestionText.trim();
 
                 div.addEventListener("click", function () {
-                  
                   // on met l'adresse sélectionnée dans le champ de saisie
                   inputElement.value = suggestionText;
 
                   // on centre la map sur la position
                   map.setView([result.lat, result.lon], 13);
 
-                  // Appeler la fonction de mise à jour du marqueur
                   marker = updateMarker(marker, result, suggestionText);
                   suggestionsBox.innerHTML = ""; // Fermer la liste après sélection
 
@@ -252,7 +244,7 @@ function geocodeAddress(inputElement, suggestionsBox, marker, isdepart) {
             } else {
               // Si aucune adresse n'est trouvée, afficher le message "L'adresse n'existe pas"
               const noResultsMessage = document.createElement("div");
-              noResultsMessage.textContent = "L'adresse n'existe pas"; 
+              noResultsMessage.textContent = "L'adresse n'existe pas";
               suggestionsBox.appendChild(noResultsMessage);
             }
           })
@@ -260,7 +252,7 @@ function geocodeAddress(inputElement, suggestionsBox, marker, isdepart) {
             console.error("Erreur lors de la récupération des données", error); // Gérer les erreurs de fetch
           });
       } else {
-        suggestionsBox.innerHTML = ""; // Réinitialiser les suggestions si la saisie est trop courte
+        suggestionsBox.innerHTML = "";
       }
     }, 500),
   ); // Délai de 1 seconde
@@ -298,7 +290,7 @@ function geocodeChauffeurs(chauffeurs) {
   let chauffeursProches = [];
 
   // Parcourir tous les chauffeurs et filtrer ceux du département souhaité
-  chauffeurs.forEach(chauffeur => {
+  chauffeurs.forEach((chauffeur) => {
     if (chauffeur.adresse.departement.code_departement == departementDepart) {
       chauffeursProches.push(chauffeur);
     }
@@ -309,7 +301,7 @@ function geocodeChauffeurs(chauffeurs) {
     AfficheAdresse("null");
   } else {
     // Pour chaque chauffeur proche, calculer le temps de trajet
-    chauffeursProches.forEach(chauffeur => {
+    chauffeursProches.forEach((chauffeur) => {
       calculDistanceChauffeur(chauffeur, (trajet) => {
         if (trajet !== null && trajet <= 60) {
           // Ajouter le temps de trajet et afficher l'adresse si inférieur à 60 minutes
@@ -340,27 +332,33 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
 
     // Logic for the pricing multiplier
     if (
-      `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Uber X"
+      `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` ==
+      "Uber X"
     ) {
       multiplicateurcourse = 1.05;
     } else if (
-      `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Green"
+      `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` ==
+      "Green"
     ) {
       multiplicateurcourse = 1;
     } else if (
-      `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Uber Pet"
+      `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` ==
+      "Uber Pet"
     ) {
       multiplicateurcourse = 1.1;
     } else if (
-      `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Uber XL"
+      `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` ==
+      "Uber XL"
     ) {
       multiplicateurcourse = 1.2;
     } else if (
-      `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Berline"
+      `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` ==
+      "Berline"
     ) {
       multiplicateurcourse = 1.25;
     } else if (
-      `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Confort"
+      `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` ==
+      "Confort"
     ) {
       multiplicateurcourse = 1.15;
     }
@@ -370,25 +368,24 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
     div.style.padding = "10px";
     div.style.margin = "10px 0";
     div.style.border = "1px solid #ccc";
-    div.style.borderRadius = "8px"; // Coins arrondis
+    div.style.borderRadius = "8px";
     div.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.1)";
-    div.style.backgroundColor = "#f9f9f9"; // Fond gris clair
-    div.style.cursor = "pointer"; // Ajoute une indication de clic
+    div.style.backgroundColor = "#f9f9f9";
+    div.style.cursor = "pointer";
     div.style.transition = "all 0.3s ease";
 
     div.style.position = "relative";
 
     div.addEventListener("mouseover", function () {
-      div.style.backgroundColor = "#e0e0e0"; // Changer la couleur de fond au survol
-      div.style.boxShadow = "0px 6px 12px rgba(0, 0, 0, 0.2)"; // Augmenter l'ombre au survol
+      div.style.backgroundColor = "#e0e0e0";
+      div.style.boxShadow = "0px 6px 12px rgba(0, 0, 0, 0.2)";
     });
 
     div.addEventListener("mouseout", function () {
-      div.style.backgroundColor = "#f9f9f9"; // Rétablir la couleur de fond normale
-      div.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.1)"; // Rétablir l'ombre normale
+      div.style.backgroundColor = "#f9f9f9";
+      div.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.1)";
     });
 
-    // Ajouter un bouton "Voir détails"
     const voirDetailsBtn = document.createElement("button");
     voirDetailsBtn.textContent = "Voir détails";
     voirDetailsBtn.style.marginTop = "10px";
@@ -398,12 +395,11 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
     voirDetailsBtn.style.color = "white";
     voirDetailsBtn.style.cursor = "pointer";
     voirDetailsBtn.style.borderRadius = "5px";
-    voirDetailsBtn.style.position = "absolute"; 
+    voirDetailsBtn.style.position = "absolute";
     voirDetailsBtn.style.top = "10px";
     voirDetailsBtn.style.right = "10px";
     div.appendChild(voirDetailsBtn);
 
-    // Créer un flag pour savoir si les détails sont déjà affichés
     let detailsAffiches = false;
 
     voirDetailsBtn.addEventListener("click", function (event) {
@@ -413,7 +409,7 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
         const vehiculeInfo = div.querySelector(".vehicule-info");
         const chauffeurInfo = div.querySelector(".chauffeur-info");
         const reserverBtn = div.querySelector(".reserver-btn");
-        
+
         if (vehiculeInfo) {
           div.removeChild(vehiculeInfo);
         }
@@ -424,7 +420,7 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
           div.removeChild(reserverBtn);
         }
 
-        voirDetailsBtn.textContent = "Voir détails"; // Réinitialiser le texte du bouton
+        voirDetailsBtn.textContent = "Voir détails";
       } else {
         const vehiculeInfo = document.createElement("p");
         vehiculeInfo.classList.add("vehicule-info");
@@ -447,22 +443,22 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
         reserverBtn.style.marginTop = "10px";
         reserverBtn.style.padding = "5px 10px";
         reserverBtn.style.border = "none";
-        reserverBtn.style.backgroundColor = "black"; // Une couleur différente pour réserver
+        reserverBtn.style.backgroundColor = "black";
         reserverBtn.style.color = "white";
         reserverBtn.style.cursor = "pointer";
         reserverBtn.style.borderRadius = "5px";
         reserverBtn.style.position = "absolute";
-        reserverBtn.style.top = "50px"; // Placer le bouton un peu plus bas que Voir détails
-        reserverBtn.style.right = "10px"; // Placer le bouton à droite
+        reserverBtn.style.top = "50px";
+        reserverBtn.style.right = "10px";
 
-        reserverBtn.addEventListener("click", function() {
+        reserverBtn.addEventListener("click", function () {
           // Créer la course
           creerCourse(chauffeur, tempsDeTrajet);
 
           // Mettre à jour le bouton pour afficher "Course réservée"
           reserverBtn.textContent = "Course réservée";
           reserverBtn.disabled = true; // Désactiver le bouton une fois la course réservée
-      });
+        });
 
         // Ajouter ces informations et le bouton à la div
         div.appendChild(vehiculeInfo);
@@ -481,12 +477,9 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
   }
 }
 
-
 function AfficheCategorie(categorie) {
   let multiplicateurcourse = 1;
   var prixint = durationInSeconds / 50;
-
-  // Créer un élément de liste pour afficher le chauffeur proche
 
   const titreCategorie = document.createElement("h4");
   const prix = document.createElement("p");
@@ -520,7 +513,6 @@ function roundToDecimals(number, decimals) {
   return Math.round(number * factor) / factor;
 }
 
-
 let courseDejaReservee = false;
 
 function creerCourse(chauffeur, tempsDeTrajet) {
@@ -530,7 +522,6 @@ function creerCourse(chauffeur, tempsDeTrajet) {
     return;
   }
 
-  // Le reste du code reste le même
   const departCoords = {
     lat: markerDepart.getLatLng().lat,
     lng: markerDepart.getLatLng().lng,
@@ -541,7 +532,6 @@ function creerCourse(chauffeur, tempsDeTrajet) {
     lng: markerArrivee.getLatLng().lng,
   };
 
-  // Fonction pour géocoder un lieu
   function getLieuDetails(lat, lng) {
     const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
     return fetch(url)
@@ -551,7 +541,11 @@ function creerCourse(chauffeur, tempsDeTrajet) {
         return {
           rue: address.road || "Rue non trouvée",
           code_postal: address.postcode || "Code postal non trouvé",
-          ville: address.city || address.town || address.village || "Ville non trouvée",
+          ville:
+            address.city ||
+            address.town ||
+            address.village ||
+            "Ville non trouvée",
         };
       })
       .catch((error) => {
@@ -580,27 +574,27 @@ function creerCourse(chauffeur, tempsDeTrajet) {
     };
 
     // Envoyer les données au serveur
-    fetch('/php/reserver_course.php', {
-      method: 'POST',
+    fetch("/php/reserver_course.php", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(course),
     })
-    .then((response) => response.json())
-    .then((data) => {
-      // Marquer la course comme réservée
-      courseDejaReservee = true;
-      
-      // Désactiver tous les boutons de réservation
-      const boutonReserver = document.querySelectorAll('.reserver-btn');
-      boutonReserver.forEach(btn => {
-        btn.disabled = true;
-        btn.textContent = 'Course réservée';
+      .then((response) => response.json())
+      .then((data) => {
+        // Marquer la course comme réservée
+        courseDejaReservee = true;
+
+        // Désactiver tous les boutons de réservation
+        const boutonReserver = document.querySelectorAll(".reserver-btn");
+        boutonReserver.forEach((btn) => {
+          btn.disabled = true;
+          btn.textContent = "Course réservée";
+        });
+      })
+      .catch((error) => {
+        console.error("Erreur lors de l'envoi de la course :", error);
       });
-    })
-    .catch((error) => {
-      console.error('Erreur lors de l\'envoi de la course :', error);
-    });
   });
 }

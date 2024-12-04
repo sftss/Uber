@@ -9,7 +9,7 @@ body {
   color: #333;
   background-color: #f9f9f9;
   line-height: 1.6;
-  padding-top: 80px; /* Ajustez cette valeur selon la hauteur exacte de votre header */
+  padding-top: 80px;
 }
 
 a {
@@ -300,13 +300,13 @@ a:hover {
   color: #333;
 }
 .restaurant-card {
-  max-width: 600px; /* Réduit la largeur de la carte */
+  max-width: 600px;
   margin: 0 auto 20px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
-  margin-top: 60px; /* Réduit l'espace en haut */
+  margin-top: 60px;
 }
 
 .restaurant-card:hover {
@@ -316,26 +316,26 @@ a:hover {
 
 .restaurant-image {
   width: 100%;
-  height: 250px; /* Réduit la hauteur de l'image */
+  height: 250px;
   object-fit: cover;
 }
 
 .restaurant-details {
-  padding: 15px; /* Réduit le padding autour du texte */
+  padding: 15px;
   background-color: #f9f9f9;
 }
 
 .restaurant-details h3 {
   color: #06c167;
-  margin-bottom: 10px; /* Réduit l'espace sous le titre */
-  font-size: 1.6em; /* Réduit la taille du titre */
+  margin-bottom: 10px;
+  font-size: 1.6em;
   border-bottom: 2px solid #06c167;
-  padding-bottom: 8px; /* Réduit le padding sous le titre */
+  padding-bottom: 8px;
 }
 
 .restaurant-details p {
-  margin: 8px 0; /* Réduit la marge entre les paragraphes */
-  font-size: 1em; /* Réduit la taille du texte */
+  margin: 8px 0;
+  font-size: 1em;
   color: #333;
 }
 
@@ -598,7 +598,7 @@ a:hover {
     padding: 8px 10px;
   }
   .horraires .time-slot {
-    flex: 1 1 100%; /* Une ligne par créneau */
+    flex: 1 1 100%;
     font-size: 12px;
   }
 }
@@ -618,14 +618,14 @@ a:hover {
   border: 1px solid #ddd;
   border-radius: 8px;
   max-width: 800px;
-  max-height: 400px; /* Limite la hauteur à 400px */
-  overflow-y: auto; /* Active le défilement vertical */
+  max-height: 400px;
+  overflow-y: auto;
   margin: 20px auto;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .horraires .time-slot {
-  flex: 1 1 calc(50% - 10px); /* Deux créneaux par ligne */
+  flex: 1 1 calc(50% - 10px);
   text-align: center;
   padding: 10px;
   font-size: 14px;

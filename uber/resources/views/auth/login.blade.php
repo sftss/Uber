@@ -33,12 +33,6 @@
                             <input type="password" id="mdp_client" name="mdp_client" class="form-control" required>
                         </div>
 
-                        <!-- Souvenir de la session -->
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" name="remember" id="remember">
-                            <label class="form-check-label" for="remember">{{ __('Se souvenir de moi') }}</label>
-                        </div>
-
                         <!-- Bouton de connexion -->
                         <button type="submit" class="btn btn-primary">{{ __('Se connecter') }}</button>
                     </form>

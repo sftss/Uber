@@ -7,7 +7,7 @@
 <a href="{{ url('/lieux/search')}}"><p>Retour</p></a>
 
 <div class="restaurant-card">
-    <img src="{{ $lieu->photo_lieu}}" alt="Image de {{$lieu->nom_etablissement}} ">
+    <img src="{{ $lieu->photo_lieu}}" alt="Image de {{$lieu->nom_etablissement}} " class="restaurant-image">
     <h3>{{ $lieu->nom_etablissement }}</h3>
     <p><strong>Ville :</strong> {{ $lieu->ville }}</p>
     <p><strong>Livraison :</strong> {{ $lieu->propose_livraison ? 'Oui' : 'Non' }}</p>

@@ -25,14 +25,14 @@ document.addEventListener("DOMContentLoaded", () => {
   headerPlanification.addEventListener("click", () => {
     const isOpen = planifSection.style.display === "block";
     planifSection.style.display = isOpen ? "none" : "block";
-    arrow.classList.toggle("open", !isOpen); // Faire pivoter la flèche
+    arrow.classList.toggle("open", !isOpen);
   });
 
   const joursContainer = document.querySelector(".jours");
-  const options = { weekday: "long" }; // Utilisation de "long" pour le nom complet du jour
+  const options = { weekday: "long" };
   const today = new Date();
 
-  // Générer les jours
+  // Générer jours
   for (let i = 0; i < 7; i++) {
     const currentDate = new Date();
     currentDate.setDate(today.getDate() + i);
@@ -41,10 +41,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const jourElement = document.createElement("div");
     if (i == 0) {
-      jourElement.textContent = "Aujourd'hui"; // Affiche "Aujourd'hui" pour aujourd'hui
+      jourElement.textContent = "Aujourd'hui"; // Affiche "Aujourd'hui"
     } else {
       jourElement.textContent =
-        dayName.charAt(0).toUpperCase() + dayName.slice(1); // Affiche le jour réel (ex: lundi, mardi)
+        dayName.charAt(0).toUpperCase() + dayName.slice(1);
     }
 
     jourElement.addEventListener("click", () => {
@@ -63,23 +63,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //#region Heure
   const horairesContainer = document.querySelector(".horraires");
-  const horaireSelectedInput = document.getElementById("horaire-selected"); // Champ caché pour l'horaire sélectionné
+  const horaireSelectedInput = document.getElementById("horaire-selected");
 
   function generateTimeSlots(selectedDay) {
     let startTime;
 
-    // Si "Aujourd'hui" est sélectionné, commencer à l'heure actuelle
+    // Si "Aujourd'hui" est sélectionné
     if (selectedDay === "Aujourd'hui") {
       startTime = new Date();
       startTime.setSeconds(0, 0); // On supprime les secondes et millisecondes
       if (startTime.getMinutes() > 0) {
-        startTime.setMinutes(30 * Math.ceil(startTime.getMinutes() / 30)); // Arrondir à la demi-heure suivante
+        startTime.setMinutes(30 * Math.ceil(startTime.getMinutes() / 30));
         if (startTime.getMinutes() === 60) {
           startTime.setHours(startTime.getHours() + 1, 0); // Changer d'heure si c'est 60 minutes
         }
       }
     } else {
-      // Pour les autres jours (J+1 à J+6), on prend le jour exact
       startTime = new Date();
       startTime.setDate(
         today.getDate() +
@@ -97,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     let endTime = new Date();
-    endTime.setHours(24, 0, 0, 0); // Fixe la fin à minuit (24:00)
+    endTime.setHours(24, 0, 0, 0); // Fixe la fin à minuit
 
     horairesContainer.innerHTML = ""; // Effacer les créneaux précédents
 

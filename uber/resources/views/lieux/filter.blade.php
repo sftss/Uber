@@ -7,7 +7,7 @@
 <section class="restaurants-list">
     @if (isset($lieux) && $lieux->isNotEmpty())
         @foreach ($lieux as $lieu)
-            <a href="{{ route('lieux.show', $lieu->id_lieu_de_vente_pf) }}" class="restaurant-card">
+            <a href="{{ route('lieux.show', $lieu->id_lieu_de_vente_pf) }}" class="restaurant-card" >
                 <img src="{{ $lieu->photo_lieu }}" alt="Image de {{ $lieu->nom_etablissement }}" class="restaurant-image">
                 <div class="restaurant-details">
                     <h3>{{ $lieu->nom_etablissement }}</h3>
