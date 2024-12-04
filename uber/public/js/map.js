@@ -18,10 +18,6 @@ const inputDateDepart = document.getElementById("dateDepart");
 const dateToday = new Date();
 const listePropositions = document.getElementById("propositionsList");
 
-console.log(dateToday.toLocaleTimeString("fr-FR"));
-
-console.log(getDate(new Date(dateToday)));
-
 const cleAPILocationIQ = "pk.69ac2966071395cd67e8a9a5ed00d2c3"; // clé API LocationIQ
 
 var markerDepart = null;
@@ -100,10 +96,6 @@ function calculDistanceChauffeur(chauffeur, callback) {
 
             const minutes = Math.floor(durationInSeconds / 60);
 
-            console.log(
-              `${chauffeur.prenom_chauffeur} ${chauffeur.nom_chauffeur} devrait arriver en ${minutes} minutes `,
-            );
-
             // on fait callback minutes pour être sûr que les minutes se renvoient après la réponse de l'api et son traitement
             callback(minutes);
           })
@@ -155,8 +147,7 @@ function getRoute(marker1, marker2) {
 
       // Vérification du temps de trajet
       if (durationInSeconds < 0) {
-        console.log("temps de trajet anormal en secondes");
-        console.log(durationInSeconds);
+
       }
 
       if (durationInSeconds < 3600) {
@@ -164,7 +155,6 @@ function getRoute(marker1, marker2) {
       } else {
         messageTempsDeTrajet = `En Uber vous devriez mettre ${heures} heures et ${minutes % 60} minutes à atteindre votre destination`;
       }
-      console.log(messageTempsDeTrajet);
 
       var elementTempsTrajet = document.getElementById("tempsTrajet");
       elementTempsTrajet.textContent = messageTempsDeTrajet;
@@ -207,7 +197,6 @@ function geocodeAddress(inputElement, suggestionsBox, marker, isdepart) {
         )
           .then((response) => response.json())
           .then((data) => {
-            console.log("requete");
             if (data.length > 0) {
               // on limite le nombre de suggestions à 5 pour que ça soit plus lisible
               const limitedData = data.slice(0, 5);
@@ -288,7 +277,6 @@ function trouverChauffeurs() {
     if (!markerDepart || !markerArrivee) {
       alert("Veuillez saisir les deux adresses (départ et arrivée).");
     } else {
-      console.log("recherche chauffeurs : ");
       geocodeChauffeurs(chauffeurs);
     }
   } else {
@@ -311,10 +299,6 @@ function geocodeChauffeurs(chauffeurs) {
 
   // Parcourir tous les chauffeurs et filtrer ceux du département souhaité
   chauffeurs.forEach(chauffeur => {
-    console.log(chauffeur.adresse.departement.code_departement);
-    console.log(departementDepart);
-    console.log("--------------------");
-
     if (chauffeur.adresse.departement.code_departement == departementDepart) {
       chauffeursProches.push(chauffeur);
     }
@@ -324,8 +308,6 @@ function geocodeChauffeurs(chauffeurs) {
   if (chauffeursProches.length == 0) {
     AfficheAdresse("null");
   } else {
-    console.log(chauffeursProches);
-
     // Pour chaque chauffeur proche, calculer le temps de trajet
     chauffeursProches.forEach(chauffeur => {
       calculDistanceChauffeur(chauffeur, (trajet) => {
@@ -341,8 +323,6 @@ function geocodeChauffeurs(chauffeurs) {
 //méthode pour afficher les méthodes des chauffeurs en html
 function AfficheAdresse(chauffeur, tempsDeTrajet) {
   if (chauffeur != "null") {
-    console.log(tempsDeTrajet + "aze");
-
     const div = document.createElement("div");
     div.className = "proposition"; // Utilisez une classe, pas un ID
     let multiplicateurcourse = 1;
@@ -385,13 +365,8 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
       multiplicateurcourse = 1.15;
     }
     prixint = roundToDecimals(prixint * multiplicateurcourse, 2);
-
-    console.log(multiplicateurcourse);
-    console.log(prixint);
     prix.textContent = `${prixint} €`;
-
     div.appendChild(prix);
-
     div.style.padding = "10px";
     div.style.margin = "10px 0";
     div.style.border = "1px solid #ccc";
@@ -534,9 +509,6 @@ function AfficheCategorie(categorie) {
     multiplicateurcourse = 1.15;
   }
   prixint = roundToDecimals(prixint * multiplicateurcourse, 2);
-
-  console.log(multiplicateurcourse);
-  console.log(prixint);
   prix.textContent = `${prixint} €`;
 
   div.appendChild(prix);
@@ -549,9 +521,16 @@ function roundToDecimals(number, decimals) {
 }
 
 
-// Fonction pour créer une course
+let courseDejaReservee = false;
+
 function creerCourse(chauffeur, tempsDeTrajet) {
-  // Récupération des coordonnées des lieux
+  // Vérifier si une course est déjà réservée
+  if (courseDejaReservee) {
+    alert("Vous avez déjà réservé une course.");
+    return;
+  }
+
+  // Le reste du code reste le même
   const departCoords = {
     lat: markerDepart.getLatLng().lat,
     lng: markerDepart.getLatLng().lng,
@@ -608,21 +587,20 @@ function creerCourse(chauffeur, tempsDeTrajet) {
       },
       body: JSON.stringify(course),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('Réponse du serveur :', data);
-        // Gérer la réponse du serveur si nécessaire
-      })
-      .catch((error) => {
-        console.error('Erreur lors de l\'envoi de la course :', error);
+    .then((response) => response.json())
+    .then((data) => {
+      // Marquer la course comme réservée
+      courseDejaReservee = true;
+      
+      // Désactiver tous les boutons de réservation
+      const boutonReserver = document.querySelectorAll('.reserver-btn');
+      boutonReserver.forEach(btn => {
+        btn.disabled = true;
+        btn.textContent = 'Course réservée';
       });
+    })
+    .catch((error) => {
+      console.error('Erreur lors de l\'envoi de la course :', error);
+    });
   });
 }
-
-
-
-
-
-
-
-

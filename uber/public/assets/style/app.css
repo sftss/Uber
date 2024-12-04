@@ -775,3 +775,8 @@ a:hover {
   font-size: 1.1em;
   color: #333;
 }
+#panier {
+  font-weight: bold;
+  font-size: 1.5rem;
+  display: flex;
+}
