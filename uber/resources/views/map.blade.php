@@ -25,7 +25,7 @@
             <h3 class="section-title">Entrez une adresse d'arrivée :</h3>
             <input type="text" id="inputArrivee" class="form-input" />
             <div id="suggestionsArrivee"></div>
-            <label for="dateDepart" class="form-label"><br>Quand voulez-vous partir :</label>
+            <label for="dateDepart" class="section-title"><br>Quand voulez-vous partir :</label>
             <input type="datetime-local" id="dateDepart" name="dateDepart" class="form-input"
                 value="2024-12-02T19:30" />
             <button id="boutonValider" class="btn-submitmap">Trouver les chauffeurs</button>
@@ -41,7 +41,6 @@
         // on récupère les chauffeurs en JS depuis PHP
         const chauffeurs = @json($chauffeurs);
         const categories = @json($categories);
-        console.log(categories)
     </script>
 
     <div id="tempsTrajetContainer">
@@ -54,8 +53,12 @@
         <h3>Propositions :</h3>
 
         <div id="propositionsList"></div>
-
     </div>
+    <div id="containerCourses">
+  <h3>Mes courses réservées</h3>
+  <!-- Les courses réservées seront ajoutées ici -->
+</div>
+
     <script src="{{ URL::asset('js/map.js') }}"></script>
 
 </body>

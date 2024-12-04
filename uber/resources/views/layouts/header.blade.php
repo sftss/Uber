@@ -7,7 +7,6 @@
     <title>@yield('title')</title>
     <link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
     <link rel="icon" href="{{ URL::asset('assets/svg/uber-logo.svg') }}" type="image/svg+xml">
-
 </head>
 
 <body>
@@ -30,10 +29,26 @@
                     </li>
                 </ul>
             </div>
+
             <div class="navbar-connect">
-                <button class="btn btn-outline-light">Connexion</button>
-                <button class="btn btn-light">S'inscrire</button>
+                @auth
+                    <!-- Si l'utilisateur est connecté -->
+                    <span class="navbar-text">Bonjour, {{ Auth::user()->prenom_cp }} !</span>
+
+                    <!-- Lien de déconnexion avec JavaScript -->
+                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="btn btn-outline-light">Déconnexion</a>
+
+                    <!-- Formulaire de déconnexion -->
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf <!-- Protection CSRF -->
+                    </form>
+                @else
+                    <!-- Si l'utilisateur n'est pas connecté -->
+                    <a href="{{ route('login') }}" class="btn btn-outline-light">Connexion</a>
+                    <a href="{{ route('register.form') }}" class="btn btn-light">S'inscrire</a>
+                @endauth
             </div>
+
         </nav>
     </header>
 

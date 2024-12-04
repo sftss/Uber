@@ -267,16 +267,16 @@ a:hover {
   width: 300px;
   background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  transition: 
+  transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
 }
 
 .menu-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 .menu-card img {
@@ -300,46 +300,48 @@ a:hover {
   color: #333;
 }
 .restaurant-card {
-  max-width: 800px;
+  max-width: 600px; /* Réduit la largeur de la carte */
   margin: 0 auto 20px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  margin-top: 80px; 
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  margin-top: 60px; /* Réduit l'espace en haut */
 }
 
 .restaurant-card:hover {
   transform: scale(1.02);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
 .restaurant-image {
   width: 100%;
-  height: 400px; /* Increased height for more impact */
+  height: 250px; /* Réduit la hauteur de l'image */
   object-fit: cover;
 }
 
 .restaurant-details {
-  padding: 20px;
+  padding: 15px; /* Réduit le padding autour du texte */
   background-color: #f9f9f9;
 }
 
 .restaurant-details h3 {
   color: #06c167;
-  margin-bottom: 15px;
-  font-size: 2em;
+  margin-bottom: 10px; /* Réduit l'espace sous le titre */
+  font-size: 1.6em; /* Réduit la taille du titre */
   border-bottom: 2px solid #06c167;
-  padding-bottom: 10px;
+  padding-bottom: 8px; /* Réduit le padding sous le titre */
 }
 
 .restaurant-details p {
-  margin: 10px 0;
-  font-size: 1.1em;
+  margin: 8px 0; /* Réduit la marge entre les paragraphes */
+  font-size: 1em; /* Réduit la taille du texte */
   color: #333;
 }
 
 .no-results {
   text-align: center;
-  font-size: 1.2em;
+  font-size: 1.5em;
   color: #999;
 }
 
@@ -732,9 +734,44 @@ a:hover {
   line-height: 1.2;
   font-size: 38px;
   text-align: center;
-  margin: 7% 0 8px;
+  margin: 2% 0 8px;
 }
 
+.lieu-vente-card {
+  max-width: 800px;
+  margin: 0 auto 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
 
+.lieu-vente-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
 
+.lieu-vente-image {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+}
 
+.lieu-vente-details {
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.lieu-vente-details h3 {
+  color: #06c167;
+  margin-bottom: 15px;
+  font-size: 2em;
+  border-bottom: 2px solid #06c167;
+  padding-bottom: 10px;
+}
+
+.lieu-vente-details p {
+  margin: 10px 0;
+  font-size: 1.1em;
+  color: #333;
+}

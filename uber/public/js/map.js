@@ -1,15 +1,14 @@
-//ici on utilise 3 api : 
+//ici on utilise 3 api :
 //nominatim et locationIQ pour convertir les adresses en coordonnées, nominatim complètement gratuit mais on peut pas envoyer beaucoup de requetes
-//locationIQ pareil avec plus de requetes possibles mais faut créer un compte (mail temporaire possible) d'où la clé d'api en dessous 
+//locationIQ pareil avec plus de requetes possibles mais faut créer un compte (mail temporaire possible) d'où la clé d'api en dessous
 //osrm pour calculer le meilleur itinéraire en voiture entre 2 points et sa durée
 
-
 // Initialisation de la carte Leaflet
-const map = L.map('map').setView([45.9207646, 6.1527482], 13); // Coordonnées de l'IUT par défaut
+const map = L.map("map").setView([45.9207646, 6.1527482], 13); // Coordonnées de l'IUT par défaut
 var divcrée;
 
 // Ajout d'un fond de carte OpenStreetMap
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
 const inputDepart = document.getElementById("inputDepart");
 const inputArrivee = document.getElementById("inputArrivee");
@@ -17,38 +16,59 @@ const suggestionsDepart = document.getElementById("suggestionsDepart");
 const suggestionsArrivee = document.getElementById("suggestionsArrivee");
 const inputDateDepart = document.getElementById("dateDepart");
 const dateToday = new Date();
-const listePropositions = document.getElementById('propositionsList');
+const listePropositions = document.getElementById("propositionsList");
 
+console.log(dateToday.toLocaleTimeString("fr-FR"));
 
-console.log(dateToday.toLocaleTimeString('fr-FR'));
-
-console.log(getDate(new Date(dateToday)))
+console.log(getDate(new Date(dateToday)));
 
 const cleAPILocationIQ = "pk.69ac2966071395cd67e8a9a5ed00d2c3"; // clé API LocationIQ
 
 var markerDepart = null;
 var markerArrivee = null;
+var departementDepart = "";
 let durationInSeconds;
 
 //quand on arrive sur la page on vide les champs
-window.onload = function() {
-  inputDepart.value = '';
-  inputArrivee.value = ' ';
-  inputDateDepart.value = dateToday.toISOString().split('T')[0]+"T"+dateToday.toLocaleTimeString('fr-FR',{ hour: '2-digit', minute: '2-digit' });
-  inputDateDepart.min = dateToday.toISOString().split('T')[0]+"T"+dateToday.toLocaleTimeString('fr-FR',{ hour: '2-digit', minute: '2-digit' });
+window.onload = function () {
+  inputDepart.value = "";
+  inputArrivee.value = " ";
+  inputDateDepart.value =
+    dateToday.toISOString().split("T")[0] +
+    "T" +
+    dateToday.toLocaleTimeString("fr-FR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  inputDateDepart.min =
+    dateToday.toISOString().split("T")[0] +
+    "T" +
+    dateToday.toLocaleTimeString("fr-FR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 };
 
+let isProcessing = false;
 //ajout de trouverchauffeur au clic du bouton valider de la view
-document.getElementById('boutonValider').addEventListener('click', trouverChauffeurs);
+document.getElementById("boutonValider").addEventListener("click", function () {
+  if (isProcessing) {
+    return; // Si le flag est true, on ignore le clic
+  }
+  isProcessing = true; // Active le flag pour indiquer que le traitement est en cours
+
+  // Appel de la fonction principale pour trouver les chauffeurs
+  trouverChauffeurs();
+  // Adaptez le temps en fonction de la durée de votre traitement
+});
 
 // Appliquer la fonction pour les deux inputs
 geocodeAddress(inputDepart, suggestionsDepart, markerDepart, true);
 geocodeAddress(inputArrivee, suggestionsArrivee, markerArrivee, false);
 
-
 function getDate(date) {
-  const day = String(date.getDate()).padStart(2, '0');  //padstart pour ajouter un 0 si le jour n'a qu'un chiffre
-  const month = String(date.getMonth() + 1).padStart(2, '0');  // Le mois commence à 0, donc on ajoute 1
+  const day = String(date.getDate()).padStart(2, "0"); //padstart pour ajouter un 0 si le jour n'a qu'un chiffre
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Le mois commence à 0, donc on ajoute 1
   const year = date.getFullYear();
 
   return `${day}/${month}/${year}`;
@@ -60,40 +80,43 @@ function calculDistanceChauffeur(chauffeur, callback) {
   const adresse = `${chauffeur.adresse.rue}, ${chauffeur.adresse.ville}, ${chauffeur.adresse.cp}, France`;
 
   //on utilise l'api locationiq pour convertir la position du chauffeur (qui est au format adresse) en coordonnées pour ne pas surcharger l'api nominatim de requêtes
-  fetch(`https://us1.locationiq.com/v1/search.php?key=${cleAPILocationIQ}&q=${encodeURIComponent(adresse)}&format=json`)
-  .then(response => response.json())
-  .then(data => {
-  if (data.length > 0) {
-    const lat = data[0].lat;
-    const lon = data[0].lon;
-    const end = L.latLng(lat, lon);
+  fetch(
+    `https://us1.locationiq.com/v1/search.php?key=${cleAPILocationIQ}&q=${encodeURIComponent(adresse)}&format=json`,
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.length > 0) {
+        const lat = data[0].lat;
+        const lon = data[0].lon;
+        const end = L.latLng(lat, lon);
 
-    //recherche du trajet le plus court depuis la position du chauffeur jusqu'au point de départ du client avec l'api d'osrm
-    var osrmUrl = `https://router.project-osrm.org/route/v1/driving/${start.lng},${start.lat};${end.lng},${end.lat}?overview=full&geometries=geojson`;
+        //recherche du trajet le plus court depuis la position du chauffeur jusqu'au point de départ du client avec l'api d'osrm
+        var osrmUrl = `https://router.project-osrm.org/route/v1/driving/${start.lng},${start.lat};${end.lng},${end.lat}?overview=full&geometries=geojson`;
 
-    fetch(osrmUrl)
-      .then(response => response.json())
-      .then(data => {
-        var durationInSeconds = data.routes[0].duration;
+        fetch(osrmUrl)
+          .then((response) => response.json())
+          .then((data) => {
+            var durationInSeconds = data.routes[0].duration;
 
-        const minutes = Math.floor(durationInSeconds / 60);
+            const minutes = Math.floor(durationInSeconds / 60);
 
-        console.log(`${chauffeur.prenom_chauffeur} ${chauffeur.nom_chauffeur} devrait arriver en ${minutes} minutes `);
+            console.log(
+              `${chauffeur.prenom_chauffeur} ${chauffeur.nom_chauffeur} devrait arriver en ${minutes} minutes `,
+            );
 
-
-        // on fait callback minutes pour être sûr que les minutes se renvoient après la réponse de l'api et son traitement
-        callback(minutes);
-      })
-      .catch(error => {
-        console.error("Erreur OSRM:", error);
-        callback(null);
-      });
-  }
-})
-  .catch(error => {
-    console.error("Erreur géocodage:", error);
-    callback(null);
-});
+            // on fait callback minutes pour être sûr que les minutes se renvoient après la réponse de l'api et son traitement
+            callback(minutes);
+          })
+          .catch((error) => {
+            console.error("Erreur OSRM:", error);
+            callback(null);
+          });
+      }
+    })
+    .catch((error) => {
+      console.error("Erreur géocodage:", error);
+      callback(null);
+    });
 }
 
 //méthode pour trouver et afficher le meilleur itinéraire entre les deux marqueurs en utilisant l'API OSRM
@@ -110,8 +133,8 @@ function getRoute(marker1, marker2) {
 
   // on récupère le résultat avec Fetch et on l'affiche avec "L.geoJSON(route).addTo(map);" en utilisant les méthodes de leaflet
   fetch(osrmUrl)
-    .then(response => response.json())
-    .then(data => {
+    .then((response) => response.json())
+    .then((data) => {
       var route = data.routes[0].geometry;
 
       // Si une route existe déjà, on la supprime
@@ -150,7 +173,7 @@ function getRoute(marker1, marker2) {
       var latLngBounds = L.latLngBounds([start, end]);
       map.fitBounds(latLngBounds, { padding: [50, 50] });
     })
-    .catch(error => console.error(error));
+    .catch((error) => console.error(error));
 }
 
 // Fonction pour mettre à jour un marqueur de façon globale
@@ -161,84 +184,98 @@ function updateMarker(marker, result, suggestionText) {
     marker.bindPopup(suggestionText).openPopup();
   } else {
     // Sinon, créer un nouveau marqueur
-    marker = L.marker([result.lat, result.lon]).addTo(map)
+    marker = L.marker([result.lat, result.lon])
+      .addTo(map)
       .bindPopup(suggestionText)
       .openPopup();
+  }
+  return marker;
 }
-return marker;
-}
-
 
 // Fonction pour géocoder l'adresse, afficher les suggestions dans une liste déroulante et placer un marqueur
 function geocodeAddress(inputElement, suggestionsBox, marker, isdepart) {
-inputElement.addEventListener("input", debounce(function() {
-const query = inputElement.value;
-suggestionsBox.innerHTML = ''; // Réinitialiser les suggestions
+  inputElement.addEventListener(
+    "input",
+    debounce(function () {
+      const query = inputElement.value;
+      suggestionsBox.innerHTML = ""; // Réinitialiser les suggestions
 
-if (query.length > 3) { // on recherche que l'utilisateur a écrit plus de 3 caractères
-  fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}%2C+France&addressdetails=1&limit=5`)
-    .then(response => response.json())
-    .then(data => {
-      console.log("requete")
-      if (data.length > 0) {
-        // on limite le nombre de suggestions à 5 pour que ça soit plus lisible
-        const limitedData = data.slice(0, 5);
+      if (query.length > 3) {
+        // on recherche que l'utilisateur a écrit plus de 3 caractères
+        fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${query}%2C+France&addressdetails=1&limit=5`,
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("requete");
+            if (data.length > 0) {
+              // on limite le nombre de suggestions à 5 pour que ça soit plus lisible
+              const limitedData = data.slice(0, 5);
 
-        limitedData.forEach(result => {
-          // on extrait les détails de l'adresse
-          const address = result.address;
-          const number = address.house_number || ''; // Numéro de rue
-          const street = address.road || ''; // Rue
-          const city = address.city || address.town || address.village || ''; // Ville
-          const postalCode = address.postcode || ''; // Code postal
-          const country = address.country || ''; // Pays
+              limitedData.forEach((result) => {
+                // on extrait les détails de l'adresse
+                const address = result.address;
+                const number = address.house_number || ""; // Numéro de rue
+                const street = address.road || ""; // Rue
+                const city =
+                  address.city || address.town || address.village || ""; // Ville
+                const postalCode = address.postcode || ""; // Code postal
+                const country = address.country || ""; // Pays
 
-          // on constuit la suggestion avec les détails du dessus pour améliorer la lisibilité (avant il donnait tout genre le quartier, si l'adresse est en france métropolitaine ou non etc)
-          const suggestionText = `${number} ${street}, ${postalCode} ${city}, ${country}`;
+                const departmentCode = address["ISO3166-2-lvl6"].substring(3, 5) || ""; // Code du département
+//0652402353
 
-          const div = document.createElement('div');
-          div.textContent = suggestionText.trim(); // Afficher l'adresse formatée
 
-          div.addEventListener('click', function() {
-            // on met l'adresse sélectionnée dans le champ de saisie
-            inputElement.value = suggestionText;
+                // on construit la suggestion avec les détails pour améliorer la lisibilité
+                const suggestionText = `${number} ${street}, ${postalCode} ${city}, ${country}`
 
-            // on centre la map sur la position
-            map.setView([result. lat, result.lon], 13);
+                const div = document.createElement("div");
+                div.textContent = suggestionText.trim(); // Afficher l'adresse formatée
 
-            // Appeler la fonction de mise à jour du marqueur
-            marker = updateMarker(marker, result, suggestionText);
-            suggestionsBox.innerHTML = ''; // Fermer la liste après sélection
-            
-            // on affecte les variables des marqueurs en fonction du booléen donné en paramètres
-            if(isdepart){
-            markerDepart = marker;
+                div.addEventListener("click", function () {
+                  
+                  // on met l'adresse sélectionnée dans le champ de saisie
+                  inputElement.value = suggestionText;
 
+                  // on centre la map sur la position
+                  map.setView([result.lat, result.lon], 13);
+
+                  // Appeler la fonction de mise à jour du marqueur
+                  marker = updateMarker(marker, result, suggestionText);
+                  suggestionsBox.innerHTML = ""; // Fermer la liste après sélection
+
+                  // Affecter les variables des marqueurs en fonction du booléen donné en paramètres
+                  if (isdepart) {
+                    markerDepart = marker;
+                    departementDepart = departmentCode;
+                  } else {
+                    markerArrivee = marker;
+                  }
+
+                  // Si les deux marqueurs ont une valeur, on trace la route
+                  if (markerDepart != null && markerArrivee != null) {
+                    getRoute(markerDepart, markerArrivee);
+                  }
+                });
+
+                suggestionsBox.appendChild(div);
+              });
+            } else {
+              // Si aucune adresse n'est trouvée, afficher le message "L'adresse n'existe pas"
+              const noResultsMessage = document.createElement("div");
+              noResultsMessage.textContent = "L'adresse n'existe pas"; 
+              suggestionsBox.appendChild(noResultsMessage);
             }
-            else {
-                markerArrivee=marker;
-            }
-
-            // si les deux marqueurs ont une valeur on trace la route
-            if(markerDepart != null && markerArrivee != null ){
-              getRoute(markerDepart,markerArrivee)
-            }
-            
+          })
+          .catch((error) => {
+            console.error("Erreur lors de la récupération des données", error); // Gérer les erreurs de fetch
           });
-
-          suggestionsBox.appendChild(div);
-        });
+      } else {
+        suggestionsBox.innerHTML = ""; // Réinitialiser les suggestions si la saisie est trop courte
       }
-    })
-    .catch(error => {
-      console.error("Erreur lors de la récupération des données", error); // Gérer les erreurs de fetch
-    });
-} else {
-  suggestionsBox.innerHTML = ''; // on réinitialises les suggestions si la saisie est trop courte
+    }, 500),
+  ); // Délai de 1 seconde
 }
-}, 1000)); // Délai de 1 seconde
-}
-
 
 //si les deux marqueurs sont renseignés on lance la méthode désignée
 function trouverChauffeurs() {
@@ -246,102 +283,105 @@ function trouverChauffeurs() {
   //on supprime les anciennes propositions
   while (propositionsList.firstChild) {
     propositionsList.removeChild(propositionsList.firstChild);
-}
-  if (getDate(dateDepart) == getDate(dateToday))
-  {
+  }
+  if (getDate(dateDepart) == getDate(dateToday)) {
     if (!markerDepart || !markerArrivee) {
       alert("Veuillez saisir les deux adresses (départ et arrivée).");
-    }
-    else {
+    } else {
       console.log("recherche chauffeurs : ");
       geocodeChauffeurs(chauffeurs);
     }
-  }
-  else{
+  } else {
     categories.forEach(AfficheCategorie);
   }
 }
 
-
 // Fonction de debouncing : déclenche la fonction après un délai
 function debounce(func, delay) {
-let timeout;
-return function(...args) {
-clearTimeout(timeout);
-timeout = setTimeout(() => func.apply(this, args), delay);
-};
+  let timeout;
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), delay);
+  };
 }
-
-
 
 // fonction pour déterminer les chauffeurs proches de l'adresse de départ
 function geocodeChauffeurs(chauffeurs) {
-let index = 0;
-let chauffeursProches = [];
+  let chauffeursProches = [];
 
-// setinterval pour espacer les requêtes et ne pas surcharger l'API
-const intervalId = setInterval(() => {
-  if (index < chauffeurs.length) {
-    // Passer un callback à calculDistanceChauffeur
-    calculDistanceChauffeur(chauffeurs[index], (trajet) => {
+  // Parcourir tous les chauffeurs et filtrer ceux du département souhaité
+  chauffeurs.forEach(chauffeur => {
+    console.log(chauffeur.adresse.departement.code_departement);
+    console.log(departementDepart);
+    console.log("--------------------");
 
-      // Si le temps de trajet est inférieur ou égal à 60 minutes, ajouter à la liste des chauffeurs proches
-      if (trajet <= 60 && trajet !== null) {
-        chauffeurs[index].tempsDeTrajet = trajet; // Ajouter le temps de trajet au chauffeur
-        chauffeursProches.push(chauffeurs[index]);
-      }
-    });
+    if (chauffeur.adresse.departement.code_departement == departementDepart) {
+      chauffeursProches.push(chauffeur);
+    }
+  });
 
-    index++;
-  }
-else {
-  // Arrêter après avoir traité tous les chauffeurs
-  clearInterval(intervalId); 
-  if (chauffeursProches.length == 0){
+  // Si aucun chauffeur n'est trouvé, afficher "null"
+  if (chauffeursProches.length == 0) {
     AfficheAdresse("null");
-  }
-  else {
-  chauffeursProches.forEach(AfficheAdresse);
-  }
+  } else {
+    console.log(chauffeursProches);
 
+    // Pour chaque chauffeur proche, calculer le temps de trajet
+    chauffeursProches.forEach(chauffeur => {
+      calculDistanceChauffeur(chauffeur, (trajet) => {
+        if (trajet !== null && trajet <= 60) {
+          // Ajouter le temps de trajet et afficher l'adresse si inférieur à 60 minutes
+          AfficheAdresse(chauffeur, trajet); // Passer le chauffeur et le temps de trajet à la fonction
+        }
+      });
+    });
   }
-}, 550);
-
 }
 
-
-
 //méthode pour afficher les méthodes des chauffeurs en html
-function AfficheAdresse(chauffeur) {
+function AfficheAdresse(chauffeur, tempsDeTrajet) {
   if (chauffeur != "null") {
+    console.log(tempsDeTrajet + "aze");
 
     const div = document.createElement("div");
-    div.className = "proposition";  // Utilisez une classe, pas un ID
+    div.className = "proposition"; // Utilisez une classe, pas un ID
     let multiplicateurcourse = 1;
-    var prixint = (durationInSeconds + chauffeur.tempsDeTrajet * 60) / 50;
+    var prixint = (durationInSeconds + tempsDeTrajet * 60) / 50;
 
     // Créer un élément de liste pour afficher le chauffeur proche
-    const titrechauffeur = document.createElement('h4');
-    const tempsDeTrajetElement = document.createElement('p');
-    const prix = document.createElement('p');
-    tempsDeTrajetElement.textContent = `Temps estimé d'arrivée du chauffeur : ${chauffeur.tempsDeTrajet} minutes.`;
+    const titrechauffeur = document.createElement("h4");
+    const tempsDeTrajetElement = document.createElement("p");
+    const prix = document.createElement("p");
+    tempsDeTrajetElement.textContent = `Temps estimé d'arrivée du chauffeur : ${tempsDeTrajet} minutes.`;
     titrechauffeur.textContent = `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}`;
-    document.getElementById('propositionsList').appendChild(div);
+    document.getElementById("propositionsList").appendChild(div);
     div.appendChild(titrechauffeur);
     div.appendChild(tempsDeTrajetElement);
 
-    // Uber X, Green, Uber XL, Uber Pet, Berline, Confort
-    if (`${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Uber X") {
+    // Logic for the pricing multiplier
+    if (
+      `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Uber X"
+    ) {
       multiplicateurcourse = 1.05;
-    } else if (`${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Green") {
+    } else if (
+      `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Green"
+    ) {
       multiplicateurcourse = 1;
-    } else if (`${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Uber Pet") {
+    } else if (
+      `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Uber Pet"
+    ) {
       multiplicateurcourse = 1.1;
-    } else if (`${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Uber XL") {
+    } else if (
+      `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Uber XL"
+    ) {
       multiplicateurcourse = 1.2;
-    } else if (`${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Berline") {
+    } else if (
+      `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Berline"
+    ) {
       multiplicateurcourse = 1.25;
-    } else if (`${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Confort") {
+    } else if (
+      `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` == "Confort"
+    ) {
       multiplicateurcourse = 1.15;
     }
     prixint = roundToDecimals(prixint * multiplicateurcourse, 2);
@@ -355,136 +395,232 @@ function AfficheAdresse(chauffeur) {
     div.style.padding = "10px";
     div.style.margin = "10px 0";
     div.style.border = "1px solid #ccc";
-    div.style.borderRadius = "8px";  // Coins arrondis
+    div.style.borderRadius = "8px"; // Coins arrondis
     div.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.1)";
-    div.style.backgroundColor = "#f9f9f9";  // Fond gris clair
-    div.style.cursor = "pointer";  // Ajoute une indication de clic
+    div.style.backgroundColor = "#f9f9f9"; // Fond gris clair
+    div.style.cursor = "pointer"; // Ajoute une indication de clic
     div.style.transition = "all 0.3s ease";
 
-    // Ajouter position relative pour la div, afin que le bouton soit bien positionné
     div.style.position = "relative";
 
-    div.addEventListener('mouseover', function () {
-      div.style.backgroundColor = "#e0e0e0";  // Changer la couleur de fond au survol
-      div.style.boxShadow = "0px 6px 12px rgba(0, 0, 0, 0.2)";  // Augmenter l'ombre au survol
+    div.addEventListener("mouseover", function () {
+      div.style.backgroundColor = "#e0e0e0"; // Changer la couleur de fond au survol
+      div.style.boxShadow = "0px 6px 12px rgba(0, 0, 0, 0.2)"; // Augmenter l'ombre au survol
     });
 
-    div.addEventListener('mouseout', function () {
-      div.style.backgroundColor = "#f9f9f9";  // Rétablir la couleur de fond normale
-      div.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.1)";  // Rétablir l'ombre normale
+    div.addEventListener("mouseout", function () {
+      div.style.backgroundColor = "#f9f9f9"; // Rétablir la couleur de fond normale
+      div.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.1)"; // Rétablir l'ombre normale
     });
 
-    // Ajouter un bouton "Voir détails" avec un style pour le placer à droite
-    const voirDetailsBtn = document.createElement('button');
+    // Ajouter un bouton "Voir détails"
+    const voirDetailsBtn = document.createElement("button");
     voirDetailsBtn.textContent = "Voir détails";
     voirDetailsBtn.style.marginTop = "10px";
     voirDetailsBtn.style.padding = "5px 10px";
     voirDetailsBtn.style.border = "none";
-    voirDetailsBtn.style.backgroundColor = "#4CAF50"; // Couleur du bouton
+    voirDetailsBtn.style.backgroundColor = "#4CAF50";
     voirDetailsBtn.style.color = "white";
     voirDetailsBtn.style.cursor = "pointer";
     voirDetailsBtn.style.borderRadius = "5px";
-    voirDetailsBtn.style.position = "absolute";  // Positionner le bouton
+    voirDetailsBtn.style.position = "absolute"; 
     voirDetailsBtn.style.top = "10px";
-    voirDetailsBtn.style.right = "10px";  // Placer le bouton à droite
+    voirDetailsBtn.style.right = "10px";
     div.appendChild(voirDetailsBtn);
 
     // Créer un flag pour savoir si les détails sont déjà affichés
     let detailsAffiches = false;
 
-    // Ajouter un événement au bouton pour afficher/fermer les détails
-    voirDetailsBtn.addEventListener('click', function (event) {
-      event.stopPropagation();  // Empêcher le clic de propager à la div principale
+    voirDetailsBtn.addEventListener("click", function (event) {
+      event.stopPropagation(); // Empêcher le clic de propager à la div principale
 
       if (detailsAffiches) {
-        // Si les détails sont déjà affichés, on les retire
-        const vehiculeInfo = div.querySelector('.vehicule-info');
-        const chauffeurInfo = div.querySelector('.chauffeur-info');
+        const vehiculeInfo = div.querySelector(".vehicule-info");
+        const chauffeurInfo = div.querySelector(".chauffeur-info");
+        const reserverBtn = div.querySelector(".reserver-btn");
+        
         if (vehiculeInfo) {
           div.removeChild(vehiculeInfo);
         }
         if (chauffeurInfo) {
           div.removeChild(chauffeurInfo);
         }
-        voirDetailsBtn.textContent = "Voir détails";  // Réinitialiser le texte du bouton
-      } else {
-        // Si les détails ne sont pas affichés, on les ajoute
-        const vehiculeInfo = document.createElement('p');
-        vehiculeInfo.classList.add('vehicule-info');  // Ajouter une classe pour éviter les doublons
-        vehiculeInfo.textContent = `Véhicule: ${chauffeur.vehicule.marque}, Couleur: ${chauffeur.vehicule.couleur.lib_couleur}`;
+        if (reserverBtn) {
+          div.removeChild(reserverBtn);
+        }
 
-        const chauffeurInfo = document.createElement('p');
-        chauffeurInfo.classList.add('chauffeur-info');  // Ajouter une classe pour éviter les doublons
+        voirDetailsBtn.textContent = "Voir détails"; // Réinitialiser le texte du bouton
+      } else {
+        const vehiculeInfo = document.createElement("p");
+        vehiculeInfo.classList.add("vehicule-info");
+        vehiculeInfo.textContent = `Véhicule: ${chauffeur.vehicule.marque}`;
+        const breakElement = document.createElement("br");
+        vehiculeInfo.appendChild(breakElement);
+        vehiculeInfo.appendChild(
+          document.createTextNode(
+            `Couleur: ${chauffeur.vehicule.couleur.lib_couleur}`,
+          ),
+        );
+
+        const chauffeurInfo = document.createElement("p");
+        chauffeurInfo.classList.add("chauffeur-info");
         chauffeurInfo.textContent = `Chauffeur: ${chauffeur.nom_chauffeur} ${chauffeur.prenom_chauffeur}`;
 
-        // Ajouter ces informations à la div après le clic
+        // Ajouter un bouton Réserver avec le même style que Voir détails
+        const reserverBtn = document.createElement("button");
+        reserverBtn.textContent = "Réserver";
+        reserverBtn.style.marginTop = "10px";
+        reserverBtn.style.padding = "5px 10px";
+        reserverBtn.style.border = "none";
+        reserverBtn.style.backgroundColor = "black"; // Une couleur différente pour réserver
+        reserverBtn.style.color = "white";
+        reserverBtn.style.cursor = "pointer";
+        reserverBtn.style.borderRadius = "5px";
+        reserverBtn.style.position = "absolute";
+        reserverBtn.style.top = "50px"; // Placer le bouton un peu plus bas que Voir détails
+        reserverBtn.style.right = "10px"; // Placer le bouton à droite
+
+        reserverBtn.addEventListener("click", function() {
+          // Créer la course
+          creerCourse(chauffeur, tempsDeTrajet);
+
+          // Mettre à jour le bouton pour afficher "Course réservée"
+          reserverBtn.textContent = "Course réservée";
+          reserverBtn.disabled = true; // Désactiver le bouton une fois la course réservée
+      });
+
+        // Ajouter ces informations et le bouton à la div
         div.appendChild(vehiculeInfo);
         div.appendChild(chauffeurInfo);
-        voirDetailsBtn.textContent = "Fermer les détails";  // Modifier le texte du bouton
+        div.appendChild(reserverBtn);
+        voirDetailsBtn.textContent = "Fermer les détails";
       }
 
-      // Mettre à jour le flag pour savoir si les détails sont affichés
       detailsAffiches = !detailsAffiches;
     });
-
   } else {
-    const aucunchauffeur = document.createElement('p');
+    const aucunchauffeur = document.createElement("p");
     aucunchauffeur.textContent = `Il n'y a pas de chauffeur disponible`;
-    document.getElementById('propositionsList').appendChild(aucunchauffeur);
+    document.getElementById("propositionsList").appendChild(aucunchauffeur);
+    isProcessing = false;
   }
 }
 
 
+function AfficheCategorie(categorie) {
+  let multiplicateurcourse = 1;
+  var prixint = durationInSeconds / 50;
 
+  // Créer un élément de liste pour afficher le chauffeur proche
 
+  const titreCategorie = document.createElement("h4");
+  const prix = document.createElement("p");
+  titreCategorie.textContent = `${categorie.lib_categorie_vehicule}`;
+  document.getElementById("propositionsList").appendChild(div);
+  div.appendChild(titreCategorie);
 
-  function AfficheCategorie(categorie) {
-    let multiplicateurcourse = 1;
-    var prixint = (durationInSeconds) / 50;
+  // Uber X, Green, Uber XL, Uber Pet, Berline, Confort
+  if (`${categorie.lib_categorie_vehicule}` == "Uber X") {
+    multiplicateurcourse = 1.05;
+  } else if (`${categorie.lib_categorie_vehicule}` == "Green") {
+    multiplicateurcourse = 1;
+  } else if (`${categorie.lib_categorie_vehicule}` == "Uber Pet") {
+    multiplicateurcourse = 1.1;
+  } else if (`${categorie.lib_categorie_vehicule}` == "Uber XL") {
+    multiplicateurcourse = 1.2;
+  } else if (`${categorie.lib_categorie_vehicule}` == "Berline") {
+    multiplicateurcourse = 1.25;
+  } else if (`${categorie.lib_categorie_vehicule}` == "Confort") {
+    multiplicateurcourse = 1.15;
+  }
+  prixint = roundToDecimals(prixint * multiplicateurcourse, 2);
 
-    // Créer un élément de liste pour afficher le chauffeur proche
-    
+  console.log(multiplicateurcourse);
+  console.log(prixint);
+  prix.textContent = `${prixint} €`;
 
-    const titreCategorie = document.createElement('h4');
-    const prix = document.createElement('p');
-    titreCategorie.textContent = `${categorie.lib_categorie_vehicule}`;
-    document.getElementById('propositionsList').appendChild(div);
-    div.appendChild(titreCategorie);
+  div.appendChild(prix);
+  isProcessing = false;
+}
 
-    // Uber X, Green, Uber XL, Uber Pet, Berline, Confort
-    if (`${categorie.lib_categorie_vehicule}` == "Uber X") {
-        multiplicateurcourse = 1.05;
-    }
-    else if (`${categorie.lib_categorie_vehicule}` == "Green") {
-        multiplicateurcourse = 1;
-    }
-    else if (`${categorie.lib_categorie_vehicule}` == "Uber Pet") {
-        multiplicateurcourse = 1.1;
-    }
-    else if (`${categorie.lib_categorie_vehicule}` == "Uber XL") {
-        multiplicateurcourse = 1.2;
-    }
-    else if (`${categorie.lib_categorie_vehicule}` == "Berline") {
-        multiplicateurcourse = 1.25;
-    }
-    else if (`${categorie.lib_categorie_vehicule}` == "Confort") {
-        multiplicateurcourse = 1.15;
-    }
-    prixint = roundToDecimals(prixint * multiplicateurcourse, 2);
-
-    console.log(multiplicateurcourse);
-    console.log(prixint);
-    prix.textContent = `${prixint} €`;
-
-    div.appendChild(prix);
-
+function roundToDecimals(number, decimals) {
+  const factor = Math.pow(10, decimals);
+  return Math.round(number * factor) / factor;
 }
 
 
-  function roundToDecimals(number, decimals) {
-    const factor = Math.pow(10, decimals);
-    return Math.round(number * factor) / factor;
+// Fonction pour créer une course
+function creerCourse(chauffeur, tempsDeTrajet) {
+  // Récupération des coordonnées des lieux
+  const departCoords = {
+    lat: markerDepart.getLatLng().lat,
+    lng: markerDepart.getLatLng().lng,
+  };
+
+  const arriveeCoords = {
+    lat: markerArrivee.getLatLng().lat,
+    lng: markerArrivee.getLatLng().lng,
+  };
+
+  // Fonction pour géocoder un lieu
+  function getLieuDetails(lat, lng) {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
+    return fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        const address = data.address || {};
+        return {
+          rue: address.road || "Rue non trouvée",
+          code_postal: address.postcode || "Code postal non trouvé",
+          ville: address.city || address.town || address.village || "Ville non trouvée",
+        };
+      })
+      .catch((error) => {
+        console.error("Erreur lors du géocodage :", error);
+        return {
+          rue: "Erreur",
+          code_postal: "Erreur",
+          ville: "Erreur",
+        };
+      });
   }
+
+  // Obtenir les détails des lieux de départ et d'arrivée
+  Promise.all([
+    getLieuDetails(departCoords.lat, departCoords.lng),
+    getLieuDetails(arriveeCoords.lat, arriveeCoords.lng),
+  ]).then(([lieuDepart, lieuArrivee]) => {
+    // Construire la course avec les données enrichies
+    const course = {
+      temps_trajet: tempsDeTrajet,
+      chauffeur: {
+        nom: `${chauffeur.nom_chauffeur} ${chauffeur.prenom_chauffeur}`,
+      },
+      lieu_depart: lieuDepart,
+      lieu_arrivee: lieuArrivee,
+    };
+
+    // Envoyer les données au serveur
+    fetch('/php/reserver_course.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(course),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Réponse du serveur :', data);
+        // Gérer la réponse du serveur si nécessaire
+      })
+      .catch((error) => {
+        console.error('Erreur lors de l\'envoi de la course :', error);
+      });
+  });
+}
+
+
+
 
 
 

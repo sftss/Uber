@@ -76,34 +76,34 @@ class RestaurantController extends Controller
         return view('restaurants.filter', compact('restaurants', 'recherche', 'categories', 'horaireOuverture', 'horaireFermeture'));
     }
     public function show($id)
-    {
-        // Récupérer les informations du restaurant avec la catégorie
-        $restaurant = DB::table('restaurant')
-            ->join('adresse', 'restaurant.id_adresse', '=', 'adresse.id_adresse')
-            ->leftJoin('a_pour_categorie', 'restaurant.id_restaurant', '=', 'a_pour_categorie.id_restaurant')
-            ->leftJoin('categorie_restaurant', 'a_pour_categorie.id_categorie', '=', 'categorie_restaurant.id_categorie')
-            ->select('restaurant.*', 'adresse.ville', 'adresse.rue', 'adresse.cp', 'categorie_restaurant.lib_categorie')
-            ->where('restaurant.id_restaurant', $id)
-            ->first();
+{
+    // Récupérer les informations du restaurant avec la catégorie
+    $restaurant = DB::table('restaurant')
+        ->join('adresse', 'restaurant.id_adresse', '=', 'adresse.id_adresse')
+        ->leftJoin('a_pour_categorie', 'restaurant.id_restaurant', '=', 'a_pour_categorie.id_restaurant')
+        ->leftJoin('categorie_restaurant', 'a_pour_categorie.id_categorie', '=', 'categorie_restaurant.id_categorie')
+        ->select('restaurant.*', 'adresse.ville', 'adresse.rue', 'adresse.cp', 'categorie_restaurant.lib_categorie')
+        ->where('restaurant.id_restaurant', $id)
+        ->first();
 
-        if (!$restaurant) {
-            abort(404, 'Restaurant non trouvé');
-        }
-
-        // Récupérer les menus associés au restaurant
-        $menus = DB::table('menu')
-            ->where('menu.id_restaurant', $id)
-            ->get();
-
-            $plats = DB::table('plat')
-            ->leftJoin('propose', 'plat.id_plat', '=', 'propose.id_plat')
-            ->leftJoin('restaurant', 'propose.id_restaurant', '=', 'restaurant.id_restaurant')
-            ->where('restaurant.id_restaurant', $id)
-            ->get();
-        
-        
-        // Retourner la vue avec les informations du restaurant, les menus et la catégorie
-        return view('restaurants.show', compact('restaurant', 'menus','plats'));
+    if (!$restaurant) {
+        abort(404, 'Restaurant non trouvé');
     }
+
+    // Récupérer les menus associés au restaurant
+    $menus = DB::table('menu')
+        ->where('menu.id_restaurant', $id)
+        ->get();
+
+        $plats = DB::table('plat')
+        ->leftJoin('propose', 'plat.id_plat', '=', 'propose.id_plat')
+        ->leftJoin('restaurant', 'propose.id_restaurant', '=', 'restaurant.id_restaurant')
+        ->where('restaurant.id_restaurant', $id)
+        ->get();
+    
+    
+    // Retourner la vue avec les informations du restaurant, les menus et la catégorie
+    return view('restaurants.show', compact('restaurant', 'menus','plats'));
+}
 
 }

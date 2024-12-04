@@ -1,7 +1,6 @@
 //#region Header hide
 let dernierPoint = 1;
 const header = document.getElementById("header");
-
 window.addEventListener("scroll", () => {
   const pointActuelle = window.scrollY;
 
@@ -44,7 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (i == 0) {
       jourElement.textContent = "Aujourd'hui"; // Affiche "Aujourd'hui" pour aujourd'hui
     } else {
-      jourElement.textContent = dayName.charAt(0).toUpperCase() + dayName.slice(1); // Affiche le jour réel (ex: lundi, mardi)
+      jourElement.textContent =
+        dayName.charAt(0).toUpperCase() + dayName.slice(1); // Affiche le jour réel (ex: lundi, mardi)
     }
 
     jourElement.addEventListener("click", () => {
@@ -81,7 +81,18 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       // Pour les autres jours (J+1 à J+6), on prend le jour exact
       startTime = new Date();
-      startTime.setDate(today.getDate() + (["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"].indexOf(selectedDay)));
+      startTime.setDate(
+        today.getDate() +
+          [
+            "lundi",
+            "mardi",
+            "mercredi",
+            "jeudi",
+            "vendredi",
+            "samedi",
+            "dimanche",
+          ].indexOf(selectedDay),
+      );
       startTime.setHours(0, 0, 0, 0); // Début à minuit
     }
 
@@ -123,6 +134,5 @@ document.addEventListener("DOMContentLoaded", () => {
   generateTimeSlots("Aujourd'hui");
 
   //#endregion Heure
-
 });
 //#endregion Planification

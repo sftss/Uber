@@ -48,9 +48,11 @@
         <div class="content">
             <h3>Courses</h3>
             <p>Faites livrer vos courses à votre porte avec Uber Eats.</p>
-            <a href="{{ url('/lieux/search') }}" class="details">Détails</a>
+            <a href="{{ route('lieux.search') }}" class="details">Détails</a>
         </div>
     </div>
+
+    <a href="{{url('/panierclient')}}">voir le panier</a>
 </section>
 
 <footer class="footer">
