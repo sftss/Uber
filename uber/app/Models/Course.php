@@ -13,8 +13,6 @@ class Course extends Model
 
     // Ajoutez ici toutes les colonnes qui peuvent être assignées en masse
     protected $fillable = [
-        'ID_COURSE', 'ID_CHAUFFEUR', 'ID_VELO', 'ID_LIEU_DEPART', 'ID_LIEU_ARRIVEE', 
-        'ID_CLIENT', 'PRIX_RESERVATION', 'DATE_PRISE_EN_CHARGE', 'DUREE_COURSE', 'LONGUEUR_COURSE', 
-        'TEMPS_ARRIVEE'
+        'id_course','id_chauffeur','id_lieu_depart','id_lieu_arrivee','id_client','prix_reservation','date_prise_en_charge','duree_course','temps_arrivee','id_velo'
     ];
 }

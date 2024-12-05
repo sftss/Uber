@@ -22,32 +22,56 @@ class RegistrationController extends Controller
         $validatedData = $request->validate([
             'prenom_cp' => 'required|string|max:20',
             'nom_cp' => 'required|string|max:30',
-            'mail_client' => 'required|email|max:70|unique:client,mail_client', // Utilisez 'mail_client' au lieu de 'email'
+            'mail_client' => [
+                'required',
+                'email',
+                'max:70',
+                'unique:client,mail_client', // Contrainte d'unicité
+            ],
             'mdp_client' => 'required|string|min:8|confirmed',
+            'tel_client' => 'nullable|string|max:15',
+        ], [
+            // Messages d'erreur personnalisés
+            'mail_client.unique' => 'Cette adresse email est déjà utilisée. Veuillez en choisir une autre.',
         ]);
+
+        // Nettoyage du numéro de téléphone
+        $telClient = $validatedData['tel_client'] ?? null;
+        if ($telClient) {
+            $telClient = preg_replace('/\D/', '', $telClient);
+            if (str_starts_with($telClient, '0')) {
+                $telClient = substr($telClient, 1);
+            }
+        }
 
         // Création du client dans la base de données
         $client = new Client();
         $client->PRENOM_CP = $validatedData['prenom_cp'];
         $client->NOM_CP = $validatedData['nom_cp'];
-        $client->mail_client = $validatedData['email'];
-        $client->MDP_CLIENT = Hash::make($validatedData['mdp_client']); // Hash du mot de passe
-        $client->TEL_CLIENT = $validatedData['tel_client'] ?? null;
-        $client->DATE_NAISSANCE_CP = $validatedData['date_naissance_cp'] ?? null;
-        $client->SEXE_CP = $validatedData['sexe_cp'] ?? null;
-        $client->EST_PARTICULIER = $validatedData['est_particulier'] ?? null;
-        $client->NEWSLETTER = $validatedData['newsletter'] ?? null;
-        // Assurez-vous que l'ID_SD et NUM_SIRET sont ajoutés selon votre logique
-        // Par exemple, vous pouvez définir un ID_SD par défaut ou le calculer
-        $client->ID_SD = 1; // Exemple de valeur par défaut
-        $client->NUM_SIRET = null; // Vous pouvez ajouter un calcul ou une valeur par défaut ici
-        $client->PHOTO = null; // Si vous n'utilisez pas cette colonne pour l'instant
+        $client->mail_client = $validatedData['mail_client'];
+        $client->MDP_CLIENT = Hash::make($validatedData['mdp_client']);
+        $client->TEL_CLIENT = $telClient;
+        $client->DATE_NAISSANCE_CP = $request->input('date_naissance_cp', null);
+        $client->SEXE_CP = $request->input('sexe_cp', null);
+
+        // Gestion des checkboxes
+        $client->EST_PARTICULIER = $request->has('est_particulier') ? true : false;
+        $client->NEWSLETTER = $request->has('newsletter') ? true : false;
+
+        // Valeurs par défaut pour les champs restants
+        $client->ID_SD = 1;
+        $client->NUM_SIRET = null;
+        $client->PHOTO = null;
 
         $client->save(); // Enregistrer le client dans la base de données
 
         // Rediriger vers la page d'accueil ou une autre page après l'inscription
         return redirect()->route('home')->with('success', 'Inscription réussie');
     }
+
+
+
+
 
     public function confirmEmail($code)
     {

@@ -363,6 +363,7 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
       multiplicateurcourse = 1.15;
     }
     prixint = roundToDecimals(prixint * multiplicateurcourse, 2);
+    prix_reservation = prixint;
     prix.textContent = `${prixint} €`;
     div.appendChild(prix);
     div.style.padding = "10px";
@@ -476,7 +477,7 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
     isProcessing = false;
   }
 }
-
+var prix_reservation;
 function AfficheCategorie(categorie) {
   let multiplicateurcourse = 1;
   var prixint = durationInSeconds / 50;
@@ -502,6 +503,7 @@ function AfficheCategorie(categorie) {
     multiplicateurcourse = 1.15;
   }
   prixint = roundToDecimals(prixint * multiplicateurcourse, 2);
+
   prix.textContent = `${prixint} €`;
 
   div.appendChild(prix);
@@ -564,13 +566,17 @@ function creerCourse(chauffeur, tempsDeTrajet) {
     getLieuDetails(arriveeCoords.lat, arriveeCoords.lng),
   ]).then(([lieuDepart, lieuArrivee]) => {
     // Construire la course avec les données enrichies
+    console.log(prix_reservation)
     const course = {
       temps_trajet: tempsDeTrajet,
       chauffeur: {
         nom: `${chauffeur.nom_chauffeur} ${chauffeur.prenom_chauffeur}`,
       },
-      lieu_depart: lieuDepart,
+      lieu_depart_rue: lieuDepart.rue,
+      lieu_depart_ville: lieuDepart.ville,
+      lieu_depart_cp: lieuDepart.code_postal,
       lieu_arrivee: lieuArrivee,
+      prix_reservation: prix_reservation,
     };
 
     // Envoyer les données au serveur
@@ -585,6 +591,7 @@ function creerCourse(chauffeur, tempsDeTrajet) {
       .then((data) => {
         // Marquer la course comme réservée
         courseDejaReservee = true;
+        console.log(data);
 
         // Désactiver tous les boutons de réservation
         const boutonReserver = document.querySelectorAll(".reserver-btn");

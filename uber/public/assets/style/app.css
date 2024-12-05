@@ -780,3 +780,77 @@ a:hover {
   font-size: 1.5rem;
   display: flex;
 }
+
+
+
+
+
+
+
+.card-header {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px;
+  font-size: 18px;
+  text-align: center;
+  border-radius: 8px 8px 0 0;
+}
+
+form {
+  margin-top: 20px;
+}
+
+form div {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.3s ease-in-out;
+}
+
+input:focus {
+  border-color: #4CAF50;
+}
+
+input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+
+.alert {
+  padding: 15px;
+  margin-top: 20px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+}
+
+.alert ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.alert ul li {
+  margin: 5px 0;
+}
+

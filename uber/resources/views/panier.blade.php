@@ -1,8 +1,5 @@
-
-
 <link href="{{ asset('assets/style/app.css') }}" rel="stylesheet">
 <link rel="icon" href="{{ URL::asset('assets/svg/uber-logo.svg') }}" type="image/svg+xml">
-
 
 @extends('layouts.header')
 
@@ -13,7 +10,7 @@
             <p><strong>Prénom :</strong> {{ $paniers->first()->prenom_cp }}</p>
             <p><strong>Nom :</strong> {{ $paniers->first()->nom_cp }}</p>
         </div>
-        
+
         <h2>Détails des commandes</h2>
         <table>
             <thead>
@@ -32,7 +29,7 @@
                 @foreach ($paniers as $panier)
                     <tr>
                         <td>{{ $panier->id_commande_repas }}</td>
-                        <td>{{ $panier->montant }}</td>
+                        <td>{{ number_format($panier->montant, 2, ',', ' ') }} €</td>
                         <td>{{ $panier->nom_produit }}</td>
                         <td>{{ $panier->quantite_produit }}</td>
                         <td>{{ $panier->libelle_menu }}</td>
@@ -47,7 +44,5 @@
         <p>Aucune commande trouvée pour ce client.</p>
     @endif
 </section>
-
-
 
 <script src="{{ asset('js/main.js') }}"></script>

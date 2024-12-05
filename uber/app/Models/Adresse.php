@@ -22,4 +22,8 @@ class Adresse extends Model
             "id_departement");
     }
 
+    protected $fillable = [
+        'id_adresse', 'id_departement', 'rue', 'ville', 'cp'
+    ];
+
 }

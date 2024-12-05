@@ -54,9 +54,7 @@
 
         <div id="propositionsList"></div>
     </div>
-    <div id="containerCourses">
-  <h3>Mes courses réservées</h3>
-  <!-- Les courses réservées seront ajoutées ici -->
+
 </div>
 
     <script src="{{ URL::asset('js/map.js') }}"></script>

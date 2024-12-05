@@ -20,30 +20,24 @@ class ClientController extends Controller
             // Récupérer l'ID du client connecté
             $clientId = Auth::user()->id_client;
 
-            // Récupérer les paniers associés à cet utilisateur
-            $paniers = DB::table('client as c')
-                ->leftJoin('commande_repas as cr', 'c.id_client', '=', 'cr.id_client')
-                ->join('panier as p', 'cr.id_panier', '=', 'p.id_panier')
-                ->leftJoin('est_contenu_dans as ecd', 'cr.id_commande_repas', '=', 'ecd.id_commande_repas')
-                ->leftJoin('est_contenu_dans_menu as ecdm', 'cr.id_commande_repas', '=', 'ecdm.id_commande_repas')
-                ->leftJoin('est_contenu_dans_plat as ecdp', 'cr.id_commande_repas', '=', 'ecdp.id_commande_repas')
-                ->leftJoin('produit as pr', 'ecd.id_produit', '=', 'pr.id_produit')
-                ->leftJoin('menu as m', 'ecdm.id_menu', '=', 'm.id_menu')
-                ->leftJoin('plat as pl', 'ecdp.id_plat', '=', 'pl.id_plat')
-                ->select(
-                    'c.prenom_cp',
-                    'c.nom_cp',
-                    'cr.id_commande_repas',
-                    'p.montant',
-                    'pr.nom_produit',
-                    'ecd.quantite as quantite_produit',
-                    'm.libelle_menu',
-                    'ecdm.quantite as quantite_menu',
-                    'pl.libelle_plat',
-                    'ecdp.quantite as quantite_plat'
-                )
-                ->where('c.id_client', $clientId)
-                ->get();
+            $paniers = DB::table('panier as p')
+            ->leftJoin('contient as c', 'p.id_panier', '=', 'c.id_panier')
+            ->leftJoin('contient_plat as cp', 'p.id_panier', '=', 'cp.id_panier')
+            ->leftJoin('contient_menu as cm', 'p.id_panier', '=', 'cm.id_panier')
+            ->leftJoin('produit as pr', 'c.id_produit', '=', 'pr.id_produit')
+            ->leftJoin('plat as pl', 'cp.id_plat', '=', 'pl.id_plat')
+            ->leftJoin('menu as m', 'cm.id_menu', '=', 'm.id_menu')
+            ->leftJoin('commande_repas as cr', 'p.id_panier', '=', 'cr.id_panier')
+            ->leftJoin('client as cli', 'cr.id_client', '=', 'cli.id_client')
+            ->select(
+                'cr.id_commande_repas', 'p.montant', 'pr.nom_produit', 'c.quantite as quantite_produit', 
+                'm.libelle_menu', 'cm.quantite as quantite_menu', 'pl.libelle_plat', 'cp.quantite as quantite_plat',
+                'cli.prenom_cp', 'cli.nom_cp'
+            )
+            ->where('cr.id_client', '=', $clientId)
+            ->get();
+
+        
 
             // Retourner la vue avec les paniers
             return view('panier', ['paniers' => $paniers]);

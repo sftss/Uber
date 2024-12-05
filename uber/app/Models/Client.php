@@ -20,4 +20,5 @@ class Client extends Authenticatable
         'num_siret', 'sexe_cp', 'prenom_cp', 'nom_cp', 'date_naissance_cp', 
         'est_particulier', 'mdp_client', 'newsletter'
     ];
+    
 }

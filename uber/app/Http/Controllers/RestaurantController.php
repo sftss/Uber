@@ -95,15 +95,21 @@ class RestaurantController extends Controller
         ->where('menu.id_restaurant', $id)
         ->get();
 
-        $plats = DB::table('plat')
+    $plats = DB::table('plat')
         ->leftJoin('propose', 'plat.id_plat', '=', 'propose.id_plat')
         ->leftJoin('restaurant', 'propose.id_restaurant', '=', 'restaurant.id_restaurant')
         ->where('restaurant.id_restaurant', $id)
         ->get();
     
+        $produits = DB::table('vends')
+        ->join('produit', 'vends.id_produit', '=', 'produit.id_produit')
+        ->select('produit.id_produit', 'produit.nom_produit', 'produit.prix_produit', 'produit.photo_produit')
+        ->where('vends.id_restaurant', $id)
+        ->get();
+    
     
     // Retourner la vue avec les informations du restaurant, les menus et la catégorie
-    return view('restaurants.show', compact('restaurant', 'menus','plats'));
+    return view('restaurants.show', compact('restaurant', 'menus','plats','produits'));
 }
 
 }

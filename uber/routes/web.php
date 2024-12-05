@@ -11,7 +11,7 @@ use App\Http\Controllers\Auth\RegistrationController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
-
+use App\Http\Controllers\CartController;
 
 
 Route::get('/', function() {
@@ -36,6 +36,18 @@ Route::get('/test', function() {
     return view('main-test');
 });
 
+Route::prefix('cart')->name('cart.')->group(function () {
+    Route::get('/', [CartController::class, 'index'])->name('index');
+    Route::post('add/{id}', [CartController::class, 'add'])->name('add');
+    Route::delete('remove/{id}', [CartController::class, 'remove'])->name('remove');
+    Route::patch('update/{id}', [CartController::class, 'update'])->name('update');
+});
+
+Route::post('/cart/add/{productId}', [CartController::class, 'addToCart'])->name('cart.add');
+Route::get('/panier', [CartController::class, 'index'])->name('cart.index');
+Route::post('/panier/ajouter/{id}', [CartController::class, 'add'])->name('cart.add');
+Route::delete('/panier/supprimer/{id}', [CartController::class, 'remove'])->name('cart.remove');
+
 
 
 Auth::routes();
@@ -54,3 +66,7 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('confirm-email/{code}', [RegistrationController::class, 'confirmEmail'])->name('confirm.email');
 
 
+
+
+Route::get('/verify', [RegisterController::class, 'showVerificationForm'])->name('verify.form');
+Route::post('/verify', [RegisterController::class, 'verifyCode'])->name('verify.code');

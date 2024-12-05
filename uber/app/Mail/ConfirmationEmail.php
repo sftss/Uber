@@ -1,8 +1,6 @@
 <?php
-
 namespace App\Mail;
 
-use App\Models\Client;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -11,17 +9,17 @@ class ConfirmationEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user;
+    public $verificationCode;
 
-    public function __construct(User $user)
+    public function __construct($code)
     {
-        $this->user = $user;
+        $this->verificationCode = $code;
     }
 
     public function build()
     {
-        return $this->subject('Confirmation de votre email')
+        return $this->subject('Confirmation de votre compte')
                     ->view('emails.confirmation')
-                    ->with(['confirmation_code' => $this->user->confirmation_code]);
+                    ->with(['code' => $this->verificationCode]);
     }
 }

@@ -34,6 +34,11 @@
                     <img src="{{ $menu->photo_menu }}" alt="Image de {{ $menu->photo_menu }}">
                     <h3>{{ $menu->libelle_menu }}</h3>
                     <p>Prix : {{ $menu->prix_menu }} €</p>
+                    <form action="{{ route('cart.add', $menu->id_menu) }}" method="POST">
+                        @csrf
+                        <input type="number" name="quantity" value="1" min="1" max="99">
+                        <button type="submit">Ajouter au panier</button>
+                    </form>
                 </div>
             @endforeach
 
@@ -55,6 +60,37 @@
                     <p>Prix : {{ $plat->prix_plat }} €</p>
                     <p>Note : {{ $plat->note_plat }}</p>
                     <p>{{ $plat->nb_avis }} avis</p>
+                    <form action="{{ route('cart.add', $plat->id_plat) }}" method="POST">
+                        @csrf
+                        <input type="number" name="quantity" value="1" min="1" max="99">
+                        <button type="submit">Ajouter au panier</button>
+                    </form>
+                </div>
+            @endforeach
+
+        @endif
+    </div>
+</section>
+
+<section class="menus-container">
+    <h2>Produits disponibles</h2>
+    <div class="menus">
+
+        @if ($produits->isEmpty())
+            <p>Aucun produits disponible pour ce restaurant.</p>
+        @else
+            @foreach ($produits as $produit)
+                <div class="menu-card">
+                    <img src="{{ $produit->photo_produit }}" alt="{{ $produit->nom_produit }}">
+                    <h3>{{ $produit->nom_produit }}</h3>
+                    <p>Prix : {{ $produit->prix_produit }} €</p>
+
+                    <!-- Formulaire d'ajout au panier -->
+                    <form action="{{ route('cart.add', $produit->id_produit) }}" method="POST">
+                        @csrf
+                        <input type="number" name="quantity" value="1" min="1" max="99">
+                        <button type="submit">Ajouter au panier</button>
+                    </form>
                 </div>
             @endforeach
 
