@@ -10,51 +10,56 @@ class CartController extends Controller
 {
     // Afficher le panier
     public function index()
-    {
-        // Récupérer les articles du panier stockés dans la session
-        $cart = session()->get('cart', []);
-
-        // Calculer le montant total
-        $total = 0;
-        foreach ($cart as $item) {
-            $total += $item['price'] * $item['quantity'];
-        }
-
-        // Retourner la vue avec les données du panier
-        return view('cart.index', compact('cart', 'total'));
+{
+    $cart = session()->get('cart', []);
+    $total = 0;
+    foreach ($cart as $item) {
+        $total += $item['price'] * $item['quantity'];
     }
+
+    return view('cart.index', compact('cart', 'total'));
+}
 
     // Ajouter un produit au panier
-    public function add(Request $request, $id)
-    {
-        // Récupérer le produit par ID
-        $product = Produit::find($id);  // Assurez-vous d'utiliser le modèle Produit approprié
-        if (!$product) {
-            return redirect()->route('home')->with('error', 'Produit non trouvé');
-        }
-
-        // Récupérer le panier de la session
-        $cart = session()->get('cart', []);
-
-        // Vérifier si le produit est déjà dans le panier
-        if (isset($cart[$id])) {
-            // Augmenter la quantité
-            $cart[$id]['quantity']++;
-        } else {
-            // Ajouter un nouveau produit au panier
-            $cart[$id] = [
-                'name' => $product->nom_produit,  // Assurez-vous d'utiliser le bon attribut
-                'price' => $product->prix_produit,  // Assurez-vous d'utiliser le bon attribut
-                'quantity' => 1,
-            ];
-        }
-
-        // Sauvegarder le panier dans la session
-        session()->put('cart', $cart);
-
-        // Retourner une réponse ou rediriger
-        return redirect()->route('cart.index');
+    public function add(Request $request, $type, $id)
+{
+    // Récupérer l'élément en fonction du type
+    $item = null;
+    if ($type === 'produit') {
+        $item = Produit::find($id);
+    } elseif ($type === 'menu') {
+        $item = Menu::find($id);
+    } elseif ($type === 'plat') {
+        $item = Plat::find($id);
     }
+
+    if (!$item) {
+        return redirect()->route('home')->with('error', 'Élément non trouvé');
+    }
+
+    // Récupérer le panier de la session
+    $cart = session()->get('cart', []);
+
+    // Vérifier si l'élément est déjà dans le panier
+    $key = $type . '_' . $id; // Utiliser une clé unique pour chaque type d'élément
+    if (isset($cart[$key])) {
+        // Augmenter la quantité
+        $cart[$key]['quantity']++;
+    } else {
+        // Ajouter un nouvel élément au panier
+        $cart[$key] = [
+            'name' => $item->nom_produit ?? $item->libelle_menu ?? $item->libelle_plat,
+            'price' => $item->prix_produit ?? $item->prix_menu ?? $item->prix_plat,
+            'quantity' => 1,
+            'image' => $item->photo_produit ?? $item->photo_menu ?? $item->photo_plat,
+        ];
+    }
+
+    // Sauvegarder le panier dans la session
+    session()->put('cart', $cart);
+
+    return redirect()->route('cart.index');
+}
 
     // Supprimer un produit du panier
     public function remove($id)
@@ -76,24 +81,16 @@ class CartController extends Controller
     }
 
     // Mettre à jour la quantité d'un produit dans le panier
-    public function update(Request $request, $id)
-    {
-        // Récupérer la quantité souhaitée à partir de la requête
-        $quantity = $request->input('quantity');
+    public function update(Request $request, $uniqueId)
+{
+    $quantity = $request->input('quantity');
+    $cart = session()->get('cart', []);
 
-        // Récupérer le panier de la session
-        $cart = session()->get('cart', []);
-
-        // Vérifier si le produit existe dans le panier
-        if (isset($cart[$id])) {
-            // Mettre à jour la quantité du produit
-            $cart[$id]['quantity'] = $quantity;
-        }
-
-        // Sauvegarder à nouveau le panier dans la session
+    if (isset($cart[$uniqueId])) {
+        $cart[$uniqueId]['quantity'] = $quantity;
         session()->put('cart', $cart);
-
-        // Rediriger vers le panier
-        return redirect()->route('cart.index');
     }
+
+    return redirect()->route('cart.index');
+}
 }

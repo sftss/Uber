@@ -1,0 +1,182 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: "Roboto", sans-serif;
+    background-color: #f8f9fa;
+    color: #212529;
+    padding: 20px;
+    line-height: 1.6;
+  }
+  
+  /* Header */
+  h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #343a40;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border-bottom: 3px solid #58b947; /* Vert Uber */
+    display: inline-block;
+    padding-bottom: 10px;
+  }
+  
+  /* Navigation / Connexion */
+  .navbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background: #ffffff;
+    padding: 10px 20px;
+    border-bottom: 2px solid #58b947; /* Vert Uber */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  
+  .navbar a {
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 15px;
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+  }
+  
+  .navbar a.login {
+    background: #58b947; /* Vert Uber */
+    color: #ffffff;
+  }
+  
+  .navbar a.register {
+    background: #ffffff;
+    color: #58b947;
+    border: 2px solid #58b947; /* Vert Uber */
+  }
+  
+  .navbar a:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+  
+  .navbar a.register:hover {
+    background: #58b947;
+    color: #ffffff;
+  }
+
+
+
+/* Conteneur général de chaque course */
+.course_container {
+    border: 2px solid #58b947; /* Vert Uber */
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    margin: 20px 0;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.course_container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Titre de chaque course */
+.course_title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #58b947; /* Vert Uber */
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #58b947;
+    padding-bottom: 5px;
+}
+
+/* Style pour le bouton "Retour" */
+.back_button {
+    display: inline-block;
+    background-color: #f8f9fa;
+    color: #58b947;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: 2px solid #58b947; /* Bordure verte */
+    border-radius: 25px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-right: auto; /* Aligne à gauche */
+    margin-top: 10px;
+    text-align: center;
+}
+
+.back_button p {
+    margin: 0; /* Évite l'espace supplémentaire autour du texte */
+    font-size: 1rem;
+}
+
+.back_button:hover {
+    background-color: #58b947;
+    color: #ffffff;
+    transform: scale(1.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Liste des détails de chaque course */
+.course_details {
+    list-style: none;
+    margin: 10px 0;
+    padding: 0;
+}
+
+.course_details li {
+    font-size: 1rem;
+    margin: 5px 0;
+    color: #495057;
+    padding-left: 10px;
+    position: relative;
+}
+
+/* Icône ou point devant chaque détail */
+.course_details li::before {
+    content: "•";
+    color: #58b947;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+/* Chauffeur en gras et vert */
+.chauffeur {
+    font-weight: bold;
+    color: #58b947;
+}
+
+/* Départ et arrivée en couleurs spécifiques */
+.depart {
+    color: #28a745; /* Vert clair */
+}
+
+.arrivee {
+    color: #dc3545; /* Rouge */
+}
+
+/* Prix en jaune et bien visible */
+.prix {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ffc107; /* Jaune */
+}
+
+/* Détails secondaires en italique */
+.date_prise_en_charge,
+.duree,
+.temps_arrivee {
+    font-style: italic;
+    color: #6c757d; /* Gris */
+}

@@ -24,7 +24,8 @@
                         <!-- Email -->
                         <div class="form-group">
                             <label for="mail_client">{{ __('Email') }}</label>
-                            <input type="email" id="mail_client" name="mail_client" class="form-control" value="{{ old('mail_client') }}" required autofocus>
+                            <input type="email" id="mail_client" name="mail_client" class="form-control"
+                                value="{{ old('mail_client') }}" required autofocus>
                         </div>
 
                         <!-- Mot de passe -->

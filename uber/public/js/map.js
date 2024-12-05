@@ -566,7 +566,6 @@ function creerCourse(chauffeur, tempsDeTrajet) {
     getLieuDetails(arriveeCoords.lat, arriveeCoords.lng),
   ]).then(([lieuDepart, lieuArrivee]) => {
     // Construire la course avec les données enrichies
-    console.log(prix_reservation)
     const course = {
       temps_trajet: tempsDeTrajet,
       chauffeur: {
@@ -575,7 +574,9 @@ function creerCourse(chauffeur, tempsDeTrajet) {
       lieu_depart_rue: lieuDepart.rue,
       lieu_depart_ville: lieuDepart.ville,
       lieu_depart_cp: lieuDepart.code_postal,
-      lieu_arrivee: lieuArrivee,
+      lieu_arrivee_rue: lieuArrivee.rue,
+      lieu_arrivee_ville: lieuArrivee.ville,
+      lieu_arrivee_cp: lieuArrivee.code_postal,
       prix_reservation: prix_reservation,
     };
 
@@ -587,21 +588,33 @@ function creerCourse(chauffeur, tempsDeTrajet) {
       },
       body: JSON.stringify(course),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Erreur côté serveur');
+        }
+        return response.json(); // Assurez-vous que la réponse est en JSON
+      })
       .then((data) => {
-        // Marquer la course comme réservée
-        courseDejaReservee = true;
+        // Vérifiez la structure de la réponse
         console.log(data);
-
-        // Désactiver tous les boutons de réservation
-        const boutonReserver = document.querySelectorAll(".reserver-btn");
-        boutonReserver.forEach((btn) => {
-          btn.disabled = true;
-          btn.textContent = "Course réservée";
-        });
+        if (data.status === 'success') {
+          // Marquer la course comme réservée
+          courseDejaReservee = true;
+          console.log(courseDejaReservee);
+    
+          // Désactiver tous les boutons de réservation
+          const boutonReserver = document.querySelectorAll(".reserver-btn");
+          boutonReserver.forEach((btn) => {
+            btn.disabled = true;
+            btn.textContent = "Course réservée";
+          });
+        } else {
+          console.error('Erreur de réservation', data.message);
+        }
       })
       .catch((error) => {
         console.error("Erreur lors de l'envoi de la course :", error);
       });
+    
   });
 }

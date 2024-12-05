@@ -11,7 +11,7 @@
     </div>
 
     <div class="form-group checkboxes">
-        <p> Mode de livraison</p>
+        <p>Mode de livraison</p>
         <div>
             <input type="checkbox" id="livre" name="livre" {{ request('livre') ? 'checked' : '' }}>
             <label for="livre">Livraison</label>
@@ -39,13 +39,12 @@
     <button type="submit" class="btn-submit">Rechercher</button>
 </form>
 
-
-
 <section class="restaurants-list">
     @if (isset($lieux) && $lieux->isNotEmpty())
         @foreach ($lieux as $lieu)
-            <a href="{{ route('lieux.show', $lieu->id_lieu_de_vente_pf) }}" class="restaurant-card" >
-                <img src="{{ $lieu->photo_lieu }}" alt="Image de {{ $lieu->nom_etablissement }}" class="restaurant-image">
+            <a href="{{ route('lieux.show', $lieu->id_lieu_de_vente_pf) }}" class="restaurant-card">
+                <img src="{{ $lieu->photo_lieu }}" alt="Image de {{ $lieu->nom_etablissement }}"
+                    class="restaurant-image">
                 <div class="restaurant-details">
                     <h3>{{ $lieu->nom_etablissement }}</h3>
                     <p><strong>Ville :</strong> {{ $lieu->ville }}</p>

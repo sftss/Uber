@@ -49,8 +49,7 @@ Route::post('/panier/ajouter/{id}', [CartController::class, 'add'])->name('cart.
 Route::delete('/panier/supprimer/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
 
-
-Auth::routes();
+Route::post('add/{type}/{id}', [CartController::class, 'add'])->name('cart.add');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -61,6 +60,9 @@ Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('login.post');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
+Route::get('/politique', function () {
+    return view('politique');
+})->name('politique');
 
 // Confirmer l'email
 Route::get('confirm-email/{code}', [RegistrationController::class, 'confirmEmail'])->name('confirm.email');

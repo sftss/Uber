@@ -23,7 +23,7 @@ class Adresse extends Model
     }
 
     protected $fillable = [
-        'id_adresse', 'id_departement', 'rue', 'ville', 'cp'
+         'id_adresse','id_departement', 'rue', 'ville', 'cp'
     ];
 
 }
