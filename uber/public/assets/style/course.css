@@ -100,16 +100,17 @@
 
 /* Style pour le bouton "Retour" */
 .back_button {
-    display: inline-block;
+    display: inline-flex; /* Utilisation de flex pour aligner l'icône et le texte */
+    align-items: center; /* Aligne verticalement l'icône et le texte */
     background-color: #f8f9fa;
     color: #58b947;
     font-weight: bold;
     padding: 10px 20px;
-    border: 2px solid #58b947; /* Bordure verte */
+    border: 2px solid #58b947;
     border-radius: 25px;
     text-decoration: none;
     transition: all 0.3s ease;
-    margin-right: auto; /* Aligne à gauche */
+    margin-right: auto;
     margin-top: 10px;
     text-align: center;
 }
@@ -117,6 +118,11 @@
 .back_button p {
     margin: 0; /* Évite l'espace supplémentaire autour du texte */
     font-size: 1rem;
+}
+
+.back_button .back_icon {
+    font-size: 20px; /* Taille de la flèche */
+    margin-right: 10px; /* Espace entre l'icône et le texte */
 }
 
 .back_button:hover {

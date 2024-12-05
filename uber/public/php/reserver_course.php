@@ -43,41 +43,25 @@ try {
     // Vérifier que les données nécessaires sont présentes
     if ($temps_trajet && $chauffeur_nom && $lieu_depart_rue && $lieu_arrivee_rue) {
         
-       // Récupération de l'id du département du départ dans la DB
-try {
-    $stmrecupdep_depart = $db->prepare("SELECT id_departement FROM departement WHERE CODE_DEPARTEMENT = :code_departement");
-    $stmrecupdep_depart->execute([ ':code_departement' => $code_departement_depart ]);
-    $id_dep_depart = $stmrecupdep_depart->fetch(PDO::FETCH_ASSOC);
-    if (!$id_dep_depart) {
-        throw new Exception('Département de départ introuvable');
-    }
-} catch (PDOException $e) {
-    error_log('Erreur lors de la récupération du département de départ: ' . $e->getMessage());
-    echo json_encode(['status' => 'error', 'message' => 'Erreur de base de données pour le départ']);
-    exit;
-}
-
-// Récupération de l'id du département de l'arrivée dans la DB
-try {
-    $stmrecupdep_arrive = $db->prepare("SELECT id_departement FROM departement WHERE CODE_DEPARTEMENT = :code_departement");
-    $stmrecupdep_arrive->execute([ ':code_departement' => $code_departement_arrivee ]);
-    $id_dep_arrivee = $stmrecupdep_arrive->fetch(PDO::FETCH_ASSOC);
-    if (!$id_dep_arrivee) {
-        throw new Exception('Département d\'arrivée introuvable');
-    }
-} catch (PDOException $e) {
-    error_log('Erreur lors de la récupération du département d\'arrivée: ' . $e->getMessage());
-    echo json_encode(['status' => 'error', 'message' => 'Erreur de base de données pour l\'arrivée']);
-    exit;
-}
-
+        // Récupération de l'id du département du départ dans la DB
+        $stmrecupdep_depart = $db->prepare("SELECT id_departement FROM departement WHERE CODE_DEPARTEMENT = :code_departement");
+        $stmrecupdep_depart->execute([
+            ':code_departement' => $code_departement_depart,  
+        ]);
+        $id_dep_depart = $stmrecupdep_depart->fetch(PDO::FETCH_ASSOC);  // Affiche le résultat
+        /*// Récupération de l'id du département de l'arrivée dans la DB
+        $stmrecupdep_arrive = $db->prepare("SELECT id_departement FROM departement WHERE CODE_DEPARTEMENT = :code_departement");
+        $stmrecupdep_arrive->execute([
+            ':code_departement' => $code_departement_arrivee, 
+        ]);
+        $id_dep_arrivee = $stmrecupdep_arrive->fetch(PDO::FETCH_ASSOC);  // Affiche le résultat*/
 
         // Préparer l'insertion du depart dans la DB
         $stmdepart = $db->prepare("INSERT INTO adresse (id_departement, rue, ville, cp) VALUES (:id_departement, :rue, :ville, :cp)");
         
         // Exécuter la requête d'insertion
         $stmdepart->execute([
-            ':id_departement' => $id_dep_depart,  
+            ':id_departement' => (int)$id_dep_depart,  
             ':rue' => $lieu_depart_rue,
             ':ville' => $lieu_depart_ville,
             ':cp' => $lieu_depart_cp
@@ -89,7 +73,7 @@ try {
         
         // Exécuter la requête d'insertion
         $stmarrivee->execute([
-            ':id_departement' => $id_dep_arrivee,  
+            ':id_departement' => 8,  
             ':rue' => $lieu_arrivee_rue,
             ':ville' => $lieu_arrivee_ville,
             ':cp' => $lieu_arrivee_cp
@@ -110,7 +94,7 @@ try {
 
         // Retourner la réponse en JSON
         header('Content-Type: application/json');
-        echo json_encode($response);
+        //echo json_encode($response);
     } else {
         // Si les informations sont manquantes, renvoyer une erreur
         http_response_code(400);

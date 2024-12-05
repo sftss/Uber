@@ -202,6 +202,7 @@ a:hover {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 15px;
   padding: 15px;
+  justify-content: center;
 }
 
 .card img.icon {
@@ -835,10 +836,6 @@ input:focus {
   border-color: #4caf50;
 }
 
-input[type="checkbox"] {
-  margin-right: 10px;
-}
-
 .alert {
   padding: 15px;
   margin-top: 20px;
@@ -846,10 +843,6 @@ input[type="checkbox"] {
   color: #721c24;
   border: 1px solid #f5c6cb;
   border-radius: 5px;
-}
-.col-md-6 {
-  display: flex;
-  width: 200px;
 }
 .alert ul {
   margin: 0;

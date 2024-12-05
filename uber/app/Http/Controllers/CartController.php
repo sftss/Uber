@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produit;  // Assurez-vous d'utiliser le bon modèle pour les produits
+use App\Models\Produit;  
+use App\Models\Plat;  
+use App\Models\Menu;  
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;  // Utilisation de la session pour stocker le panier
 

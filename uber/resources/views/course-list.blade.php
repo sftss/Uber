@@ -1,12 +1,13 @@
 <link rel="stylesheet" href="{{ URL::asset('assets/style/course.css') }}" />
 
 <div class="navbar">
-    <a href="{{ url('/') }}" class="back_button">
-    <img src="chemin/vers/ton-logo.svg" alt="Retour" class="back_icon" />
+<a href="{{ url('/') }}" class="back_button">
+    <span class="back_icon">&#8592;</span> <!-- Flèche vers la gauche -->
     <p>Retour</p>
 </a>
 
-        <p>Retour</p>
+</a>
+
     </a>
     <a href="{{ route('login') }}" class="login">Login</a>
     <a href="{{ route('register') }}" class="register">Register</a>
