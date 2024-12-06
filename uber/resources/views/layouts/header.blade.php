@@ -27,6 +27,9 @@
                     <li class="nav-item">
                         <a href="{{ url('/restaurants/search') }}" class="feature-link">Uber Eats</a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ url('/courses') }}" class="feature-link">Mes Courses</a>
+                    </li>
                 </ul>
             </div>
 

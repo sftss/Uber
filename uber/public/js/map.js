@@ -146,9 +146,9 @@ function getRoute(marker1, marker2) {
       }
 
       if (durationInSeconds < 3600) {
-        messageTempsDeTrajet = `En Uber vous devriez mettre ${minutes} minutes à atteindre votre destination`;
+        messageTempsDeTrajet = `En Uber, vous devriez mettre ${minutes} minutes à atteindre votre destination`;
       } else {
-        messageTempsDeTrajet = `En Uber vous devriez mettre ${heures} heures et ${minutes % 60} minutes à atteindre votre destination`;
+        messageTempsDeTrajet = `En Uber, vous devriez mettre ${heures} heures et ${minutes % 60} minutes à atteindre votre destination`;
       }
 
       var elementTempsTrajet = document.getElementById("tempsTrajet");
@@ -257,10 +257,10 @@ function geocodeAddress(inputElement, suggestionsBox, marker, isdepart) {
     }, 500),
   ); // Délai de 1 seconde
 }
-
+let dateDepart;
 //si les deux marqueurs sont renseignés on lance la méthode désignée
 function trouverChauffeurs() {
-  let dateDepart = new Date(inputDateDepart.value);
+   dateDepart = new Date(inputDateDepart.value);
   //on supprime les anciennes propositions
   while (propositionsList.firstChild) {
     propositionsList.removeChild(propositionsList.firstChild);
@@ -454,7 +454,7 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
 
         reserverBtn.addEventListener("click", function () {
           // Créer la course
-          creerCourse(chauffeur, tempsDeTrajet);
+          creerCourse(chauffeur);
 
           // Mettre à jour le bouton pour afficher "Course réservée"
           reserverBtn.textContent = "Course réservée";
@@ -479,6 +479,8 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
 }
 var prix_reservation;
 function AfficheCategorie(categorie) {
+  const div = document.createElement("div");
+    div.className = "proposition"; // Utilisez une classe, pas un ID
   let multiplicateurcourse = 1;
   var prixint = durationInSeconds / 50;
 
@@ -507,6 +509,45 @@ function AfficheCategorie(categorie) {
   prix.textContent = `${prixint} €`;
 
   div.appendChild(prix);
+  div.style.padding = "10px";
+  div.style.margin = "10px 0";
+  div.style.border = "1px solid #ccc";
+  div.style.borderRadius = "8px";
+  div.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.1)";
+  div.style.backgroundColor = "#f9f9f9";
+  div.style.cursor = "pointer";
+  div.style.transition = "all 0.3s ease";
+  
+  div.style.position = "relative";
+  
+  div.addEventListener("mouseover", function () {
+    div.style.backgroundColor = "#e0e0e0";
+    div.style.boxShadow = "0px 6px 12px rgba(0, 0, 0, 0.2)";
+  });
+  
+  div.addEventListener("mouseout", function () {
+    div.style.backgroundColor = "#f9f9f9";
+    div.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.1)";
+  });
+  
+  const reserverBtn = document.createElement("button");
+  reserverBtn.textContent = "Réserver";
+  reserverBtn.style.marginTop = "10px";
+  reserverBtn.style.padding = "5px 10px";
+  reserverBtn.style.border = "none";
+  reserverBtn.style.backgroundColor = "black";
+  reserverBtn.style.color = "white";
+  reserverBtn.style.cursor = "pointer";
+  reserverBtn.style.borderRadius = "5px";
+  
+  // Centrer verticalement le bouton
+  reserverBtn.style.position = "absolute";
+  reserverBtn.style.top = "50%";
+  reserverBtn.style.right = "10px";
+  reserverBtn.style.transform = "translateY(-50%)"; // Centrer en hauteur
+  
+  div.appendChild(reserverBtn);
+  
   isProcessing = false;
 }
 
@@ -517,7 +558,7 @@ function roundToDecimals(number, decimals) {
 
 let courseDejaReservee = false;
 
-function creerCourse(chauffeur, tempsDeTrajet) {
+function creerCourse(chauffeur) {
   // Vérifier si une course est déjà réservée
   if (courseDejaReservee) {
     alert("Vous avez déjà réservé une course.");
@@ -567,10 +608,8 @@ function creerCourse(chauffeur, tempsDeTrajet) {
   ]).then(([lieuDepart, lieuArrivee]) => {
     // Construire la course avec les données enrichies
     const course = {
-      temps_trajet: tempsDeTrajet,
-      chauffeur: {
-        nom: `${chauffeur.nom_chauffeur} ${chauffeur.prenom_chauffeur}`,
-      },
+      chauffeur_nom: chauffeur.nom_chauffeur,
+      chauffeur_prenom: chauffeur.prenom_chauffeur,
       lieu_depart_rue: lieuDepart.rue,
       lieu_depart_ville: lieuDepart.ville,
       lieu_depart_cp: lieuDepart.code_postal,
@@ -578,10 +617,114 @@ function creerCourse(chauffeur, tempsDeTrajet) {
       lieu_arrivee_ville: lieuArrivee.ville,
       lieu_arrivee_cp: lieuArrivee.code_postal,
       prix_reservation: prix_reservation,
+      tempscourse: durationInSeconds,
+      date_trajet: dateDepart,
     };
 
     // Envoyer les données au serveur
     fetch("/php/reserver_course.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(course),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Erreur côté serveur');
+        }
+        return response.json(); // Assurez-vous que la réponse est en JSON
+      })
+      .then((data) => {
+        // Vérifiez la structure de la réponse
+        console.log(data);
+        if (data.status === 'success') {
+          // Marquer la course comme réservée
+          courseDejaReservee = true;
+          console.log(courseDejaReservee);
+    
+          // Désactiver tous les boutons de réservation
+          const boutonReserver = document.querySelectorAll(".reserver-btn");
+          boutonReserver.forEach((btn) => {
+            btn.disabled = true;
+            btn.textContent = "Course réservée";
+          });
+        } else {
+          console.error('Erreur de réservation', data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Erreur lors de l'envoi de la course :", error);
+      });
+    
+  });
+}
+
+
+function creerCourseCategorie(categorie) {
+  // Vérifier si une course est déjà réservée
+  if (courseDejaReservee) {
+    alert("Vous avez déjà réservé une course.");
+    return;
+  }
+
+  const departCoords = {
+    lat: markerDepart.getLatLng().lat,
+    lng: markerDepart.getLatLng().lng,
+  };
+
+  const arriveeCoords = {
+    lat: markerArrivee.getLatLng().lat,
+    lng: markerArrivee.getLatLng().lng,
+  };
+
+  function getLieuDetails(lat, lng) {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
+    return fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        const address = data.address || {};
+        return {
+          rue: address.road || "Rue non trouvée",
+          code_postal: address.postcode || "Code postal non trouvé",
+          ville:
+            address.city ||
+            address.town ||
+            address.village ||
+            "Ville non trouvée",
+        };
+      })
+      .catch((error) => {
+        console.error("Erreur lors du géocodage :", error);
+        return {
+          rue: "Erreur",
+          code_postal: "Erreur",
+          ville: "Erreur",
+        };
+      });
+  }
+
+  // Obtenir les détails des lieux de départ et d'arrivée
+  Promise.all([
+    getLieuDetails(departCoords.lat, departCoords.lng),
+    getLieuDetails(arriveeCoords.lat, arriveeCoords.lng),
+  ]).then(([lieuDepart, lieuArrivee]) => {
+    // Construire la course avec les données enrichies
+    const course = {
+      categorie: categorie,
+      lieu_depart_rue: lieuDepart.rue,
+      lieu_depart_ville: lieuDepart.ville,
+      lieu_depart_cp: lieuDepart.code_postal,
+      lieu_arrivee_rue: lieuArrivee.rue,
+      lieu_arrivee_ville: lieuArrivee.ville,
+      lieu_arrivee_cp: lieuArrivee.code_postal,
+      prix_reservation: prix_reservation,
+      tempscourse: durationInSeconds,
+      date_trajet: dateDepart,
+    };
+
+    // Envoyer les données au serveur
+    fetch("/php/reservercoursecategorie.php", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

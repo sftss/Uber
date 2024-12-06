@@ -18,8 +18,11 @@ Route::get('/', function() {
     return view('main');
 });
 
+Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
+Route::delete('/courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');
+Route::put('/courses/{id}', [CourseController::class, 'update'])->name('courses.update');
 
-Route::get('/courses', [CourseController::class, 'index']);
+
 
 Route::get('/restaurants/search', [RestaurantController::class, 'filter'])->name('restaurants.search');
 Route::get('/restaurants/{id}', [RestaurantController::class, 'show'])->name('restaurants.show');

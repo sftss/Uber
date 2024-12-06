@@ -807,6 +807,7 @@ a:hover {
 
 form {
   margin-top: 20px;
+  width: 500px;
 }
 
 form div {
@@ -815,6 +816,7 @@ form div {
 
 label {
   margin-bottom: 5px;
+max-width: 70%;
 }
 
 input[type="text"],
@@ -831,6 +833,10 @@ select {
   outline: none;
   transition: border-color 0.3s ease-in-out;
 }
+input[type="checkbox"]{
+  width: 50px;
+}
+
 
 input:focus {
   border-color: #4caf50;
@@ -853,3 +859,66 @@ input:focus {
 .alert ul li {
   margin: 5px 0;
 }
+
+
+/* Style des tableaux */
+table {
+  width: 90%;
+  margin: 0 auto 20px auto;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+table th {
+  background-color: #333;
+  color: #fff;
+  font-weight: bold;
+  min-width: 200px;
+}
+
+table td {
+  vertical-align: middle;
+}
+
+/* Style des images */
+table img {
+  border-radius: 5px;
+}
+
+/* Style des formulaires */
+form {
+  display: inline;
+}
+
+input[type="number"] {
+  width: 50px;
+  padding: 5px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 5px;
+}
+
+/* Style pour le total */
+.total {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+/* Message vide */
+.empty {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: 40px;
+  color: #666;
+}
+

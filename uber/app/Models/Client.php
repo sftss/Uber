@@ -18,7 +18,7 @@ class Client extends Authenticatable
     protected $fillable = [
         'id_client', 'id_sd', 'photo', 'tel_client', 'mail_client', 
         'num_siret', 'sexe_cp', 'prenom_cp', 'nom_cp', 'date_naissance_cp', 
-        'est_particulier', 'mdp_client', 'newsletter'
+        'est_particulier', 'mdp_client', 'newsletter','est_verif'
     ];
     
 }

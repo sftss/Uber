@@ -25,7 +25,7 @@ try {
     $data = json_decode(file_get_contents('php://input'), true);
 
     // Extraire les informations spécifiques
-    $chauffeur_nom = $data['chauffeur_nom'] ?? null;
+    $categorie = $data['chauffeur_nom'] ?? null;
     $chauffeur_prenom = $data['chauffeur_prenom'] ?? null;
     $lieu_depart_rue = $data['lieu_depart_rue'] ?? null;    
     $lieu_depart_ville = $data['lieu_depart_ville'] ?? null;

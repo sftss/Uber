@@ -1,11 +1,10 @@
 @extends('layouts.header')
 
 <div class="container">
-    <div class="card-header">Register</div>
+    <div class="card-header">S'inscrire</div>
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-
                 <div class="card-body">
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
@@ -58,59 +57,84 @@
                             </div>
                         </div>
 
-                        <!-- Autres champs -->
+                        <!-- Sélection du type de client -->
                         <div class="row">
                             <div>
                                 <div class="form-group">
-                                    <label for="num_siret">Numéro SIRET</label>
-                                    <input type="text" name="num_siret" value="{{ old('num_siret') }}">
+                                    <label for="est_particulier">Type de client</label>
+                                    <select name="est_particulier" id="est_particulier" required onchange="toggleProfessionnelFields()">
+                                        <option value="1" {{ old('est_particulier') == '1' ? 'selected' : '' }}>Particulier</option>
+                                        <option value="0" {{ old('est_particulier') == '0' ? 'selected' : '' }}>Professionnel</option>
+                                    </select>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Champs spécifiques pour les professionnels -->
+                        <div id="professionnel_fields" style="display: none;">
+                            <div class="row">
+                                <div id="num_siret_field">
+                                    <div class="form-group">
+                                        <label for="num_siret">Numéro SIRET</label>
+                                        <input type="text" name="num_siret" id="num_siret" value="{{ old('num_siret') }}">
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="form-group">
+                                        <label for="secteur_activite">Secteur d'activité</label>
+                                        <select name="secteur_activite" id="secteur_activite">
+                                            <option value="" disabled selected>Choisir...</option>
+                                            @foreach($secteurs as $secteur)
+                                                <option value="{{ $secteur->id_sd }}" {{ old('secteur_activite') == $secteur->id_sd ? 'selected' : '' }}>
+                                                    {{ $secteur->lib_sd }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sexe et date de naissance -->
+                        <div class="row">
                             <div>
                                 <div class="form-group">
                                     <label for="sexe_cp">Sexe</label>
-                                    <input type="text" name="sexe_cp" value="{{ old('sexe_cp') }}">
+                                    <select name="sexe_cp" id="sexe_cp" required>
+                                        <option value="" disabled selected>Choisir...</option>
+                                        <option value="H" {{ old('sexe_cp') == 'H' ? 'selected' : '' }}>Homme</option>
+                                        <option value="F" {{ old('sexe_cp') == 'F' ? 'selected' : '' }}>Femme</option>
+                                    </select>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div>
                                 <div class="form-group">
                                     <label for="date_naissance_cp">Date de naissance</label>
-                                    <input type="date" name="date_naissance_cp"
-                                        value="{{ old('date_naissance_cp') }}">
-                                </div>
-                            </div>
-                            <div>
-                                <div class="form-group">
-                                    <label for="est_particulier">Particulier</label>
-                                    <input type="checkbox" name="est_particulier"
-                                        {{ old('est_particulier') ? 'checked' : '' }}>
+                                    <input type="date" name="date_naissance_cp" value="{{ old('date_naissance_cp') }}">
                                 </div>
                             </div>
                         </div>
+
 
                         <div class="row">
-                            <div>
-                                <div class="form-group">
-                                    <label for="newsletter">Abonnement à la newsletter</label>
-                                    <input type="checkbox" name="newsletter" {{ old('newsletter') ? 'checked' : '' }}>
-                                </div>
+                            <div class="col-12 form-group d-flex align-items-center">
+                                <input type="checkbox" name="newsletter" id="newsletter" {{ old('newsletter') ? 'checked' : '' }}>
+                                <label for="newsletter" class="ml-2">
+                                    Recevoir la newsletter
+                                </label>
                             </div>
-                            <div>
-                                <div class="form-group">
-                                    <input type="checkbox" name="politique_confidentialite"
-                                        id="politique_confidentialite" required>
-                                    <label for="politique_confidentialite">
-                                        J'ai lu et j'accepte la <a href="{{ route('politique') }}"
-                                            target="_blank">politique de confidentialité</a>
-                                    </label>
-                                </div>
+                        </div>
+                        <!-- Politique de confidentialité -->
+                        <div class="row">
+                            <div class="col-12 form-group d-flex align-items-center">
+                                <input type="checkbox" name="politique_confidentialite" id="politique_confidentialite" required>
+                                <label for="politique_confidentialite" class="ml-2">
+                                    J'ai lu et j'accepte la <a href="{{ route('politique') }}" target="_blank">politique de confidentialité</a>
+                                </label>
                             </div>
                         </div>
 
-                        <button type="submit">S'inscrire</button>
+                        <button class="btn-submit" type="submit">S'inscrire</button>
                     </form>
 
                     @if ($errors->any())
@@ -122,9 +146,19 @@
                             </ul>
                         </div>
                     @endif
-
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function toggleProfessionnelFields() {
+        const clientType = document.getElementById('est_particulier').value;
+        const professionnelFields = document.getElementById('professionnel_fields');
+        professionnelFields.style.display = clientType === '0' ? 'block' : 'none';
+    }
+
+    // Appel initial pour gérer l'affichage correct au chargement
+    document.addEventListener('DOMContentLoaded', toggleProfessionnelFields);
+</script>
