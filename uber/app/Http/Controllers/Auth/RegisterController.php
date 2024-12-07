@@ -7,8 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use App\Mail\ConfirmationEmail; // Assurez-vous que le mail est bien importé
 use App\Models\Secteur;
+use App\Mail\ConfirmationEmail; // Assurez-vous que le mail est bien importé
+use App\Mail\VerificationEmail;
+use Illuminate\Support\Facades\Log;
+use App\Models\User; // Pas besoin de require 'vendor/autoload.php' !
+// Utiliser les classes SendGrid
+use SendGrid\Mail\Mail;
 
 class RegisterController extends Controller
 {
@@ -34,7 +39,8 @@ class RegisterController extends Controller
         'secteur_activite' => 'required_if:est_particulier,0|exists:secteur_d_activite,id_sd',
     ], [
         'mdp_client.confirmed' => 'Les mots de passe ne correspondent pas.',
-        'mail_client.unique' => 'Cette adresse email est déjà utilisée.',
+        'mdp_client.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
+        'mail_client.unique' => 'Cette adresse email est déjà utilisée, veuillez en entrer une autre et réessayer.',
         'sexe_cp.required' => 'Veuillez sélectionner un sexe.',
         'sexe_cp.in' => 'Le sexe sélectionné est invalide.',
         'num_siret.required_if' => 'Le numéro SIRET est requis pour un client professionnel.',
@@ -69,15 +75,32 @@ class RegisterController extends Controller
     $client->newsletter =
     $client->newsletter = $request->has('newsletter') ? true : false;
     
-    $client->save();
 
 
+    
 
+    /*$email = new Mail();
+    $email->setFrom("no-reply@votresite.com", "Nom de votre entreprise");
+    $email->setSubject("Inscription");
+    $email->addTo($client->mail_client);
+    $email->addContent("text/plain", "Votre code de vérification est : " . $client->code_verif);
+    
+    $sendgrid = new \SendGrid(env('SENDGRID_API_KEY'));
+    $response = $sendgrid->send($email);
+    
+    echo "Message envoyé avec succès : " . $response->statusCode();*/
+    
 
 
 
     
-    return redirect()->route('home')->with('success', 'Inscription réussie');
+    $client->save();
+
+
+
+    
+        
+    return redirect()->route('home')->with('success', 'Inscription réussie. Un email de confirmation vous a été envoyé.');
 }
         
 }

@@ -58,9 +58,6 @@ class CartController extends Controller
 
 
 
-
-
-    // Ajouter un produit au panier
 public function add(Request $request, $type, $id)
 {
     // Récupérer l'élément en fonction du type
@@ -74,104 +71,52 @@ public function add(Request $request, $type, $id)
     }
 
     if (!$item) {
-        return redirect()->route('home')->with('error', 'Élément non trouvé');
+        return redirect()->back()->with('error', 'Élément non trouvé');
     }
 
-    // Récupérer ou initialiser l'id_panier
-    $idClient = Auth::user()->id_client;
+    // Ajouter l'élément au panier (session)
+    $cart = session()->get('cart', []);
+    $key = $type . '_' . $id;
 
-    if ($idClient) {
+    // Calculer le montant total pour cet élément
+    $price = $item->prix_produit ?? $item->prix_menu ?? $item->prix_plat;
+    $quantity = 1;
+    $totalAmount = $price * $quantity;
+
+    // Vérifier si l'élément est déjà dans le panier
+    if (isset($cart[$key])) {
+        // Augmenter la quantité et recalculer le montant total
+        $cart[$key]['quantity']++;
+        $totalAmount = $cart[$key]['quantity'] * $price;
+    } else {
+        // Ajouter un nouvel élément au panier
+        $cart[$key] = [
+            'name' => $item->nom_produit ?? $item->libelle_menu ?? $item->libelle_plat,
+            'price' => $price,
+            'quantity' => $quantity,
+            'total' => $totalAmount,
+            'image' => $item->photo_produit ?? $item->photo_menu ?? $item->photo_plat,
+        ];
+    }
+
+    // Sauvegarder le panier dans la session
+    session()->put('cart', $cart);
+
+    // Vérifier si l'utilisateur est connecté
+    if (Auth::check()) {
+        $idClient = Auth::user()->id_client;
         $idPanier = $this->getPanierId($idClient);
 
-        // Ajouter l'élément au panier en utilisant la session
-        $cart = session()->get('cart', []);
-        $key = $type . '_' . $id;
-
-        // Calculer le montant total pour cet élément
-        $price = $item->prix_produit ?? $item->prix_menu ?? $item->prix_plat;
-        $quantity = 1;
-        $totalAmount = $price * $quantity;
-
-        // Vérifier si l'élément est déjà dans le panier dans la session
-        if (isset($cart[$key])) {
-            // Augmenter la quantité et recalculer le montant total
-            $cart[$key]['quantity']++;
-            $totalAmount = $cart[$key]['quantity'] * $price;
-        } else {
-            // Ajouter un nouvel élément au panier dans la session
-            $cart[$key] = [
-                'name' => $item->nom_produit ?? $item->libelle_menu ?? $item->libelle_plat,
-                'price' => $price,
-                'quantity' => $quantity,
-                'total' => $totalAmount,
-                'image' => $item->photo_produit ?? $item->photo_menu ?? $item->photo_plat,
-            ];
-        }
-
-        // Sauvegarder le panier dans la session
-        session()->put('cart', $cart);
-
-        // Sauvegarder dans la base de données (tables CONTIENT, CONTIENT_MENU, CONTIENT_PLAT)
-        if ($type === 'produit') {
-            // Vérifier si le produit est déjà dans le panier
-            $existing = \DB::table('contient')->where('id_panier', $idPanier)->where('id_produit', $id)->first();
-
-            if ($existing) {
-                // Si le produit existe déjà, mettre à jour la quantité et le montant
-                \DB::table('contient')->where('id_panier', $idPanier)->where('id_produit', $id)->update([
-                    'quantite' => $existing->quantite + $cart[$key]['quantity']
-                ]);
-            } else {
-                // Sinon, insérer un nouvel enregistrement
-                \DB::table('contient')->insert([
-                    'id_panier' => $idPanier,
-                    'id_produit' => $id,
-                    'quantite' => $cart[$key]['quantity']
-                ]);
-            }
-        } elseif ($type === 'menu') {
-            // Vérifier si le menu est déjà dans le panier
-            $existing = \DB::table('contient_menu')->where('id_panier', $idPanier)->where('id_menu', $id)->first();
-
-            if ($existing) {
-                // Si le menu existe déjà, mettre à jour la quantité et le montant
-                \DB::table('contient_menu')->where('id_panier', $idPanier)->where('id_menu', $id)->update([
-                    'quantite' => $existing->quantite + $cart[$key]['quantity']
-                ]);
-            } else {
-                // Sinon, insérer un nouvel enregistrement
-                \DB::table('contient_menu')->insert([
-                    'id_panier' => $idPanier,
-                    'id_menu' => $id,
-                    'quantite' => $cart[$key]['quantity']
-                ]);
-            }
-        } elseif ($type === 'plat') {
-            // Vérifier si le plat est déjà dans le panier
-            $existing = \DB::table('contient_plat')->where('id_panier', $idPanier)->where('id_plat', $id)->first();
-
-            if ($existing) {
-                // Si le plat existe déjà, mettre à jour la quantité et le montant
-                \DB::table('contient_plat')->where('id_panier', $idPanier)->where('id_plat', $id)->update([
-                    'quantite' => $existing->quantite + $cart[$key]['quantity']
-                ]);
-            } else {
-                // Sinon, insérer un nouvel enregistrement
-                \DB::table('contient_plat')->insert([
-                    'id_panier' => $idPanier,
-                    'id_plat' => $id,
-                    'quantite' => $cart[$key]['quantity']
-                ]);
-            }
-        }
+        // Sauvegarder dans la base de données
+        $this->saveToDatabase($type, $id, $idPanier, $cart[$key]);
 
         // Mettre à jour le montant total du panier dans la table panier
         $this->updateMontantPanier($idPanier);
-
-        return redirect()->route('cart.index');
     }
 
-    return redirect()->route('home')->with('error', 'Utilisateur non authentifié');
+    // Rediriger vers la page précédente avec un message de succès
+    return redirect()->back()->with('success', 'Votre article a correctement été ajouté au panier !');
+
 }
 
 
@@ -190,7 +135,7 @@ public function add(Request $request, $type, $id)
 
 
 
-// Supprimer un produit du panier
+
 public function remove($id)
 {
     // Récupérer le panier de la session
@@ -204,30 +149,33 @@ public function remove($id)
         // Sauvegarder à nouveau le panier dans la session
         session()->put('cart', $cart);
 
-        // Récupérer l'ID du client et mettre à jour la base de données
-        $idClient = Auth::user()->id_client;
-        $idPanier = $this->getPanierId($idClient);
+        if (Auth::check()) {
+            // Si l'utilisateur est connecté, gérer la base de données
+            $idClient = Auth::user()->id_client;
+            $idPanier = $this->getPanierId($idClient);
 
-        // Extraire le type (produit, plat, menu) et l'ID de l'élément
-        $item = explode('_', $id);
-        $type = $item[0];
-        $idElement = $item[1];
+            // Extraire le type (produit, plat, menu) et l'ID de l'élément
+            $item = explode('_', $id);
+            $type = $item[0];
+            $idElement = $item[1];
 
-        // Supprimer l'élément de la base de données
-        if ($type === 'produit') {
-            \DB::table('contient')->where('id_panier', $idPanier)->where('id_produit', $idElement)->delete();
-        } elseif ($type === 'menu') {
-            \DB::table('contient_menu')->where('id_panier', $idPanier)->where('id_menu', $idElement)->delete();
-        } elseif ($type === 'plat') {
-            \DB::table('contient_plat')->where('id_panier', $idPanier)->where('id_plat', $idElement)->delete();
+            // Supprimer l'élément de la base de données
+            if ($type === 'produit') {
+                \DB::table('contient')->where('id_panier', $idPanier)->where('id_produit', $idElement)->delete();
+            } elseif ($type === 'menu') {
+                \DB::table('contient_menu')->where('id_panier', $idPanier)->where('id_menu', $idElement)->delete();
+            } elseif ($type === 'plat') {
+                \DB::table('contient_plat')->where('id_panier', $idPanier)->where('id_plat', $idElement)->delete();
+            }
+
+            // Mettre à jour le montant total du panier dans la table panier
+            $this->updateMontantPanier($idPanier);
         }
-
-        // Mettre à jour le montant total du panier dans la table panier
-        $this->updateMontantPanier($idPanier);
     }
 
     return redirect()->route('cart.index');
 }
+
 
 
 public function updateMontantPanier($idPanier)
@@ -256,12 +204,58 @@ public function updateMontantPanier($idPanier)
 
 
 
+private function saveToDatabase($type, $id, $idPanier, $cartItem)
+{
+    if ($type === 'produit') {
+        $existing = \DB::table('contient')->where('id_panier', $idPanier)->where('id_produit', $id)->first();
+
+        if ($existing) {
+            // Si le produit existe déjà, mettre à jour la quantité
+            \DB::table('contient')->where('id_panier', $idPanier)->where('id_produit', $id)->update([
+                'quantite' => $existing->quantite + $cartItem['quantity']
+            ]);
+        } else {
+            // Sinon, insérer un nouvel enregistrement
+            \DB::table('contient')->insert([
+                'id_panier' => $idPanier,
+                'id_produit' => $id,
+                'quantite' => $cartItem['quantity']
+            ]);
+        }
+    } elseif ($type === 'menu') {
+        $existing = \DB::table('contient_menu')->where('id_panier', $idPanier)->where('id_menu', $id)->first();
+
+        if ($existing) {
+            \DB::table('contient_menu')->where('id_panier', $idPanier)->where('id_menu', $id)->update([
+                'quantite' => $existing->quantite + $cartItem['quantity']
+            ]);
+        } else {
+            \DB::table('contient_menu')->insert([
+                'id_panier' => $idPanier,
+                'id_menu' => $id,
+                'quantite' => $cartItem['quantity']
+            ]);
+        }
+    } elseif ($type === 'plat') {
+        $existing = \DB::table('contient_plat')->where('id_panier', $idPanier)->where('id_plat', $id)->first();
+
+        if ($existing) {
+            \DB::table('contient_plat')->where('id_panier', $idPanier)->where('id_plat', $id)->update([
+                'quantite' => $existing->quantite + $cartItem['quantity']
+            ]);
+        } else {
+            \DB::table('contient_plat')->insert([
+                'id_panier' => $idPanier,
+                'id_plat' => $id,
+                'quantite' => $cartItem['quantity']
+            ]);
+        }
+    }
+}
 
 
 
 
-
-// Mettre à jour la quantité d'un produit dans le panier
 public function update(Request $request, $uniqueId)
 {
     // Récupérer la nouvelle quantité
@@ -300,31 +294,34 @@ public function update(Request $request, $uniqueId)
         // Sauvegarder le panier dans la session
         session()->put('cart', $cart);
 
-        // Récupérer l'ID du panier et mettre à jour la base de données
-        $idClient = Auth::user()->id_client;
-        $idPanier = $this->getPanierId($idClient);
+        if (Auth::check()) {
+            // Si l'utilisateur est connecté, mettre à jour la base de données
+            $idClient = Auth::user()->id_client;
+            $idPanier = $this->getPanierId($idClient);
 
-        if ($type === 'produit') {
-            \DB::table('contient')->where('id_panier', $idPanier)->where('id_produit', $id)->update([
-                'quantite' => $quantity
-            ]);
-        } elseif ($type === 'menu') {
-            \DB::table('contient_menu')->where('id_panier', $idPanier)->where('id_menu', $id)->update([
-                'quantite' => $quantity
-            ]);
-        } elseif ($type === 'plat') {
-            \DB::table('contient_plat')->where('id_panier', $idPanier)->where('id_plat', $id)->update([
-                'quantite' => $quantity
-            ]);
+            if ($type === 'produit') {
+                \DB::table('contient')->where('id_panier', $idPanier)->where('id_produit', $id)->update([
+                    'quantite' => $quantity
+                ]);
+            } elseif ($type === 'menu') {
+                \DB::table('contient_menu')->where('id_panier', $idPanier)->where('id_menu', $id)->update([
+                    'quantite' => $quantity
+                ]);
+            } elseif ($type === 'plat') {
+                \DB::table('contient_plat')->where('id_panier', $idPanier)->where('id_plat', $id)->update([
+                    'quantite' => $quantity
+                ]);
+            }
+
+            // Mettre à jour le montant total du panier dans la table panier
+            $this->updateMontantPanier($idPanier);
         }
-
-        // Mettre à jour le montant total du panier dans la table panier
-        $this->updateMontantPanier($idPanier);
     }
 
     // Rediriger vers le panier avec la mise à jour
     return redirect()->route('cart.index');
 }
+
 
 
 

@@ -5,8 +5,11 @@
     <title>Confirmation de votre email</title>
 </head>
 <body>
-    <h2>Confirmation de votre inscription</h2>
-    <p>Votre code de vérification est : <strong>{{ $code }}</strong></p>
-    <p>Veuillez saisir ce code sur notre site pour confirmer votre compte.</p>
+    <p>Bonjour {{ $prenom }} {{ $nom }},</p>
+    <p>Merci pour votre inscription. Veuillez utiliser le code suivant pour vérifier votre compte :</p>
+    <h3>{{ $code }}</h3>
+    <p>Entrez ce code sur la page de vérification pour activer votre compte.</p>
+    <p>Merci de nous faire confiance,</p>
+    <p>L'équipe de notre plateforme.</p>
 </body>
 </html>

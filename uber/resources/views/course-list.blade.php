@@ -13,7 +13,6 @@
     <a href="{{ route('register') }}" class="register">Register</a>
 </div>
 
-
 @extends('layouts.app')
 
 
@@ -47,17 +46,9 @@
             </ul>
 
             <!-- Bouton Modifier -->
-            <button class="btn btn-modifier" data-toggle="modal" data-target="#editCourseModal" 
-                    data-id="{{ $course->id_course }}"
-                    data-chauffeur="{{ $course->id_chauffeur }}"
-                    data-depart="{{ $course->id_lieu_depart }}"
-                    data-arrivee="{{ $course->id_lieu_arrivee }}"
-                    data-prix="{{ $course->prix_reservation }}"
-                    data-date="{{ $course->date_prise_en_charge }}"
-                    data-duree="{{ $course->duree_course }}"
-                    data-temps="{{ $course->temps_arrivee }}">
-                Modifier
-            </button>
+            <button id="modifyButton" class="btn btn-primary" >Modifier</button>
+
+
 
             @if(!$course->terminee)
             <form action="{{ route('courses.destroy', $course->id_course) }}" method="POST" style="display:inline;">
@@ -69,135 +60,27 @@
             </form>
             @endif
         </div>
+        
         @endforeach
-    </ul>
-
-<!-- Modale de modification -->
-<div class="modal fade" id="editCourseModal" tabindex="-1" role="dialog" aria-labelledby="editCourseModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editCourseModalLabel">Modifier la course</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editCourseForm" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <input type="hidden" id="course_id" name="course_id">
-
-                    <div class="form-group">
-                        <label for="chauffeur">Chauffeur</label>
-                        <input type="text" class="form-control" id="chauffeur" name="chauffeur">
-                    </div>
-                    <div class="form-group">
-                        <label for="depart">Lieu de départ</label>
-                        <input type="text" class="form-control" id="depart" name="depart">
-                    </div>
-                    <div class="form-group">
-                        <label for="arrivee">Lieu d'arrivée</label>
-                        <input type="text" class="form-control" id="arrivee" name="arrivee">
-                    </div>
-                    <div class="form-group">
-                        <label for="prix">Prix</label>
-                        <input type="number" class="form-control" id="prix" name="prix">
-                    </div>
-                    <div class="form-group">
-                        <label for="date">Date de prise en charge</label>
-                        <input type="date" class="form-control" id="date" name="date">
-                    </div>
-                    <div class="form-group">
-                        <label for="duree">Durée</label>
-                        <input type="text" class="form-control" id="duree" name="duree">
-                    </div>
-                    <div class="form-group">
-                        <label for="temps">Heure d'arrivée</label>
-                        <input type="time" class="form-control" id="temps" name="temps">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                <button type="button" class="btn btn-primary" id="saveChangesBtn">Enregistrer les modifications</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- CDN pour jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- CDN pour Bootstrap JS -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-
+</ul>
 <script>
-    $('#editCourseModal').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget);
-        
-        // Récupération des données de la course depuis les attributs data-* du bouton
-        var courseId = button.data('id');
-        var chauffeur = button.data('chauffeur');
-        var depart = button.data('depart');
-        var arrivee = button.data('arrivee');
-        var prix = button.data('prix');
-        var date = button.data('date');
-        var duree = button.data('duree');
-        var temps = button.data('temps');
-        
-        // Remplir les champs du formulaire avec les valeurs existantes
-        $('#course_id').val(courseId);
+    document.querySelectorAll('#modifyButton').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var courseElement = this.closest('.course_container');  // Trouve le conteneur de la course parent
 
-        // Si le chauffeur est null ou vide, afficher "Vélo" dans le champ "chauffeur"
-        if (!chauffeur || chauffeur === '') {
-            $('#chauffeur').val('Vélo');
-        } else {
-            $('#chauffeur').val(chauffeur);
-        }
+            var heure = courseElement.querySelector('.temps_arrivee').textContent.split(":")[1].trim();
+            var datePriseEnCharge = courseElement.querySelector('.date_prise_en_charge').textContent.split(":")[1].trim()+"T"+heure;
+            
+            var id = courseElement.querySelector('.course_title').textContent.split(":")[1].trim();  // Extraction de l'id_course
 
-        // Remplir les autres champs du formulaire avec les données de la course
-        $('#depart').val(depart);
-        $('#arrivee').val(arrivee);
-        $('#prix').val(prix);
-        $('#date').val(date);
-        $('#duree').val(duree);
-        
-        // Initialiser le champ "temps" (heure d'arrivée) avec la valeur existante
-        if (temps) {
-            $('#temps').val(temps);  // Remplir avec la valeur de "temps"
-        } else {
-            $('#temps').val('');  // Si pas de valeur, laisser vide
-        }
-    });
-
-    // Action lors de la sauvegarde des modifications
-    $('#saveChangesBtn').click(function() {
-        var courseId = $('#course_id').val();
-        var formData = $('#editCourseForm').serialize(); // Sérialiser les données du formulaire
-
-        $.ajax({
-            url: '/courses/' + courseId,  // Assurez-vous que l'URL est correcte
-            type: 'PUT',
-            data: formData,
-            success: function(response) {
-                alert(response.success);
-                $('#editCourseModal').modal('hide');
-                location.reload(); // Recharger la page après la mise à jour
-            },
-            error: function(xhr, status, error) {
-                var response = xhr.responseJSON;
-                console.error(response);  // Afficher la réponse d'erreur dans la console
-                alert('Erreur lors de la modification: ' + response.message);
-            }
+            // Envoie l'utilisateur vers la page de modification avec les paramètres requis
+            window.location.href = "{{ url('/map') }}?depart=" + encodeURIComponent(courseElement.querySelector('.depart').textContent.split(":")[1].trim()) +
+                "&arrivee=" + encodeURIComponent(courseElement.querySelector('.arrivee').textContent.split(":")[1].trim()) +
+                "&datePriseEnCharge=" + encodeURIComponent(datePriseEnCharge) +
+                "&modification=true" +
+                "&id=" + encodeURIComponent(id);
         });
     });
 </script>
-
 
 @endsection

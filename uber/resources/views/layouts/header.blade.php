@@ -39,7 +39,8 @@
                     <span class="navbar-text">Bonjour, {{ Auth::user()->prenom_cp }} !</span>
 
                     <!-- Lien de déconnexion avec JavaScript -->
-                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="btn btn-outline-light">Déconnexion</a>
+                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                        class="btn btn-outline-light">Déconnexion</a>
 
                     <!-- Formulaire de déconnexion -->
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -62,11 +63,6 @@
                 <ul>
                     <li><a href="#">À propos</a></li>
                     <li><a href="#">Nos services</a></li>
-                    <li><a href="#">Espace presse</a></li>
-                    <li><a href="#">Investisseurs</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Offres d'emploi</a></li>
-                    <li><a href="#">Uber AI</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -76,16 +72,6 @@
                     <li><a href="#">Conduire</a></li>
                     <li><a href="#">Livrez</a></li>
                     <li><a href="#">Commandez un repas</a></li>
-                    <li><a href="#">Uber for Business</a></li>
-                    <li><a href="#">Uber Freight</a></li>
-                    <li><a href="#">Cartes-cadeaux</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Citoyens du monde</h4>
-                <ul>
-                    <li><a href="#">Sécurité</a></li>
-                    <li><a href="#">Développement durable</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -114,7 +100,7 @@
             </div>
             <p>© {{ date('Y') }} Uber Technologies Inc.</p>
             <div class="footer-meta">
-                <a href="#">Confidentialité</a> |
+                <a href="{{ route('politique') }}">Confidentialité</a> |
                 <a href="#">Accessibilité</a> |
                 <a href="#">Conditions</a>
             </div>

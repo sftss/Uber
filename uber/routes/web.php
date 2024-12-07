@@ -12,7 +12,10 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CartController;
-
+use App\Http\Controllers\AdresseController;
+use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers;
+use App\Http\Controllers\MailController;
 
 Route::get('/', function() {
     return view('main');
@@ -21,6 +24,7 @@ Route::get('/', function() {
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 Route::delete('/courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');
 Route::put('/courses/{id}', [CourseController::class, 'update'])->name('courses.update');
+
 
 
 
@@ -46,11 +50,16 @@ Route::prefix('cart')->name('cart.')->group(function () {
     Route::patch('update/{id}', [CartController::class, 'update'])->name('update');
 });
 
+
+
+
+Route::post('/cart/add/{type}/{id}', [CartController::class, 'add'])->name('cart.add');
+
 Route::post('/cart/add/{productId}', [CartController::class, 'addToCart'])->name('cart.add');
 Route::get('/panier', [CartController::class, 'index'])->name('cart.index');
 Route::post('/panier/ajouter/{id}', [CartController::class, 'add'])->name('cart.add');
 Route::delete('/panier/supprimer/{id}', [CartController::class, 'remove'])->name('cart.remove');
-
+Route::patch('update/{id}', [CartController::class, 'update'])->name('update');
 
 Route::post('add/{type}/{id}', [CartController::class, 'add'])->name('cart.add');
 
@@ -67,11 +76,14 @@ Route::get('/politique', function () {
     return view('politique');
 })->name('politique');
 
-// Confirmer l'email
+
 Route::get('confirm-email/{code}', [RegistrationController::class, 'confirmEmail'])->name('confirm.email');
 
 
-
+Route::get('/adresse/{id}', [AdresseController::class, 'show']);
 
 Route::get('/verify', [RegisterController::class, 'showVerificationForm'])->name('verify.form');
 Route::post('/verify', [RegisterController::class, 'verifyCode'])->name('verify.code');
+
+Route::get('/verification', [VerificationController::class, 'showVerificationPage'])->name('verification.page');
+Route::post('/verification', [VerificationController::class, 'verifyCode'])->name('verification.submit');

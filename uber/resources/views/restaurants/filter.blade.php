@@ -80,5 +80,6 @@
         <p class="no-results">Aucun restaurant ne correspond à vos critères.</p>
     @endif
 </section>
+<a href="{{ url('/panier') }}" id="panier">🛒</a>
 
 <script src="{{ asset('js/main.js') }}"></script>

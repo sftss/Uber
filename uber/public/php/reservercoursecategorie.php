@@ -2,15 +2,16 @@
 // Activer le rapport d'erreurs PHP
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+
 try {
-    // Paramètres de connexion à la base de données (remplis avec les informations fournies)
-    $host = '127.0.0.1';  // Ou utiliser env('DB_HOST', '127.0.0.1')
-    $port = '5432';        // Ou utiliser env('DB_PORT', '5432')
-    $database = 's231_uber'; // Ou utiliser env('DB_DATABASE', 's231_uber')
-    $username = 's231';     // Ou utiliser env('DB_USERNAME', 's231')
-    $password = 'etsmb31'; // Ou utiliser env('DB_PASSWORD', 'etsmb31')
+    // Paramètres de connexion à la base de données
+    $host = '127.0.0.1';  
+    $port = '5432';        
+    $database = 's231_uber'; 
+    $username = 's231';     
+    $password = 'etsmb31'; 
     $charset = 'utf8';
-    $search_path = 's_uber'; // Le schéma spécifique
+    $search_path = 's_uber'; 
 
     // Créer la chaîne de connexion DSN
     $dsn = "pgsql:host=$host;port=$port;dbname=$database;options='--search_path=$search_path'";
@@ -24,9 +25,18 @@ try {
     // Récupérer les données JSON envoyées
     $data = json_decode(file_get_contents('php://input'), true);
 
+    // Vérifiez si la conversion JSON a échoué
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Erreur dans les données JSON envoyées.',
+            'details' => json_last_error_msg()
+        ]);
+        exit;
+    }
+
     // Extraire les informations spécifiques
-    $categorie = $data['chauffeur_nom'] ?? null;
-    $chauffeur_prenom = $data['chauffeur_prenom'] ?? null;
+    $categorie = $data['categorie'] ?? null;
     $lieu_depart_rue = $data['lieu_depart_rue'] ?? null;    
     $lieu_depart_ville = $data['lieu_depart_ville'] ?? null;
     $lieu_depart_cp = $data['lieu_depart_cp'] ?? null;
@@ -37,8 +47,7 @@ try {
     $tempscourse = $data['tempscourse'] ?? null;
     $date_depart = $data['date_trajet'] ?? null;
 
-   
-
+    // Calculer les codes des départements et la durée de la course
     $code_departement_depart = substr($lieu_depart_cp, 0, 2);
     $code_departement_arrivee = substr($lieu_arrivee_cp, 0, 2);
 
@@ -46,89 +55,54 @@ try {
     $minutescourse = floor(($tempscourse % 3600) / 60);
     $secondescourse = $tempscourse % 60;
 
-    /*$id_client =  Auth::user()->id_client ?? null;
-    dd($idclient);*/
-
     // Vérifier que les données nécessaires sont présentes
-    if ( $chauffeur_nom && $lieu_depart_rue && $lieu_arrivee_rue) {
-        
-        // Récupération de l'id du département du départ et d'arrivée dans la DB
+    if ($categorie && $lieu_depart_rue && $lieu_arrivee_rue) {
+
+        // Récupérer l'id du département de départ
         $stmrecupdep_depart = $db->prepare("SELECT id_departement FROM departement WHERE CODE_DEPARTEMENT = :code_departement");
-        $stmrecupdep_depart->execute([
-            ':code_departement' => $code_departement_depart,  
-        ]);
+        $stmrecupdep_depart->execute([ ':code_departement' => $code_departement_depart ]);
         $id_dep_depart = $stmrecupdep_depart->fetch(PDO::FETCH_ASSOC);
-        $id_dep_depart_val = $id_dep_depart['id_departement'];  
+        $id_dep_depart_val = isset($id_dep_depart['id_departement']) ? $id_dep_depart['id_departement'] : null;
 
+        // Récupérer l'id du département d'arrivée
         $stmrecupdep_arrivee = $db->prepare("SELECT id_departement FROM departement WHERE CODE_DEPARTEMENT = :code_departement");
-        $stmrecupdep_arrivee->execute([
-            ':code_departement' => $code_departement_arrivee,  
-        ]);
+        $stmrecupdep_arrivee->execute([ ':code_departement' => $code_departement_arrivee ]);
         $id_dep_arrivee = $stmrecupdep_arrivee->fetch(PDO::FETCH_ASSOC);
-        $id_dep_arrivee_val = $id_dep_arrivee['id_departement'];
+        $id_dep_arrivee_val = isset($id_dep_arrivee['id_departement']) ? $id_dep_arrivee['id_departement'] : null;
 
+        // Si les départements n'ont pas été trouvés, afficher une erreur
+        if (!$id_dep_depart_val || !$id_dep_arrivee_val) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Code département non trouvé'
+            ]);
+            exit;
+        }
 
-
-        // Préparer l'insertion du depart dans la DB
+        // Insérer les adresses de départ et d'arrivée
         $stmdepart = $db->prepare("INSERT INTO adresse (id_departement, rue, ville, cp) VALUES (:id_departement, :rue, :ville, :cp)");
-        
-        // Exécuter la requête d'insertion
-        $stmdepart->execute([
-            ':id_departement' => intval($id_dep_depart_val),  
-            ':rue' => $lieu_depart_rue,
-            ':ville' => $lieu_depart_ville,
-            ':cp' => $lieu_depart_cp
-        ]);
-
-
-        // Préparer l'insertion de l'arrivée dans la DB
+        $stmdepart->execute([ ':id_departement' => intval($id_dep_depart_val), ':rue' => $lieu_depart_rue, ':ville' => $lieu_depart_ville, ':cp' => $lieu_depart_cp ]);
         $stmarrivee = $db->prepare("INSERT INTO adresse (id_departement, rue, ville, cp) VALUES (:id_departement, :rue, :ville, :cp)");
-        
-        // Exécuter la requête d'insertion
-        $stmarrivee->execute([
-            ':id_departement' => intval($id_dep_arrivee_val),  
-            ':rue' => $lieu_arrivee_rue,
-            ':ville' => $lieu_arrivee_ville,
-            ':cp' => $lieu_arrivee_cp
-        ]);
+        $stmarrivee->execute([ ':id_departement' => intval($id_dep_arrivee_val), ':rue' => $lieu_arrivee_rue, ':ville' => $lieu_arrivee_ville, ':cp' => $lieu_arrivee_cp ]);
 
+        // Récupérer l'ID des adresses de départ et d'arrivée
+        $stmid_adresse_depart = $db->prepare("SELECT id_adresse FROM adresse WHERE RUE = :rue AND VILLE = :ville AND CP = :cp");
+        $stmid_adresse_depart->execute([ ':rue' => $lieu_depart_rue, ':ville' => $lieu_depart_ville, ':cp' => $lieu_depart_cp ]);
+        $id_adresse_depart = $stmid_adresse_depart->fetch(PDO::FETCH_ASSOC)['id_adresse'];
 
-        //Recup id adresse de depart
-        $stmid_adresse_depart = $db->prepare("SELECT id_adresse FROM adresse WHERE RUE = :rue and VILLE = :ville and CP = :cp");
-        $stmid_adresse_depart->execute([
-            ':rue' => $lieu_depart_rue,
-            ':ville' => $lieu_depart_ville,
-            ':cp' => $lieu_depart_cp
-        ]);
-        $id_adresse_depart = $stmid_adresse_depart->fetch(PDO::FETCH_ASSOC);
-        $id_adresse_depart = $id_adresse_depart['id_adresse'];  
+        $stmid_adresse_arrivee = $db->prepare("SELECT id_adresse FROM adresse WHERE RUE = :rue AND VILLE = :ville AND CP = :cp");
+        $stmid_adresse_arrivee->execute([ ':rue' => $lieu_arrivee_rue, ':ville' => $lieu_arrivee_ville, ':cp' => $lieu_arrivee_cp ]);
+        $id_adresse_arrivee = $stmid_adresse_arrivee->fetch(PDO::FETCH_ASSOC)['id_adresse'];
 
-        
-        //Recup id adresse d'arrivée
-        $stmid_adresse_arrivee = $db->prepare("SELECT id_adresse FROM adresse WHERE RUE = :rue and VILLE = :ville and CP = :cp");
-        $stmid_adresse_arrivee->execute([
-            ':rue' => $lieu_arrivee_rue,
-            ':ville' => $lieu_arrivee_ville,
-            ':cp' => $lieu_arrivee_cp
-        ]);
-        $id_adresse_arrivee = $stmid_adresse_arrivee->fetch(PDO::FETCH_ASSOC);
-        $id_adresse_arrivee = $id_adresse_arrivee['id_adresse']; 
+        // Récupérer l'id du chauffeur en fonction de la catégorie de véhicule
+        $stmid_chauffeur = $db->prepare("SELECT CH.id_chauffeur FROM chauffeur CH JOIN vehicule V ON V.id_chauffeur=CH.id_chauffeur JOIN categorie_vehicule CAT ON CAT.id_categorie_vehicule=V.id_categorie_vehicule WHERE lib_categorie_vehicule = :categorie LIMIT 1");
+        $stmid_chauffeur->execute([ ':categorie' => $categorie ]);
+        $id_chauffeur = $stmid_chauffeur->fetch(PDO::FETCH_ASSOC)['id_chauffeur'];
 
-        
-
-
-        //Recup id chauffeur avec son nom et prenom
-        $stmid_chauffeur = $db->prepare("SELECT id_chauffeur FROM chauffeur WHERE nom_chauffeur = :nom and prenom_chauffeur = :prenom ");
-        $stmid_chauffeur->execute([
-            ':nom' => $chauffeur_nom,
-            ':prenom' => $chauffeur_prenom,
-        ]);
-        $id_chauffeur = $stmid_chauffeur->fetch(PDO::FETCH_ASSOC);
-        $id_chauffeur = $id_chauffeur['id_chauffeur']; 
         $duree_course = $heurescourse . ":" . $minutescourse . ":" . $secondescourse;
 
         $terminée = 'false';
-        //Insertion de la course ENFIN WALLAH 
+
         $stm_insert_course = $db->prepare("INSERT INTO course 
         (ID_CHAUFFEUR, ID_VELO, ID_LIEU_DEPART, ID_LIEU_ARRIVEE, ID_CLIENT, PRIX_RESERVATION, DATE_PRISE_EN_CHARGE, DUREE_COURSE, heure_arrivee, TERMINEE) 
         VALUES 
@@ -145,11 +119,11 @@ try {
         ':heure_arrivee' => null, // ou l'heure d'arrivée valide
         ':terminee' => $terminée, // si vous souhaitez marquer la course comme non terminée
         ]);
-    
+
         // Préparer la réponse à envoyer au client
         $response = [
             'status' => 'success',
-            'message' => 'Informations de la course récupérées',
+            'message' => 'Course créée avec succès.',
             'details' => [
                 'chauffeur' => $id_chauffeur,
                 'depart' => $id_adresse_depart,
@@ -162,22 +136,21 @@ try {
 
         // Retourner la réponse en JSON
         header('Content-Type: application/json');
-        echo json_encode( $response );
+        echo json_encode($response);
+
     } else {
         // Si les informations sont manquantes, renvoyer une erreur
-        http_response_code(400);
         echo json_encode([
             'status' => 'error',
-            'message' => 'Informations manquantes'
+            'message' => 'Informations manquantes. Veuillez fournir toutes les données nécessaires.'
         ]);
     }
 
 } catch (PDOException $e) {
-    // Si une erreur de base de données se produit
-    error_log('Erreur PDO: ' . $e->getMessage());
-    http_response_code(500);
+    // Si une erreur de base de données se produit, on retourne l'erreur en JSON
     echo json_encode([
         'status' => 'error',
-        'message' => 'Erreur serveur: ' . $e->getMessage()
+        'message' => 'Erreur de base de données',
+        'details' => $e->getMessage()
     ]);
 }

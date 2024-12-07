@@ -1,25 +1,41 @@
 <?php
+
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ConfirmationEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $verificationCode;
+    public $client;
 
-    public function __construct($code)
+    /**
+     * Create a new message instance.
+     *
+     * @param $client
+     */
+    public function __construct($client)
     {
-        $this->verificationCode = $code;
+        $this->client = $client;
     }
 
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
     public function build()
     {
-        return $this->subject('Confirmation de votre compte')
-                    ->view('emails.confirmation')
-                    ->with(['code' => $this->verificationCode]);
+        return $this->subject("Votre code de vérification")
+                    ->view('emails.verification_email')
+                    ->with([
+                        'code' => $this->client->code_verif,
+                        'prenom' => $this->client->prenom_cp,
+                        'nom' => $this->client->nom_cp,
+                    ]);
     }
 }

@@ -162,3 +162,15 @@
     // Appel initial pour gérer l'affichage correct au chargement
     document.addEventListener('DOMContentLoaded', toggleProfessionnelFields);
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Sélectionner l'alerte
+        const alert = document.querySelector('.alert');
+        if (alert) {
+            // Attendre 5 secondes (5000 ms) avant de masquer l'alerte
+            setTimeout(() => {
+                alert.classList.add('hide');
+            }, 5000);
+        }
+    });
+</script>

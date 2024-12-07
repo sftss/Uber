@@ -3,40 +3,36 @@
 <link href="{{ asset('assets/style/app.css') }}" rel="stylesheet">
 <link rel="icon" href="{{ URL::asset('assets/svg/uber-logo.svg') }}" type="image/svg+xml">
 
-<form action="{{ route('restaurants.search') }}" method="GET" class="filter-form">
+<form method="GET" action="{{ route('lieux.search') }}"  class="filter-form">
     <div class="form-group">
-        <label for="lieu" class="form-label">Rechercher par ville ou par nom :</label>
-        <input type="text" id="lieu" name="lieu" class="form-input"
-            placeholder="Rechercher par Nom ou par Ville" value="{{ $lieu ?? '' }}">
+        <label for="lieu" class="form-label">Rechercher un lieu de vente</label>
+        <input type="text" id="lieu" name="lieu" value="{{ old('lieu') }}" class="form-input" placeholder="Nom de l'établissement ou ville">
     </div>
-
+    
     <div class="form-group checkboxes">
-        <p>Mode de livraison</p>
-        <div>
-            <input type="checkbox" id="livre" name="livre" {{ request('livre') ? 'checked' : '' }}>
-            <label for="livre">Livraison</label>
-        </div>
-        <div>
-            <input type="checkbox" id="emporter" name="emporter" {{ request('emporter') ? 'checked' : '' }}>
-            <label for="emporter">À emporter</label>
-        </div>
-
+        <label for="livre">Livraison</label>
+        <input type="checkbox" id="livre" name="livre" {{ request('livre') ? 'checked' : '' }}>
     </div>
 
     <div class="form-group">
-        <label for="categorie" class="form-label">Catégorie de restaurant :</label>
-        <select id="categorie" name="categorie" class="form-input">
-            <option value="">Toutes les catégories</option>
-            @foreach ($categories as $categorie)
-                <option value="{{ $categorie->id_categorie }}"
-                    {{ request('categorie') == $categorie->id_categorie ? 'selected' : '' }}>
-                    {{ $categorie->lib_categorie }}
-                </option>
-            @endforeach
-        </select>
+        <div class="planifier">
+            <h2 class="planifier-header"><span>Planifier</span>
+                <span class="toggle-arrow">➤</span>
+            </h2>
+            <div class="interface-planif" style="display: none;">
+                <div class="jours">
+                    <!-- génération jour -->
+                </div>
+                <div class="horraires">
+                    <!-- génération heure -->
+                </div>
+            </div>
+        </div>
+
     </div>
     <input type="hidden" id="horaire-selected" name="horaire-selected" value="">
-    <button type="submit" class="btn-submit">Rechercher</button>
+
+    <button type="submit" class="btn btn-primary">Filtrer</button>
 </form>
 
 <section class="restaurants-list">
@@ -60,4 +56,5 @@
         <p class="no-results">Aucun lieu ne correspond à vos critères.</p>
     @endif
 </section>
+<a href="{{ url('/panier') }}" id="panier">🛒</a>
 <script src="{{ asset('js/main.js') }}"></script>

@@ -17,6 +17,7 @@ const suggestionsArrivee = document.getElementById("suggestionsArrivee");
 const inputDateDepart = document.getElementById("dateDepart");
 const dateToday = new Date();
 const listePropositions = document.getElementById("propositionsList");
+const modification = getUrlParameter('modification');
 
 const cleAPILocationIQ = "pk.69ac2966071395cd67e8a9a5ed00d2c3"; // clé API LocationIQ
 
@@ -24,12 +25,59 @@ var markerDepart = null;
 var markerArrivee = null;
 var departementDepart = "";
 let durationInSeconds;
+    // Fonction pour obtenir les paramètres d'URL
+    function getUrlParameter(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+  }
+
+  // Function to fetch address details using the ID
+function fetchAddressDetails(id, callback) {
+  fetch(`/adresse/${id}`)  // Make sure this endpoint is set up in your backend
+      .then(response => response.json())
+      .then(data => {
+          callback(data);
+      })
+      .catch(error => {
+          console.error('Error fetching address details:', error);
+      });
+}
+
+  
 
 //quand on arrive sur la page on vide les champs
 window.onload = function () {
   inputDepart.value = "";
   inputArrivee.value = " ";
-  inputDateDepart.value =
+// Récupérer les adresses de départ et d'arrivée depuis l'URL
+const depart = getUrlParameter('depart');
+const arrivee = getUrlParameter('arrivee');
+const date_depart = getUrlParameter('datePriseEnCharge');
+const idCourse = getUrlParameter('id');
+
+// Si des adresses sont présentes dans l'URL, les insérer dans les champs correspondants
+if (depart) {
+  inputDepart.value =
+    fetchAddressDetails(depart, function(data) {
+      // On insère les informations dans les champs correspondants
+      document.getElementById('inputDepart').value = data.rue + ', ' + data.ville + ', ' + data.cp;
+  });
+}
+
+if (arrivee) {
+  inputArrivee.value = 
+    fetchAddressDetails(arrivee, function(data) {  // Utilisation de 'arrivee' ici
+      document.getElementById('inputArrivee').value = data.rue + ', ' + data.ville + ', ' + data.cp;  // Modifie 'inputArrivee'
+  });
+}
+
+if(date_depart)
+  {
+    inputDateDepart.value = date_depart+":00"
+  }
+  else
+  {
+    inputDateDepart.value =
     dateToday.toISOString().split("T")[0] +
     "T" +
     dateToday.toLocaleTimeString("fr-FR", {
@@ -37,12 +85,14 @@ window.onload = function () {
       minute: "2-digit",
     });
   inputDateDepart.min =
-    dateToday.toISOString().split("T")[0] +
-    "T" +
-    dateToday.toLocaleTimeString("fr-FR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  dateToday.toISOString().split("T")[0] +
+  "T" +
+  dateToday.toLocaleTimeString("fr-FR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  }  
+  
 };
 
 let isProcessing = false;
@@ -52,8 +102,12 @@ document.getElementById("boutonValider").addEventListener("click", function () {
     return;
   }
   isProcessing = true;
-
+  
   trouverChauffeurs();
+  
+  setTimeout(function() {
+    isProcessing = false;
+  }, 1000);
 });
 
 // Appliquer la fonction pour les deux inputs
@@ -202,7 +256,8 @@ function geocodeAddress(inputElement, suggestionsBox, marker, isdepart) {
                 const number = address.house_number || ""; // Numéro de rue
                 const street = address.road || ""; // Rue
                 const city =
-                  address.city || address.town || address.village || ""; // Ville
+                   address.town || address.village || ""; // Ville
+                const agglo = address.city || "";
                 const postalCode = address.postcode || ""; // Code postal
                 const country = address.country || ""; // Pays
 
@@ -210,8 +265,14 @@ function geocodeAddress(inputElement, suggestionsBox, marker, isdepart) {
                   address["ISO3166-2-lvl6"].substring(3, 5) || ""; // Code du département //0652402353
 
                 // on construit la suggestion avec les détails pour améliorer la lisibilité
-                const suggestionText = `${number} ${street}, ${postalCode} ${city}, ${country}`;
-
+                const suggestionText = [
+                  number && number,
+                  street && street,
+                  postalCode && postalCode,
+                  city && city,
+                  agglo && agglo,
+                  country && country
+              ].filter(Boolean).join(', ');
                 const div = document.createElement("div");
                 div.textContent = suggestionText.trim();
 
@@ -260,19 +321,33 @@ function geocodeAddress(inputElement, suggestionsBox, marker, isdepart) {
 let dateDepart;
 //si les deux marqueurs sont renseignés on lance la méthode désignée
 function trouverChauffeurs() {
-   dateDepart = new Date(inputDateDepart.value);
-  //on supprime les anciennes propositions
+  // Reset processing flag at the start of the function
+  isProcessing = false;
+
+  dateDepart = new Date(inputDateDepart.value);
+  
+  // Clear previous propositions
   while (propositionsList.firstChild) {
     propositionsList.removeChild(propositionsList.firstChild);
   }
+
+  // Check processing flag at the start
+  if (isProcessing) {
+    return;
+  }
+  
+  isProcessing = true;
+
   if (getDate(dateDepart) == getDate(dateToday)) {
     if (!markerDepart || !markerArrivee) {
       alert("Veuillez saisir les deux adresses (départ et arrivée).");
+      isProcessing = false; // Reset flag if addresses are missing
     } else {
       geocodeChauffeurs(chauffeurs);
     }
   } else {
     categories.forEach(AfficheCategorie);
+    isProcessing = false; // Reset flag after displaying categories
   }
 }
 
@@ -545,6 +620,15 @@ function AfficheCategorie(categorie) {
   reserverBtn.style.top = "50%";
   reserverBtn.style.right = "10px";
   reserverBtn.style.transform = "translateY(-50%)"; // Centrer en hauteur
+
+  reserverBtn.addEventListener("click", function () {
+    // Créer la course
+    creerCourseCategorie(categorie);
+
+    // Mettre à jour le bouton pour afficher "Course réservée"
+    reserverBtn.textContent = "Course réservée";
+    reserverBtn.disabled = true; // Désactiver le bouton une fois la course réservée
+  });
   
   div.appendChild(reserverBtn);
   
@@ -601,27 +685,29 @@ function creerCourse(chauffeur) {
       });
   }
 
-  // Obtenir les détails des lieux de départ et d'arrivée
-  Promise.all([
-    getLieuDetails(departCoords.lat, departCoords.lng),
-    getLieuDetails(arriveeCoords.lat, arriveeCoords.lng),
-  ]).then(([lieuDepart, lieuArrivee]) => {
-    // Construire la course avec les données enrichies
-    const course = {
-      chauffeur_nom: chauffeur.nom_chauffeur,
-      chauffeur_prenom: chauffeur.prenom_chauffeur,
-      lieu_depart_rue: lieuDepart.rue,
-      lieu_depart_ville: lieuDepart.ville,
-      lieu_depart_cp: lieuDepart.code_postal,
-      lieu_arrivee_rue: lieuArrivee.rue,
-      lieu_arrivee_ville: lieuArrivee.ville,
-      lieu_arrivee_cp: lieuArrivee.code_postal,
-      prix_reservation: prix_reservation,
-      tempscourse: durationInSeconds,
-      date_trajet: dateDepart,
-    };
 
-    // Envoyer les données au serveur
+
+// Obtenir les détails des lieux de départ et d'arrivée
+Promise.all([
+  getLieuDetails(departCoords.lat, departCoords.lng),
+  getLieuDetails(arriveeCoords.lat, arriveeCoords.lng),
+]).then(([lieuDepart, lieuArrivee]) => {
+  // Construire la course avec les données enrichies
+  const course = {
+    chauffeur_nom: chauffeur.nom_chauffeur,
+    chauffeur_prenom: chauffeur.prenom_chauffeur,
+    lieu_depart_rue: lieuDepart.rue,
+    lieu_depart_ville: lieuDepart.ville,
+    lieu_depart_cp: lieuDepart.code_postal,
+    lieu_arrivee_rue: lieuArrivee.rue,
+    lieu_arrivee_ville: lieuArrivee.ville,
+    lieu_arrivee_cp: lieuArrivee.code_postal,
+    prix_reservation: prix_reservation,
+    tempscourse: durationInSeconds,
+    date_trajet: dateDepart,
+  };
+
+  
     fetch("/php/reserver_course.php", {
       method: "POST",
       headers: {
@@ -657,12 +743,16 @@ function creerCourse(chauffeur) {
         console.error("Erreur lors de l'envoi de la course :", error);
       });
     
-  });
-}
+  
+
+  // Envoyer les données au serveur
+  
+});
+  }
+  
 
 
 function creerCourseCategorie(categorie) {
-  // Vérifier si une course est déjà réservée
   if (courseDejaReservee) {
     alert("Vous avez déjà réservé une course.");
     return;
@@ -704,14 +794,12 @@ function creerCourseCategorie(categorie) {
       });
   }
 
-  // Obtenir les détails des lieux de départ et d'arrivée
   Promise.all([
     getLieuDetails(departCoords.lat, departCoords.lng),
     getLieuDetails(arriveeCoords.lat, arriveeCoords.lng),
   ]).then(([lieuDepart, lieuArrivee]) => {
-    // Construire la course avec les données enrichies
     const course = {
-      categorie: categorie,
+      categorie: categorie.lib_categorie_vehicule,  // Utilisez le nom de la catégorie
       lieu_depart_rue: lieuDepart.rue,
       lieu_depart_ville: lieuDepart.ville,
       lieu_depart_cp: lieuDepart.code_postal,
@@ -723,7 +811,6 @@ function creerCourseCategorie(categorie) {
       date_trajet: dateDepart,
     };
 
-    // Envoyer les données au serveur
     fetch("/php/reservercoursecategorie.php", {
       method: "POST",
       headers: {
@@ -732,27 +819,30 @@ function creerCourseCategorie(categorie) {
       body: JSON.stringify(course),
     })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error('Erreur côté serveur');
-        }
-        return response.json(); // Assurez-vous que la réponse est en JSON
+        // Vérifiez la réponse avant de la parser en JSON
+        console.log(response);
+        return response.text(); // Utilisez .text() pour voir la réponse brute
       })
       .then((data) => {
-        // Vérifiez la structure de la réponse
-        console.log(data);
-        if (data.status === 'success') {
-          // Marquer la course comme réservée
-          courseDejaReservee = true;
-          console.log(courseDejaReservee);
+        console.log(data); // Affichez la réponse brute pour mieux comprendre son contenu
+        try {
+          const jsonData = JSON.parse(data); // Tentez de parser en JSON
+          if (jsonData.status === 'success') {
+            // Marquer la course comme réservée
+            courseDejaReservee = true;
+            console.log(courseDejaReservee);
     
-          // Désactiver tous les boutons de réservation
-          const boutonReserver = document.querySelectorAll(".reserver-btn");
-          boutonReserver.forEach((btn) => {
-            btn.disabled = true;
-            btn.textContent = "Course réservée";
-          });
-        } else {
-          console.error('Erreur de réservation', data.message);
+            // Désactiver tous les boutons de réservation
+            const boutonReserver = document.querySelectorAll(".reserver-btn");
+            boutonReserver.forEach((btn) => {
+              btn.disabled = true;
+              btn.textContent = "Course réservée";
+            });
+          } else {
+            console.error('Erreur de réservation', jsonData.message);
+          }
+        } catch (e) {
+          console.error('Erreur de parsing JSON', e, data); // Affiche l'erreur de parsing
         }
       })
       .catch((error) => {

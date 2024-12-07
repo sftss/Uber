@@ -52,8 +52,11 @@
         </div>
     </div>
 
-    <a href="{{ url('/panier') }}" id="panier">Voir mon panier 🛒</a>
 </section>
+
+<a href="{{ url('/panier') }}" id="panier">🛒</a>
+
+
 
 <script src="{{ asset('js/main.js') }}" defer></script>
 </body>

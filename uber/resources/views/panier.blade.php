@@ -1,6 +1,3 @@
-<link href="{{ asset('assets/style/app.css') }}" rel="stylesheet">
-<link rel="icon" href="{{ URL::asset('assets/svg/uber-logo.svg') }}" type="image/svg+xml">
-
 @extends('layouts.header')
 
 <section class="paniers-list">
