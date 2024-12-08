@@ -76,19 +76,6 @@ class RegisterController extends Controller
     $client->newsletter = $request->has('newsletter') ? true : false;
     
 
-
-    
-
-    /*$email = new Mail();
-    $email->setFrom("no-reply@votresite.com", "Nom de votre entreprise");
-    $email->setSubject("Inscription");
-    $email->addTo($client->mail_client);
-    $email->addContent("text/plain", "Votre code de vérification est : " . $client->code_verif);
-    
-    $sendgrid = new \SendGrid(env('SENDGRID_API_KEY'));
-    $response = $sendgrid->send($email);
-    
-    echo "Message envoyé avec succès : " . $response->statusCode();*/
     
 
 

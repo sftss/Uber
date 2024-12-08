@@ -8,17 +8,17 @@
 <form action="{{ route('restaurants.search') }}" method="GET" class="filter-form">
     <div class="form-group">
         <label for="lieu" class="form-label">Rechercher par ville ou par nom :</label>
-        <input type="text" id="lieu" name="lieu" class="form-input"
-            placeholder="Rechercher par Nom ou par Ville" value="{{ $lieu ?? '' }}">
+        <input type="text" id="lieu" name="lieu" class="form-input" placeholder="Lyon, Annecy, Quick, ..."
+            value="{{ $lieu ?? '' }}">
     </div>
 
     <div class="form-group checkboxes">
-        <p> Mode de livraison</p>
-        <div>
+        <p style="font: weight 300px;">Mode de livraison :</p>
+        <div class="checkBoxSearchRestau">
             <input type="checkbox" id="livre" name="livre" {{ request('livre') ? 'checked' : '' }}>
             <label for="livre">Livraison</label>
         </div>
-        <div>
+        <div class="checkBoxSearchRestau">
             <input type="checkbox" id="emporter" name="emporter" {{ request('emporter') ? 'checked' : '' }}>
             <label for="emporter">À emporter</label>
         </div>

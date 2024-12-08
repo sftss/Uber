@@ -62,9 +62,12 @@
                             <div>
                                 <div class="form-group">
                                     <label for="est_particulier">Type de client</label>
-                                    <select name="est_particulier" id="est_particulier" required onchange="toggleProfessionnelFields()">
-                                        <option value="1" {{ old('est_particulier') == '1' ? 'selected' : '' }}>Particulier</option>
-                                        <option value="0" {{ old('est_particulier') == '0' ? 'selected' : '' }}>Professionnel</option>
+                                    <select name="est_particulier" id="est_particulier" required
+                                        onchange="toggleProfessionnelFields()">
+                                        <option value="1" {{ old('est_particulier') == '1' ? 'selected' : '' }}>
+                                            Particulier</option>
+                                        <option value="0" {{ old('est_particulier') == '0' ? 'selected' : '' }}>
+                                            Professionnel</option>
                                     </select>
                                 </div>
                             </div>
@@ -76,7 +79,8 @@
                                 <div id="num_siret_field">
                                     <div class="form-group">
                                         <label for="num_siret">Numéro SIRET</label>
-                                        <input type="text" name="num_siret" id="num_siret" value="{{ old('num_siret') }}">
+                                        <input type="text" name="num_siret" id="num_siret"
+                                            value="{{ old('num_siret') }}">
                                     </div>
                                 </div>
                                 <div>
@@ -84,8 +88,9 @@
                                         <label for="secteur_activite">Secteur d'activité</label>
                                         <select name="secteur_activite" id="secteur_activite">
                                             <option value="" disabled selected>Choisir...</option>
-                                            @foreach($secteurs as $secteur)
-                                                <option value="{{ $secteur->id_sd }}" {{ old('secteur_activite') == $secteur->id_sd ? 'selected' : '' }}>
+                                            @foreach ($secteurs as $secteur)
+                                                <option value="{{ $secteur->id_sd }}"
+                                                    {{ old('secteur_activite') == $secteur->id_sd ? 'selected' : '' }}>
                                                     {{ $secteur->lib_sd }}
                                                 </option>
                                             @endforeach
@@ -102,23 +107,26 @@
                                     <label for="sexe_cp">Sexe</label>
                                     <select name="sexe_cp" id="sexe_cp" required>
                                         <option value="" disabled selected>Choisir...</option>
-                                        <option value="H" {{ old('sexe_cp') == 'H' ? 'selected' : '' }}>Homme</option>
-                                        <option value="F" {{ old('sexe_cp') == 'F' ? 'selected' : '' }}>Femme</option>
+                                        <option value="H" {{ old('sexe_cp') == 'H' ? 'selected' : '' }}>Homme
+                                        </option>
+                                        <option value="F" {{ old('sexe_cp') == 'F' ? 'selected' : '' }}>Femme
+                                        </option>
                                     </select>
                                 </div>
                             </div>
                             <div>
                                 <div class="form-group">
                                     <label for="date_naissance_cp">Date de naissance</label>
-                                    <input type="date" name="date_naissance_cp" value="{{ old('date_naissance_cp') }}">
+                                    <input type="date" name="date_naissance_cp"
+                                        value="{{ old('date_naissance_cp') }}">
                                 </div>
                             </div>
                         </div>
 
-
                         <div class="row">
                             <div class="col-12 form-group d-flex align-items-center">
-                                <input type="checkbox" name="newsletter" id="newsletter" {{ old('newsletter') ? 'checked' : '' }}>
+                                <input type="checkbox" name="newsletter" id="newsletter"
+                                    {{ old('newsletter') ? 'checked' : '' }}>
                                 <label for="newsletter" class="ml-2">
                                     Recevoir la newsletter
                                 </label>
@@ -127,9 +135,11 @@
                         <!-- Politique de confidentialité -->
                         <div class="row">
                             <div class="col-12 form-group d-flex align-items-center">
-                                <input type="checkbox" name="politique_confidentialite" id="politique_confidentialite" required>
+                                <input type="checkbox" name="politique_confidentialite" id="politique_confidentialite"
+                                    required>
                                 <label for="politique_confidentialite" class="ml-2">
-                                    J'ai lu et j'accepte la <a href="{{ route('politique') }}" target="_blank">politique de confidentialité</a>
+                                    J'ai lu et j'accepte la <a class="txtPolConf" href="{{ route('politique') }}"
+                                        target="_blank">politique de confidentialité</a>
                                 </label>
                             </div>
                         </div>
@@ -163,7 +173,7 @@
     document.addEventListener('DOMContentLoaded', toggleProfessionnelFields);
 </script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         // Sélectionner l'alerte
         const alert = document.querySelector('.alert');
         if (alert) {

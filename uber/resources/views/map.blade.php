@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autocomplétion d'adresses en France avec Leaflet</title>
+    <title>Uber</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
 </head>
@@ -31,16 +31,23 @@
             <button id="boutonValider" class="btn-submitmap">Trouver les chauffeurs</button>
 
         </div>
-
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js" ></script>
         <div id="map"></div>
     </div>
 
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    
 
+    <!-- Charger votre script après Leaflet -->
     <script>
-        // on récupère les chauffeurs en JS depuis PHP
-        const chauffeurs = @json($chauffeurs);
-        const categories = @json($categories);
+    // On récupère les chauffeurs en JS depuis PHP
+    const chauffeurs = @json($chauffeurs);
+    const categories = @json($categories);
+
+    @if(isset($coursePourModification))
+    const coursePourModification = @json($coursePourModification);
+    @else
+    const coursePourModification = null;
+    @endif
     </script>
 
     <div id="tempsTrajetContainer">
@@ -56,8 +63,8 @@
     </div>
 
 </div>
-
-    <script src="{{ URL::asset('js/map.js') }}"></script>
+    
+    <script src="{{ URL::asset('js/map.js') }}" defer></script>
 
 </body>
 

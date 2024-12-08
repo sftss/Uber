@@ -39,9 +39,8 @@ Route::get('/panierclient', [ClientController::class, 'panierclient']);
 
 
 Route::get('/map',[ChauffeurController::class, "index" ]);
-Route::get('/test', function() {
-    return view('main-test');
-});
+Route::get('/map/{id?}', [ChauffeurController::class, 'index'])->name('map');
+
 
 Route::prefix('cart')->name('cart.')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('index');

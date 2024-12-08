@@ -3,14 +3,15 @@
 <link href="{{ asset('assets/style/app.css') }}" rel="stylesheet">
 <link rel="icon" href="{{ URL::asset('assets/svg/uber-logo.svg') }}" type="image/svg+xml">
 
-<form method="GET" action="{{ route('lieux.search') }}"  class="filter-form">
+<form method="GET" action="{{ route('lieux.search') }}" class="filter-form">
     <div class="form-group">
         <label for="lieu" class="form-label">Rechercher un lieu de vente</label>
-        <input type="text" id="lieu" name="lieu" value="{{ old('lieu') }}" class="form-input" placeholder="Nom de l'établissement ou ville">
+        <input type="text" id="lieu" name="lieu" value="{{ old('lieu') }}" class="form-input"
+            placeholder="Nom de l'établissement ou ville">
     </div>
-    
-    <div class="form-group checkboxes">
-        <label for="livre">Livraison</label>
+
+    <div class="form-group form-group-lieu checkboxes">
+        <label id="livraisonTxtCourse" for="livre">Livraison</label>
         <input type="checkbox" id="livre" name="livre" {{ request('livre') ? 'checked' : '' }}>
     </div>
 

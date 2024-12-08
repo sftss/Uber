@@ -56,8 +56,6 @@
 
 <a href="{{ url('/panier') }}" id="panier">🛒</a>
 
-
-
 <script src="{{ asset('js/main.js') }}" defer></script>
 </body>
 

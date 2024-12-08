@@ -17,33 +17,36 @@
     </div>
 @endif
 
-
-<a href="{{ url('/lieux/search')}}"><p>Retour</p></a>
+<a href="{{ url('/lieux/search') }}">
+    <p>Retour</p>
+</a>
 
 <div class="restaurant-card">
-    <img src="{{ $lieu->photo_lieu}}" alt="Image de {{$lieu->nom_etablissement}} " class="restaurant-image">
-    <h3>{{ $lieu->nom_etablissement }}</h3>
-    <p><strong>Ville :</strong> {{ $lieu->ville }}</p>
-    <p><strong>Livraison :</strong> {{ $lieu->propose_livraison ? 'Oui' : 'Non' }}</p>
-    <p><strong>Horaires :</strong>
-    {{ date('H:i', strtotime($lieu->horaires_ouverture)) }} -
-    {{ date('H:i', strtotime($lieu->horaires_fermeture)) }}
-</p>
+    <img src="{{ $lieu->photo_lieu }}" alt="Image de {{ $lieu->nom_etablissement }} " class="restaurant-image">
+    <div class="lieu-vente-details">
+        <h3>{{ $lieu->nom_etablissement }}</h3>
+        <p><strong>Ville :</strong> {{ $lieu->ville }}</p>
+        <p><strong>Livraison :</strong> {{ $lieu->propose_livraison ? 'Oui' : 'Non' }}</p>
+        <p><strong>Horaires :</strong>
+            {{ date('H:i', strtotime($lieu->horaires_ouverture)) }} -
+            {{ date('H:i', strtotime($lieu->horaires_fermeture)) }}
+        </p>
+    </div>
 </div>
-
 
 <form method="GET" action="{{ route('lieux.show', $lieu->id_lieu_de_vente_pf) }}" class="filter-form">
     <div class="form-group">
         <label for="produit" class="form-label">Rechercher un produit</label>
-        <input type="text" id="produit" name="produit" value="{{ old('produit') }}" class="form-input" placeholder="Nom du produit">
+        <input type="text" id="produit" name="produit" value="{{ old('produit') }}" class="form-input"
+            placeholder="Nom du produit">
     </div>
 
     <div class="form-group">
         <label for="categorie" class="form-label">Catégorie</label>
         <select id="categorie" name="categorie" class="form-input">
             <option value="">-- Sélectionner une catégorie --</option>
-            @foreach($categories as $categorie)
-                <option value="{{ $categorie->id_categorie_produit }}" 
+            @foreach ($categories as $categorie)
+                <option value="{{ $categorie->id_categorie_produit }}"
                     {{ old('categorie') == $categorie->id_categorie_produit ? 'selected' : '' }}>
                     {{ $categorie->libelle_categorie }}
                 </option>
@@ -54,35 +57,33 @@
     <button type="submit" class="btn btn-primary">Rechercher</button>
 </form>
 
-
-
 <section class="menus-container">
     <h2>Plats disponibles</h2>
     <div class="menus">
-    @if ($produits->isNotEmpty())
-        @foreach ($produits as $produit)
-            <div class="menu-card">
-                <img src="{{ $produit->photo_produit }}" alt="">
-                <h4>{{ $produit->nom_produit }}</h4>
-                <p><strong>Catégorie :</strong> {{ $produit->libelle_categorie }} </p>
-                <p><strong>Prix :</strong> {{ $produit->prix_produit }} €</p>
-                <form action="{{ route('cart.add', ['type' => 'produit', 'id' => $produit->id_produit]) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-primary ajtpanier">Ajouter au panier</button>
-                </form>
-            </div>
-        @endforeach
-    @else
-        <p class="no-results">Aucun produit disponible dans ce lieu de vente.</p>
-    @endif
-</div>
+        @if ($produits->isNotEmpty())
+            @foreach ($produits as $produit)
+                <div class="menu-card">
+                    <img src="{{ $produit->photo_produit }}" alt="">
+                    <h4>{{ $produit->nom_produit }}</h4>
+                    <p><strong>Catégorie :</strong> {{ $produit->libelle_categorie }} </p>
+                    <p><strong>Prix :</strong> {{ $produit->prix_produit }} €</p>
+                    <form action="{{ route('cart.add', ['type' => 'produit', 'id' => $produit->id_produit]) }}"
+                        method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-primary ajtpanier">Ajouter au panier</button>
+                    </form>
+                </div>
+            @endforeach
+        @else
+            <p class="no-results">Aucun produit disponible dans ce lieu de vente.</p>
+        @endif
+    </div>
 </section>
 <a href="{{ url('/panier') }}" id="panier">🛒</a>
 
-
 <script src="{{ asset('js/main.js') }}"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         // Sélectionner l'alerte
         const alert = document.querySelector('.alert');
         if (alert) {

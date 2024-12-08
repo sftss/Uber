@@ -1,22 +1,13 @@
 <link rel="stylesheet" href="{{ URL::asset('assets/style/course.css') }}" />
 
-<div class="navbar">
+
+
+@extends('layouts.header')
+
 <a href="{{ url('/') }}" class="back_button">
     <span class="back_icon">&#8592;</span> <!-- Flèche vers la gauche -->
     <p>Retour</p>
 </a>
-
-</a>
-
-    </a>
-    <a href="{{ route('login') }}" class="login">Login</a>
-    <a href="{{ route('register') }}" class="register">Register</a>
-</div>
-
-@extends('layouts.app')
-
-
-@section('content')
     <h2>Les courses</h2>
     <ul>
         @foreach ($courses->reverse() as $course)
@@ -30,23 +21,32 @@
                         Chauffeur : {{ $course->id_chauffeur }}
                         @endif
                 </li>
-                <li class="depart">Lieu de départ : {{ $course->id_lieu_depart }}</li>
-                <li class="arrivee">Lieu d'arrivée : {{ $course->id_lieu_arrivee }}</li>
+                <li class="depart">Lieu de départ : {{ $course->ville_depart }}</li>
+                <li class="arrivee">Lieu d'arrivée : {{ $course->ville_arrivee }}</li>
                 <li class="prix">Prix : {{ $course->prix_reservation }} €</li>
                 <li class="date_prise_en_charge">Date de la course : {{ $course->date_prise_en_charge }}</li>
                 <li class="duree">Durée : {{ $course->duree_course }}</li>
-                <li class="temps_arrivee">Heure d'arrivée : {{ $course->heure_arrivee }}</li>
+                <li class="temps_arrivee">Heure d'arrivée : 
+                    @if($course->heure_arrivee)
+                        {{ $course->heure_arrivee }}
+                    @else
+                        Non spécifiée
+                    @endif
+                </li>
                 <li class="terminee"> 
                     @if($course->terminee)
                         Terminée
                     @else
-                        En cours
+                        <div>
+                            <p>En cours</p>
+                            <button class="modifyButton" data-course-id="{{ $course->id_course }}">Modifier</button>
+                        </div>
                     @endif
                 </li>
             </ul>
 
-            <!-- Bouton Modifier -->
-            <button id="modifyButton" class="btn btn-primary" >Modifier</button>
+            <div class="course">
+    </div>
 
 
 
@@ -64,23 +64,16 @@
         @endforeach
 </ul>
 <script>
-    document.querySelectorAll('#modifyButton').forEach(function(button) {
+     document.querySelectorAll('.modifyButton').forEach(function(button) {
         button.addEventListener('click', function() {
             var courseElement = this.closest('.course_container');  // Trouve le conteneur de la course parent
 
-            var heure = courseElement.querySelector('.temps_arrivee').textContent.split(":")[1].trim();
-            var datePriseEnCharge = courseElement.querySelector('.date_prise_en_charge').textContent.split(":")[1].trim()+"T"+heure;
-            
-            var id = courseElement.querySelector('.course_title').textContent.split(":")[1].trim();  // Extraction de l'id_course
+            // Extraction de l'id_course
+            var id = courseElement.querySelector('.course_title').textContent.split(":")[1].trim();  
+            console.log(id)
 
-            // Envoie l'utilisateur vers la page de modification avec les paramètres requis
-            window.location.href = "{{ url('/map') }}?depart=" + encodeURIComponent(courseElement.querySelector('.depart').textContent.split(":")[1].trim()) +
-                "&arrivee=" + encodeURIComponent(courseElement.querySelector('.arrivee').textContent.split(":")[1].trim()) +
-                "&datePriseEnCharge=" + encodeURIComponent(datePriseEnCharge) +
-                "&modification=true" +
-                "&id=" + encodeURIComponent(id);
+            // Envoie l'utilisateur vers la page de modification avec l'id_course
+            window.location.href = "{{ url('/map') }}/" + encodeURIComponent(id);
         });
     });
 </script>
-
-@endsection

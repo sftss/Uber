@@ -3,8 +3,6 @@
 <link href="{{ asset('assets/style/app.css') }}" rel="stylesheet">
 <link rel="icon" href="{{ URL::asset('assets/svg/uber-logo.svg') }}" type="image/svg+xml">
 
-
-
 <div class="restaurant-card">
 
     <img src="{{ $restaurant->photo_restaurant }}" alt="Image de {{ $restaurant->nom_etablissement }}"
@@ -38,37 +36,28 @@
     </div>
 @endif
 
-
-<form method="GET" action="{{ route('restaurants.show', $restaurant->id_restaurant) }}">
-    <div>
+<form id="formRechercherProd" method="GET" action="{{ route('restaurants.show', $restaurant->id_restaurant) }}">
+    <div class="RechercherProduitMagasin">
         <label for="search">Recherche</label>
-        <input type="text" id="search" name="search" value="{{ old('search') }}" placeholder="Rechercher dans les menus, plats, produits...">
+        <input type="text" id="search" name="search" value="{{ old('search') }}"
+            placeholder="Rechercher dans les menus, plats, produits...">
     </div>
-    <div>
+    <div class="RechercherProduitMagasin">
         <label for="categorie">Catégorie de produit</label>
         <select name="categorie" id="categorie">
-    <option value="">Sélectionner une catégorie</option>
-    @foreach($categoriesProduits as $cat)
-        <option value="{{ $cat->id_categorie_produit }}" 
-            {{ old('categorie', $categorieId ?? '') == $cat->id_categorie_produit ? 'selected' : '' }}>
-            {{ $cat->libelle_categorie }}
-        </option>
-    @endforeach
-</select>
+            <option value="">Sélectionner une catégorie</option>
+            @foreach ($categoriesProduits as $cat)
+                <option value="{{ $cat->id_categorie_produit }}"
+                    {{ old('categorie', $categorieId ?? '') == $cat->id_categorie_produit ? 'selected' : '' }}>
+                    {{ $cat->libelle_categorie }}
+                </option>
+            @endforeach
+        </select>
     </div>
-    <button type="submit">Filtrer</button>
+    <button class="filter-but-eat" type="submit">Filtrer</button>
 </form>
 
-
 <a href="{{ url('/panier') }}" id="panier">🛒</a>
-
-
-
-
-
-
-
-
 
 <section class="menus-container">
     <h2>Menus disponibles</h2>
@@ -84,16 +73,15 @@
                     <p>Catégorie : {{ $menu->categorie_produit }} </p>
                     <p>Prix : {{ $menu->prix_menu }} €</p>
                     <form action="{{ route('cart.add', ['type' => 'menu', 'id' => $menu->id_menu]) }}" method="POST">
-                      @csrf
-                         <button type="submit" class="btn-primary ajtpanier">Ajouter au panier</button>
-                     </form>
+                        @csrf
+                        <button type="submit" class="btn-primary ajtpanier">Ajouter au panier</button>
+                    </form>
                 </div>
             @endforeach
 
         @endif
     </div>
 </section>
-
 
 <section class="menus-container">
     <h2>Plats disponibles</h2>
@@ -135,10 +123,11 @@
                     <p>Catégorie : {{ $produit->categorie_produit }} </p>
                     <p>Prix : {{ $produit->prix_produit }} €</p>
 
-                    <form action="{{ route('cart.add', ['type' => 'produit', 'id' => $produit->id_produit]) }}" method="POST">
-    @csrf
-    <button type="submit" class="btn-primary ajtpanier">Ajouter au panier</button>
-</form>
+                    <form action="{{ route('cart.add', ['type' => 'produit', 'id' => $produit->id_produit]) }}"
+                        method="POST">
+                        @csrf
+                        <button type="submit" class="btn-primary ajtpanier">Ajouter au panier</button>
+                    </form>
                 </div>
             @endforeach
 
@@ -148,7 +137,7 @@
 
 <script src="{{ asset('js/main.js') }}"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         // Sélectionner l'alerte
         const alert = document.querySelector('.alert');
         if (alert) {

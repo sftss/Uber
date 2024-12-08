@@ -16,11 +16,18 @@ class Course extends Model
         // Récupérer toutes les courses
         $courses = Course::all();
 
-        // Retourner la vue avec les courses
         return view('courses.index', compact('courses'));
     }
 
-    
+    public function lieuDepart()
+    {
+        return $this->belongsTo(Adresse::class, 'id_lieu_depart', 'id_adresse');
+    }
+
+    public function lieuArrivee()
+    {
+        return $this->belongsTo(Adresse::class, 'id_lieu_arrivee', 'id_adresse');
+    }
 
     // Ajoutez ici toutes les colonnes qui peuvent être assignées en masse
     protected $fillable = [

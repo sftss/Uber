@@ -1,4 +1,9 @@
 <?php
+
+
+
+
+
 // Activer le rapport d'erreurs PHP
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -49,6 +54,8 @@ try {
     /*$id_client =  Auth::user()->id_client ?? null;
     dd($idclient);*/
 
+
+    
     // Vérifier que les données nécessaires sont présentes
     if ( $chauffeur_nom && $lieu_depart_rue && $lieu_arrivee_rue) {
         

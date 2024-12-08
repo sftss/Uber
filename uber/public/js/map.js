@@ -4,11 +4,27 @@
 //osrm pour calculer le meilleur itinéraire en voiture entre 2 points et sa durée
 
 // Initialisation de la carte Leaflet
-const map = L.map("map").setView([45.9207646, 6.1527482], 13); // Coordonnées de l'IUT par défaut
-var divcrée;
+if (typeof L === 'undefined') {
+  // Charger Leaflet si ce n'est pas déjà fait
+  var script = document.createElement('script');
+  script.src = 'https://unpkg.com/leaflet/dist/leaflet.js';
+  script.onload = function() {
+      // Une fois que Leaflet est chargé, exécuter votre code
+      const map = L.map("map").setView([45.9207646, 6.1527482], 13); // Coordonnées de l'IUT par défaut
+
+      
+      // Ajout d'un fond de carte OpenStreetMap
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map); // Appeler la fonction d'initialisation de la carte
+  };
+  document.head.appendChild(script);
+} else {
+  // Si Leaflet est déjà chargé, appeler directement la fonction d'initialisation de la carte
+  const map = L.map("map").setView([45.9207646, 6.1527482], 13); // Coordonnées de l'IUT par défaut
 
 // Ajout d'un fond de carte OpenStreetMap
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+}
+var divcrée;
 
 const inputDepart = document.getElementById("inputDepart");
 const inputArrivee = document.getElementById("inputArrivee");
@@ -18,6 +34,7 @@ const inputDateDepart = document.getElementById("dateDepart");
 const dateToday = new Date();
 const listePropositions = document.getElementById("propositionsList");
 const modification = getUrlParameter('modification');
+
 
 const cleAPILocationIQ = "pk.69ac2966071395cd67e8a9a5ed00d2c3"; // clé API LocationIQ
 
@@ -44,56 +61,112 @@ function fetchAddressDetails(id, callback) {
 }
 
   
+///////MATHIEU C EST ICI
+document.addEventListener('DOMContentLoaded', function() {
+  if (coursePourModification) {
+      // Pre-fill departure input
+      const inputDepart = document.getElementById('inputDepart');
+      inputDepart.value = coursePourModification.lieu_depart ? 
+          `${coursePourModification.lieu_depart.rue},${coursePourModification.lieu_depart.cp}, ${coursePourModification.lieu_depart.ville}, France ` : 
+          '';
 
-//quand on arrive sur la page on vide les champs
-window.onload = function () {
-  inputDepart.value = "";
-  inputArrivee.value = " ";
-// Récupérer les adresses de départ et d'arrivée depuis l'URL
-const depart = getUrlParameter('depart');
-const arrivee = getUrlParameter('arrivee');
-const date_depart = getUrlParameter('datePriseEnCharge');
-const idCourse = getUrlParameter('id');
+      // Pre-fill arrival input
+      const inputArrivee = document.getElementById('inputArrivee');
+      inputArrivee.value = coursePourModification.lieu_arrivee ? 
+          `${coursePourModification.lieu_arrivee.rue}, ${coursePourModification.lieu_arrivee.cp}, ${coursePourModification.lieu_arrivee.ville}, France ` : 
+          '';
 
-// Si des adresses sont présentes dans l'URL, les insérer dans les champs correspondants
-if (depart) {
-  inputDepart.value =
-    fetchAddressDetails(depart, function(data) {
-      // On insère les informations dans les champs correspondants
-      document.getElementById('inputDepart').value = data.rue + ', ' + data.ville + ', ' + data.cp;
-  });
-}
+      // Pre-fill date and time
+      const dateDepart = document.getElementById('dateDepart');
+      dateDepart.value = formatDateForInput(coursePourModification.date_prise_en_charge);
 
-if (arrivee) {
-  inputArrivee.value = 
-    fetchAddressDetails(arrivee, function(data) {  // Utilisation de 'arrivee' ici
-      document.getElementById('inputArrivee').value = data.rue + ', ' + data.ville + ', ' + data.cp;  // Modifie 'inputArrivee'
-  });
-}
+      setupAddressModification();
 
-if(date_depart)
-  {
-    inputDateDepart.value = date_depart+":00"
+
   }
-  else
-  {
-    inputDateDepart.value =
-    dateToday.toISOString().split("T")[0] +
-    "T" +
-    dateToday.toLocaleTimeString("fr-FR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  inputDateDepart.min =
-  dateToday.toISOString().split("T")[0] +
-  "T" +
-  dateToday.toLocaleTimeString("fr-FR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-  }  
+});
+
+///////MATHIEU C EST ICI
+function setupAddressModification() {
+  const inputDepart = document.getElementById('inputDepart');
+  const inputArrivee = document.getElementById('inputArrivee');
+  const suggestionsDepart = document.getElementById('suggestionsDepart');
+  const suggestionsArrivee = document.getElementById('suggestionsArrivee');
   
-};
+  // Configurer la géocodification pour les inputs de départ et d'arrivée
+  geocodeAddressModif(inputDepart,suggestionsDepart, markerDepart, true);
+  geocodeAddressModif(inputArrivee,suggestionsArrivee, markerArrivee, false);
+}
+
+function geocodeAddressModif(inputElement, suggestionsBox, marker, isdepart) {
+  const query = inputElement.value;
+
+  if (query.length > 3) {
+    // Effectuer la requête uniquement si la saisie a plus de 3 caractères
+    fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${query}&addressdetails=1&limit=1`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.length > 0) {
+          // Récupérer uniquement le premier résultat
+          const result = data[0];
+
+          // Extraire les coordonnées et les informations de l'adresse
+          const latitude = result.lat;
+          const longitude = result.lon;
+          const addressDetails = result.display_name; // Affichage complet de l'adresse
+
+          // Mettre à jour le champ de saisie avec l'adresse trouvée
+          inputElement.value = addressDetails;
+
+          // Centrer la carte sur la position trouvée
+          map.setView([latitude, longitude], 13);
+
+          // Mettre à jour le marqueur avec les informations trouvées
+          marker = updateMarker(marker, { lat: latitude, lon: longitude }, addressDetails);
+
+          // Mettre à jour les variables selon le type de marqueur (départ ou arrivée)
+          if (isdepart) {
+            markerDepart = marker;
+          } else {
+            markerArrivee = marker;
+          }
+
+          // Tracer la route si les deux marqueurs sont définis
+          if (markerDepart != null && markerArrivee != null) {
+            getRoute(markerDepart, markerArrivee);
+          }
+        } else {
+          console.log("Pas d'adresse trouvée.");
+        }
+      })
+      .catch((error) => {
+        console.error("Erreur lors de la récupération des données :", error);
+      });
+  } else {
+    console.log("Saisie insuffisante pour effectuer une recherche.");
+    suggestionsBox.innerHTML = ""; // Vider les suggestions si la saisie est insuffisante
+  }
+}
+
+
+
+
+
+
+
+
+function formatDateForInput(dateString) {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
 
 let isProcessing = false;
 //ajout de trouverchauffeur au clic du bouton valider de la view
@@ -387,6 +460,8 @@ function geocodeChauffeurs(chauffeurs) {
   }
 }
 
+var prixcourse;
+let courseDejaReservee = false;
 //méthode pour afficher les méthodes des chauffeurs en html
 function AfficheAdresse(chauffeur, tempsDeTrajet) {
   if (chauffeur != "null") {
@@ -438,7 +513,8 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
       multiplicateurcourse = 1.15;
     }
     prixint = roundToDecimals(prixint * multiplicateurcourse, 2);
-    prix_reservation = prixint;
+    prixcourse = prixint;
+    console.log(prixcourse)
     prix.textContent = `${prixint} €`;
     div.appendChild(prix);
     div.style.padding = "10px";
@@ -531,9 +607,7 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
           // Créer la course
           creerCourse(chauffeur);
 
-          // Mettre à jour le bouton pour afficher "Course réservée"
-          reserverBtn.textContent = "Course réservée";
-          reserverBtn.disabled = true; // Désactiver le bouton une fois la course réservée
+          courseDejaReservee=true
         });
 
         // Ajouter ces informations et le bouton à la div
@@ -552,7 +626,7 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
     isProcessing = false;
   }
 }
-var prix_reservation;
+
 function AfficheCategorie(categorie) {
   const div = document.createElement("div");
     div.className = "proposition"; // Utilisez une classe, pas un ID
@@ -580,6 +654,11 @@ function AfficheCategorie(categorie) {
     multiplicateurcourse = 1.15;
   }
   prixint = roundToDecimals(prixint * multiplicateurcourse, 2);
+
+
+  //REGARDE BERKAN 
+  prixcourse = prixint;
+  console.log(prixcourse)
 
   prix.textContent = `${prixint} €`;
 
@@ -620,14 +699,37 @@ function AfficheCategorie(categorie) {
   reserverBtn.style.top = "50%";
   reserverBtn.style.right = "10px";
   reserverBtn.style.transform = "translateY(-50%)"; // Centrer en hauteur
+  reserverBtn.classList.add("reserver-btn");
+  reserverBtn.dataset.prix = prixint;
 
   reserverBtn.addEventListener("click", function () {
     // Créer la course
-    creerCourseCategorie(categorie);
+    creerCourseCategorie(categorie,this.dataset.prix);
+    reserverBtn.classList.replace("reserver-btn","courseclique")
 
     // Mettre à jour le bouton pour afficher "Course réservée"
-    reserverBtn.textContent = "Course réservée";
-    reserverBtn.disabled = true; // Désactiver le bouton une fois la course réservée
+    
+    if(coursePourModification){
+        const boutonReserver = document.querySelectorAll(".reserver-btn");
+        boutonReserver.forEach((btn) => {
+          btn.disabled = true;
+          btn.textContent = "Une autre course a deja été modifiée";
+        });
+        const boutonclique = document.querySelector(".courseclique");
+        boutonclique.textContent ="Course Modifiée";
+        boutonclique.disabled =true;
+    }
+
+    else{
+        const boutonReserver = document.querySelectorAll(".reserver-btn");
+        boutonReserver.forEach((btn) => {
+          btn.disabled = true;
+          btn.textContent = "Une autre course a deja été réservée";
+        });
+        const boutonclique = document.querySelector(".courseclique");
+        boutonclique.textContent ="Course Réservée";
+        boutonclique.disabled =true;
+    }
   });
   
   div.appendChild(reserverBtn);
@@ -640,10 +742,11 @@ function roundToDecimals(number, decimals) {
   return Math.round(number * factor) / factor;
 }
 
-let courseDejaReservee = false;
+
 
 function creerCourse(chauffeur) {
   // Vérifier si une course est déjà réservée
+  console.log(prixcourse)
   if (courseDejaReservee) {
     alert("Vous avez déjà réservé une course.");
     return;
@@ -702,7 +805,7 @@ Promise.all([
     lieu_arrivee_rue: lieuArrivee.rue,
     lieu_arrivee_ville: lieuArrivee.ville,
     lieu_arrivee_cp: lieuArrivee.code_postal,
-    prix_reservation: prix_reservation,
+    prix_reservation: prixcourse,
     tempscourse: durationInSeconds,
     date_trajet: dateDepart,
   };
@@ -731,9 +834,10 @@ Promise.all([
     
           // Désactiver tous les boutons de réservation
           const boutonReserver = document.querySelectorAll(".reserver-btn");
+
           boutonReserver.forEach((btn) => {
-            btn.disabled = true;
-            btn.textContent = "Course réservée";
+            btn.disabled = true; // Désactiver le bouton
+            btn.textContent = "Course réservée"; // Changer le texte
           });
         } else {
           console.error('Erreur de réservation', data.message);
@@ -752,7 +856,7 @@ Promise.all([
   
 
 
-function creerCourseCategorie(categorie) {
+function creerCourseCategorie(categorie,prix) {
   if (courseDejaReservee) {
     alert("Vous avez déjà réservé une course.");
     return;
@@ -806,11 +910,51 @@ function creerCourseCategorie(categorie) {
       lieu_arrivee_rue: lieuArrivee.rue,
       lieu_arrivee_ville: lieuArrivee.ville,
       lieu_arrivee_cp: lieuArrivee.code_postal,
-      prix_reservation: prix_reservation,
+      prix_reservation: prix,
       tempscourse: durationInSeconds,
       date_trajet: dateDepart,
+      id_course: coursePourModification ? coursePourModification.id_course : null,
     };
-
+    if(coursePourModification){
+      fetch("/php/modifiercourse.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(course),
+      })
+        .then((response) => {
+          // Vérifiez la réponse avant de la parser en JSON
+          console.log(response);
+          return response.text(); // Utilisez .text() pour voir la réponse brute
+        })
+        .then((data) => {
+          console.log(data); // Affichez la réponse brute pour mieux comprendre son contenu
+          try {
+            const jsonData = JSON.parse(data); // Tentez de parser en JSON
+            if (jsonData.status === 'success') {
+              // Marquer la course comme réservée
+              courseDejaReservee = true;
+              console.log(courseDejaReservee);
+      
+              // Désactiver tous les boutons de réservation
+              const boutonReserver = document.querySelectorAll(".reserver-btn");
+              boutonReserver.forEach((btn) => {
+                btn.disabled = true;
+                btn.textContent = "Course Modifiée";
+              });
+            } else {
+              console.error('Erreur de réservation', jsonData.message);
+            }
+          } catch (e) {
+            console.error('Erreur de parsing JSON', e, data); // Affiche l'erreur de parsing
+          }
+        })
+        .catch((error) => {
+          console.error("Erreur lors de l'envoi de la course :", error);
+        });
+    }
+    else{
     fetch("/php/reservercoursecategorie.php", {
       method: "POST",
       headers: {
@@ -836,7 +980,7 @@ function creerCourseCategorie(categorie) {
             const boutonReserver = document.querySelectorAll(".reserver-btn");
             boutonReserver.forEach((btn) => {
               btn.disabled = true;
-              btn.textContent = "Course réservée";
+              btn.textContent = "Course Réservée";
             });
           } else {
             console.error('Erreur de réservation', jsonData.message);
@@ -849,5 +993,6 @@ function creerCourseCategorie(categorie) {
         console.error("Erreur lors de l'envoi de la course :", error);
       });
     
-  });
+  }
+});
 }
