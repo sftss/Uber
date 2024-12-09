@@ -1,7 +1,6 @@
-<!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
-
 @extends('layouts.header')
+
+<link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
 
 <section class="suggestions">
     <h1>Allez où vous voulez avec Uber</h1>

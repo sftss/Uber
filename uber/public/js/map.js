@@ -4,12 +4,19 @@
 //osrm pour calculer le meilleur itinéraire en voiture entre 2 points et sa durée
 
 
+
 let map;
 // Initialisation de la carte Leaflet
 if (typeof L === 'undefined') {
   // Charger Leaflet si ce n'est pas déjà fait
   var script = document.createElement('script');
   script.src = 'https://unpkg.com/leaflet/dist/leaflet.js';
+
+  var scriptcss = document.createElement('script');
+  scriptcss.src = 'https://unpkg.com/leaflet/dist/leaflet.css';
+
+  
+  
   script.onload = function() {
       // Une fois que Leaflet est chargé, exécuter votre code
       map = L.map("map").setView([45.9207646, 6.1527482], 13); // Coordonnées de l'IUT par défaut
@@ -19,6 +26,7 @@ if (typeof L === 'undefined') {
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map); // Appeler la fonction d'initialisation de la carte
   };
   document.head.appendChild(script);
+  document.head.appendChild(scriptcss);
 } else {
   // Si Leaflet est déjà chargé, appeler directement la fonction d'initialisation de la carte
   map = L.map("map").setView([45.9207646, 6.1527482], 13); // Coordonnées de l'IUT par défaut
@@ -26,6 +34,7 @@ if (typeof L === 'undefined') {
 // Ajout d'un fond de carte OpenStreetMap
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 }
+
 var divcrée;
 
 const inputDepart = document.getElementById("inputDepart");

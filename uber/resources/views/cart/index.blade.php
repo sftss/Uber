@@ -1,4 +1,6 @@
 @extends('layouts.header')
+<link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
+
 <div id="panier-main">
     <div class="panier-header">
         <h1 class="panier-title">Mon Panier 🛒</h1>

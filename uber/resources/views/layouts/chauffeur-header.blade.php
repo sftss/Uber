@@ -15,22 +15,13 @@
             <div class="navbar-links">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/map') }}">Déplacez-vous avec Uber</a>
+                        <a class="nav-link" href="{{ url('/map') }}">Propositions de course</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="https://www.uber.com/fr/fr/drive/">Conduire</a>
+                        <a class="nav-link" href="https://www.uber.com/fr/fr/drive/">Mes Courses</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="https://www.uber.com/fr/fr/business/">Professionnel</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ url('/restaurants/search') }}" class="feature-link">Uber Eats</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ url('/courses') }}" class="feature-link">Mes Courses</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ url('/chauffeur-main') }}" class="feature-link">Affichage Chauffeur</a>
+                        <a href="{{ url('/') }}" class="feature-link">Affichage Client</a>
                     </li>
                 </ul>
             </div>
@@ -41,7 +32,8 @@
                     <span class="navbar-text">Bonjour, <a href="{{ url('/profil/' . auth()->user()->id_client) }}">{{ auth()->user()->prenom_cp }}</a> !</span>
 
 
-                    <a href="{{ url('/info-compte') }}" class="btn btn-outline-light">Informations du compte</a>
+                    <a href="{{ url('/info-compte') }}" 
+                    class="btn btn-outline-light">Informations du compte</a>
 
 
                     <!-- Lien de déconnexion avec JavaScript -->

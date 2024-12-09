@@ -46,4 +46,14 @@ class ClientController extends Controller
             return redirect()->route('login')->with('error', 'Vous devez être connecté pour accéder à cette page.');
         }
     }
+    public function profil($id){
+        
+        
+        $client=DB::table('client as c')
+        ->where('client.id_client', $id)
+        ->get();
+        
+        return view();
+    }
+
 }

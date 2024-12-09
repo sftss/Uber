@@ -1,4 +1,5 @@
 @extends('layouts.header')
+<link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
 
 <main class="container">
     <section class="privacy-policy">

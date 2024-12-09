@@ -1,4 +1,5 @@
 @extends('layouts.header')
+<link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
 
 <p>Bonjour {{ $prenom }} {{ $nom }},</p>
 <p>Merci pour votre inscription. Veuillez utiliser le code suivant pour vérifier votre compte :</p>

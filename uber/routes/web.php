@@ -50,6 +50,16 @@ Route::prefix('cart')->name('cart.')->group(function () {
 });
 
 
+Route::get('/profil/{id_client}', [ClientController::class, 'profil'])->name('profil');
+
+
+Route::get('/info-compte', function() {
+    return view('info-compte');
+});
+
+Route::get('/chauffeur-main', function() {
+    return view('chauffeur-main');
+});
 
 
 Route::post('/cart/add/{type}/{id}', [CartController::class, 'add'])->name('cart.add');

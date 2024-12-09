@@ -1,5 +1,7 @@
 @extends('layouts.header')
 
+<link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
+
 <section class="paniers-list">
     @if (isset($paniers) && $paniers->isNotEmpty())
         <div class="client-info">

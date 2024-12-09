@@ -1,15 +1,9 @@
 @extends('layouts.header')
 
-<!DOCTYPE html>
-<html lang="fr">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uber</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
-</head>
+<link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+   crossorigin=""/>
 
 <body>
 
@@ -31,23 +25,23 @@
             <button id="boutonValider" class="btn-submitmap">Trouver les chauffeurs</button>
 
         </div>
-        <script src="https://unpkg.com/leaflet/dist/leaflet.js" ></script>
+
+        
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <div id="map"></div>
     </div>
 
-    
-
     <!-- Charger votre script après Leaflet -->
     <script>
-    // On récupère les chauffeurs en JS depuis PHP
-    const chauffeurs = @json($chauffeurs);
-    const categories = @json($categories);
+        // On récupère les chauffeurs en JS depuis PHP
+        const chauffeurs = @json($chauffeurs);
+        const categories = @json($categories);
 
-    @if(isset($coursePourModification))
-    const coursePourModification = @json($coursePourModification);
-    @else
-    const coursePourModification = null;
-    @endif
+        @if (isset($coursePourModification))
+            const coursePourModification = @json($coursePourModification);
+        @else
+            const coursePourModification = null;
+        @endif
     </script>
 
     <div id="tempsTrajetContainer">
@@ -62,8 +56,8 @@
         <div id="propositionsList"></div>
     </div>
 
-</div>
-    
+    </div>
+
     <script src="{{ URL::asset('js/map.js') }}" defer></script>
 
 </body>

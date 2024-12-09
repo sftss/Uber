@@ -1,13 +1,6 @@
 @extends('layouts.app')
 
-<!DOCTYPE html>
-<html lang="fr">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vérification de votre adresse e-mail</title>
-</head>
+<link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
 
 <body>
     <div class="container">

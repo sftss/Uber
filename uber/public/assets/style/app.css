@@ -440,7 +440,8 @@ select {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin-bottom: 20px;
+  margin-bottom: 3%;
+  margin-top: 3%;
 }
 
 .footer-section {

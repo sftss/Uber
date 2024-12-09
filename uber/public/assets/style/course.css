@@ -21,7 +21,125 @@ h2 {
   letter-spacing: 1.5px;
   border-bottom: 3px solid #58b947; /* Vert Uber */
   display: inline-block;
-  padding-bottom: 10px;
+  margin-left: 3%;
+
+  text-transform: uppercase;
+  border-left: 4px solid #28a745;
+  padding-left: 10px;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s;
+  color: white;
+}
+
+.footer {
+  background-color: #000;
+  color: #fff;
+  padding: 20px 40px;
+  font-family: Arial, sans-serif;
+}
+
+.footer .container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 3%;
+  margin-top: 3%;
+}
+
+.footer-section {
+  flex: 1 1 200px;
+  margin: 10px;
+}
+
+.footer-section h4 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 8px;
+}
+
+.footer-section ul li a {
+  text-decoration: none;
+  color: #fff;
+  transition: color 0.3s;
+}
+
+.footer-section ul li a:hover {
+  color: #ccc;
+}
+
+.footer-bottom {
+  text-align: center;
+  border-top: 1px solid #333;
+  padding-top: 20px;
+}
+
+.footer-icons a {
+  color: #fff;
+  margin: 0 10px;
+  font-size: 20px;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-icons a:hover {
+  color: #ccc;
+}
+
+.app-links img {
+  width: 120px;
+  margin: 0 10px;
+  transition: transform 0.3s;
+}
+
+.app-links img:hover {
+  transform: scale(1.1);
+}
+
+.footer-meta,
+.footer-location {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.footer-meta a,
+.footer-location a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 5px;
+}
+.card-header {
+  background-color: #4caf50;
+  color: white;
+  padding: 20px;
+  font-size: 22px;
+  text-align: center;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+}
+
+.card-header:hover {
+  background-color: #45a049;
+  cursor: pointer;
+}
+.header {
+  z-index: 1000;
+  top: 0;
+  position: fixed;
+  width: 100%;
+  transition: top 0.3s;
 }
 
 .navbar {
@@ -37,34 +155,82 @@ h2 {
   z-index: 10;
 }
 
-.navbar a {
-  text-decoration: none;
+.navbar-text {
+  color: white;
+  align-self: center;
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #000;
+  padding: 1rem 2rem;
+}
+
+.navbar-brand {
+  font-size: 2rem;
+  color: #fff;
   font-weight: bold;
-  margin-left: 15px;
-  padding: 10px 20px;
+}
+
+.navbar-links {
+  flex-grow: 1;
+  margin-left: 2rem;
+}
+
+.navbar-nav {
+  display: flex;
+  list-style: none;
+  gap: 1.5rem;
+}
+
+.navbar-nav .nav-link {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  text-decoration: none;
+}
+
+.navbar-nav .nav-link:hover {
+  background-color: #06c167;
+  color: #000;
+}
+
+.navbar-connect {
+  display: flex;
+  gap: 1rem;
+}
+
+.navbar-connect .btn {
+  font-size: 1rem;
+  padding: 0.5rem 1.25rem;
   border-radius: 25px;
+  cursor: pointer;
+}
+
+.navbar-connect .btn-outline-light {
+  color: #fff;
+  background: transparent;
+  border: 2px solid #fff;
   transition: all 0.3s ease;
 }
 
-.navbar a.login {
-  background: #58b947;
-  color: #ffffff;
+.navbar-connect .btn-outline-light:hover {
+  background-color: #fff;
+  color: #000;
 }
 
-.navbar a.register {
-  background: #ffffff;
-  color: #58b947;
-  border: 2px solid #58b947;
+.navbar-connect .btn-light {
+  background-color: #fff;
+  color: #000;
+  border: none;
+  transition: all 0.3s ease;
 }
 
-.navbar a:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-.navbar a.register:hover {
-  background: #58b947;
-  color: #ffffff;
+.navbar-connect .btn-light:hover {
+  background-color: #f0f0f0;
 }
 
 .course_container {
@@ -241,4 +407,10 @@ h2 {
   background-color: #28a76a;
   border-color: #b3b3b3;
   color: white;
+}
+#butRetourListCourse {
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 5% 0 2% 5%;
 }

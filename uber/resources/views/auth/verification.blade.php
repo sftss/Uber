@@ -1,4 +1,5 @@
 @extends('layouts.header')
+<link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
 
 <div class="container">
     <h1>Vérification de votre compte</h1>
@@ -11,4 +12,3 @@
         <button type="submit" class="btn btn-primary">Vérifier</button>
     </form>
 </div>
-

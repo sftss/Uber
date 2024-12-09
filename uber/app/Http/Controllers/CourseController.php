@@ -12,7 +12,6 @@ class CourseController extends Controller
 {
     public function index()
     {
-        
         $courses = DB::table('course')
         ->join('adresse as depart', 'course.id_lieu_depart', '=', 'depart.id_adresse')
         ->join('adresse as arrivee', 'course.id_lieu_arrivee', '=', 'arrivee.id_adresse')
@@ -28,37 +27,26 @@ class CourseController extends Controller
             'course.id_velo',
             'depart.ville as ville_depart',
             'ch.prenom_chauffeur',
+            'ch.nom_chauffeur',
             'arrivee.ville as ville_arrivee'
         )
-        ->get();
-    
+        ->orderBy('course.id_course', 'desc') // Ordre décroissant pour afficher les plus récentes en premier
+        ->paginate(5);    
+        // ->get();
     return view('course-list', ['courses' => $courses]);
-    
-
-
-
     }
-
-    
-
-
 
     public function destroy($id)
     {
-        // Récupérer la course par son ID
         $course = Course::findOrFail($id);
-
          // Vérifier si la course est terminée
          if ($course->terminee) {
             // La course est terminée, ne pas la supprimer et afficher un message d'erreur
             return redirect()->route('courses.index')->with('error', 'Cette course est terminée et ne peut pas être supprimée.');
         }
-
         // Supprimer la course
         $course->delete();
-
         // Rediriger avec un message de succès
         return redirect()->route('courses.index')->with('success', 'Course supprimée avec succès');
     }
-
 }
