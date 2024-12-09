@@ -1,314 +1,294 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: "Arial", sans-serif;
-    color: #333;
-    background-color: #f9f9f9;
-    line-height: 1.6;
-    padding-top: 80px;
-  }
-  
-  
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Arial", sans-serif;
+  color: #333;
+  background-color: #f9f9f9;
+  line-height: 1.6;
+  padding-top: 80px;
+}
+
 /*#region Navbar */
 
 a {
-    text-decoration: none;
-    color: inherit;
-    transition: color 0.3s;
-  }
-  
-  a:hover {
-    color: #06c167;
-  }
-  
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s;
+}
 
-  .feature-link {
-    background-color: #000;
-    color: #fff;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    font-size: 1.1rem;
-    transition: all 0.3s;
-  }
-  
-  .feature-link:hover {
-    background-color: #06c167;
-    color: #000;
-  }
-  
+a:hover {
+  color: #06c167;
+}
 
 .header {
-    z-index: 1000;
-    top: 0;
-    position: fixed;
-    width: 100%;
-    transition: top 0.3s;
-  }
-  .navbar-text {
-    color: white;
-    align-self: center;
-  }
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #000;
-    padding: 1rem 2rem;
-  }
-  
-  .navbar-brand {
-    font-size: 2rem;
-    color: #fff;
-    font-weight: bold;
-  }
-  
-  .navbar-links {
-    flex-grow: 1;
-    margin-left: 2rem;
-  }
-  
-  .navbar-nav {
-    display: flex;
-    list-style: none;
-    gap: 1.5rem;
-  }
-  
-  .navbar-nav .nav-link {
-    font-size: 1rem;
-    font-weight: 500;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
-  }
-  
-  .navbar-nav .nav-link:hover {
-    background-color: #06c167;
-    color: #000;
-  }
-  
-  .navbar-connect {
-    display: flex;
-    gap: 1rem;
-  }
-  
-  .navbar-connect .btn {
-    font-size: 1rem;
-    padding: 0.5rem 1.25rem;
-    border-radius: 25px;
-    cursor: pointer;
-  }
-  
-  .navbar-connect .btn-outline-light {
-    color: #fff;
-    background: transparent;
-    border: 2px solid #fff;
-    transition: all 0.3s ease;
-  }
-  
-  .navbar-connect .btn-outline-light:hover {
-    background-color: #fff;
-    color: #000;
-  }
-  
-  .navbar-connect .btn-light {
-    background-color: #fff;
-    color: #000;
-    border: none;
-    transition: all 0.3s ease;
-  }
-  
-  .navbar-connect .btn-light:hover {
-    background-color: #f0f0f0;
-  }
-  
-  /*#endregion Navbar */
-  .footer {
-    background-color: #000;
-    color: #fff;
-    padding: 20px 40px;
-    font-family: Arial, sans-serif;
-  }
-  
-  .footer .container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    margin-bottom: 3%;
-    margin-top: 3%;
-  }
-  
-  .footer-section {
-    flex: 1 1 200px;
-    margin: 10px;
-  }
-  
-  .footer-section h4 {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .footer-section ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .footer-section ul li {
-    margin-bottom: 8px;
-  }
-  
-  .footer-section ul li a {
-    text-decoration: none;
-    color: #fff;
-    transition: color 0.3s;
-  }
-  
-  .footer-section ul li a:hover {
-    color: #ccc;
-  }
-  
-  .footer-bottom {
-    text-align: center;
-    border-top: 1px solid #333;
-    padding-top: 20px;
-  }
-  
-  .footer-icons a {
-    color: #fff;
-    margin: 0 10px;
-    font-size: 20px;
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-  
-  .footer-icons a:hover {
-    color: #ccc;
-  }
-  
-  .app-links img {
-    width: 120px;
-    margin: 0 10px;
-    transition: transform 0.3s;
-  }
-  
-  .app-links img:hover {
-    transform: scale(1.1);
-  }
-  
-  .footer-meta,
-  .footer-location {
-    margin-top: 10px;
-    font-size: 14px;
-  }
-  
-  .footer-meta a,
-  .footer-location a {
-    color: #fff;
-    text-decoration: none;
-    margin: 0 5px;
-  }
-  
-  .footer-meta a:hover,
-  .footer-location a:hover {
-    color: #ccc;
-  }
+  z-index: 1000;
+  top: 0;
+  position: fixed;
+  width: 100%;
+  transition: top 0.3s;
+}
+.navbar-text {
+  color: white;
+  align-self: center;
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #000;
+  padding: 1rem 2rem;
+}
 
+.navbar-brand {
+  font-size: 2rem;
+  color: #fff;
+  font-weight: bold;
+}
 
-  /* Container principal pour la page des informations du compte */
+.navbar-links {
+  flex-grow: 1;
+  margin-left: 2rem;
+}
+
+.navbar-nav {
+  display: flex;
+  list-style: none;
+  gap: 1.5rem;
+}
+
+.navbar-nav .nav-link {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+}
+
+.navbar-nav .nav-link:hover {
+  background-color: #06c167;
+  color: #000;
+}
+
+.navbar-connect {
+  display: flex;
+  gap: 1rem;
+}
+
+.navbar-connect .btn {
+  font-size: 1rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+.navbar-connect .btn-outline-light {
+  color: #fff;
+  background: transparent;
+  border: 2px solid #fff;
+  transition: all 0.3s ease;
+}
+
+.navbar-connect .btn-outline-light:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+.navbar-connect .btn-light {
+  background-color: #fff;
+  color: #000;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.navbar-connect .btn-light:hover {
+  background-color: #f0f0f0;
+}
+
+/*#endregion Navbar */
+.footer {
+  background-color: #000;
+  color: #fff;
+  padding: 20px 40px;
+  font-family: Arial, sans-serif;
+}
+
+.footer .container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 3%;
+  margin-top: 3%;
+}
+
+.footer-section {
+  flex: 1 1 200px;
+  margin: 10px;
+}
+
+.footer-section h4 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 8px;
+}
+
+.footer-section ul li a {
+  text-decoration: none;
+  color: #fff;
+  transition: color 0.3s;
+}
+
+.footer-section ul li a:hover {
+  color: #ccc;
+}
+
+.footer-bottom {
+  text-align: center;
+  border-top: 1px solid #333;
+  padding-top: 20px;
+}
+
+.footer-icons a {
+  color: #fff;
+  margin: 0 10px;
+  font-size: 20px;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-icons a:hover {
+  color: #ccc;
+}
+
+.app-links img {
+  width: 120px;
+  margin: 0 10px;
+  transition: transform 0.3s;
+}
+
+.app-links img:hover {
+  transform: scale(1.1);
+}
+
+.footer-meta,
+.footer-location {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.footer-meta a,
+.footer-location a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 5px;
+}
+
+.footer-meta a:hover,
+.footer-location a:hover {
+  color: #ccc;
+}
+
+/* Container principal pour la page des informations du compte */
 .container.info-compte {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 2rem;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 120px; /* Pour éviter que la page ne soit sous le header fixe */
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 120px; /* Pour éviter que la page ne soit sous le header fixe */
 }
 
 /* Titre principal */
 .info-compte h1 {
-    text-align: center;
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 1rem;
+  text-align: center;
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 1rem;
 }
 
 /* Section des informations de compte */
 .account-info {
-    padding: 1rem;
-    font-size: 1.1rem;
-    color: #333;
+  padding: 1rem;
+  font-size: 1.1rem;
+  color: #333;
 }
 
 /* Style des éléments d'informations */
 .info-item {
-    margin-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .info-item strong {
-    font-weight: bold;
-    color: #333;
+  font-weight: bold;
+  color: #333;
 }
 
 .info-item p {
-    margin-top: 0.5rem;
-    color: #555;
-    word-wrap: break-word; /* Pour gérer les textes longs comme les numéros de carte */
+  margin-top: 0.5rem;
+  color: #555;
+  word-wrap: break-word; /* Pour gérer les textes longs comme les numéros de carte */
 }
 
 /* Style du titre pour les informations bancaires */
 h3 {
-    margin-top: 2rem;
-    font-size: 1.4rem;
-    color: #333;
-    border-top: 2px solid #ddd;
-    padding-top: 1rem;
-    margin-bottom: 1.5rem;
+  margin-top: 2rem;
+  font-size: 1.4rem;
+  color: #333;
+  border-top: 2px solid #ddd;
+  padding-top: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 /* Bouton d'action pour la modification des informations */
 .actions {
-    text-align: center;
-    margin-top: 2rem;
+  text-align: center;
+  margin-top: 2rem;
 }
 
 .actions .btn {
-    background-color: #06c167;
-    color: white;
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 30px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  background-color: #06c167;
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 30px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .actions .btn:hover {
-    background-color: #04a957;
+  background-color: #04a957;
 }
 
 /* Style spécifique pour les petits écrans */
 @media screen and (max-width: 768px) {
-    .container.info-compte {
-        padding: 1rem;
-    }
+  .container.info-compte {
+    padding: 1rem;
+  }
 
-    .info-compte h1 {
-        font-size: 1.6rem;
-    }
+  .info-compte h1 {
+    font-size: 1.6rem;
+  }
 
-    .info-item {
-        font-size: 1rem;
-    }
+  .info-item {
+    font-size: 1rem;
+  }
 
-    .actions .btn {
-        width: 100%;
-        padding: 1rem;
-    }
+  .actions .btn {
+    width: 100%;
+    padding: 1rem;
+  }
 }
-
-  

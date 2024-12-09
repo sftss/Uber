@@ -16,6 +16,7 @@ use App\Http\Controllers\AdresseController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers;
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\CBController;
 
 Route::get('/', function() {
     return view('main');
@@ -24,6 +25,7 @@ Route::get('/', function() {
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 Route::delete('/courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');
 Route::put('/courses/{id}', [CourseController::class, 'update'])->name('courses.update');
+Route::put('/courses/accepter/{course}', [CourseController::class, 'accepter'])->name('courses.accepter');
 
 
 
@@ -51,6 +53,11 @@ Route::prefix('cart')->name('cart.')->group(function () {
 
 
 Route::get('/profil/{id_client}', [ClientController::class, 'profil'])->name('profil');
+Route::get('/profil/{id_client}/add-card', [CBController::class, 'create'])->name('card.create');
+Route::post('/profil/{id_client}/add-card', [CBController::class, 'store'])->name('card.store');
+
+
+
 
 
 Route::get('/info-compte', function() {
@@ -61,6 +68,7 @@ Route::get('/chauffeur-main', function() {
     return view('chauffeur-main');
 });
 
+Route::get('/chauffeur-propositions/{id}', [ChauffeurController::class, 'AfficherPropositions'])->name('propositions');
 
 Route::post('/cart/add/{type}/{id}', [CartController::class, 'add'])->name('cart.add');
 

@@ -46,14 +46,33 @@ class ClientController extends Controller
             return redirect()->route('login')->with('error', 'Vous devez être connecté pour accéder à cette page.');
         }
     }
-    public function profil($id){
-        
-        
-        $client=DB::table('client as c')
-        ->where('client.id_client', $id)
-        ->get();
-        
-        return view();
+    public function profil($id)
+{
+    // Récupération de l'utilisateur connecté
+    $currentUser = auth()->user();
+
+    // Vérification que l'utilisateur connecté est autorisé à accéder à cette page
+    if (!$currentUser || $currentUser->id_client != $id) {
+        return redirect('/')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
     }
+
+    // Récupération des données du client et des cartes bancaires associées
+    $client = DB::table('client as c')
+        ->leftJoin('possede as p', 'p.id_client', '=', 'c.id_client')
+        ->leftJoin('cb as cb', 'cb.id_cb', '=', 'p.id_cb')
+        ->select('c.prenom_cp', 'c.nom_cp', 'c.mail_client', 'c.tel_client', 'cb.num_cb', 'cb.nom_cb', 'cb.date_fin_validite','cb.type_cb')
+        ->where('c.id_client', $id)
+        ->get();
+
+    // Vérification que le client existe
+    if ($client->isEmpty()) {
+        return redirect('/')->with('error', 'Utilisateur introuvable.');
+    }
+
+    // Retourner la vue avec les informations du client et des cartes
+    return view('auth.profil', ['client' => $client]);
+}
+
+
 
 }

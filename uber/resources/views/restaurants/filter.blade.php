@@ -9,7 +9,7 @@
     <div class="form-group-restau">
         <label for="lieu" class="form-label">Rechercher par ville ou par nom :</label>
         <input type="text" id="lieu" name="lieu" class="form-input" placeholder="Lyon, Annecy, Quick, ..."
-            value="{{ $lieu ?? '' }}">
+            value="{{ request('lieu', '') }}">
     </div>
 
     <div class="form-group-restau checkboxes">
@@ -52,7 +52,7 @@
         </div>
 
     </div>
-    <input type="hidden" id="horaire-selected" name="horaire-selected" value="">
+    <input type="hidden" id="horaire-selected" name="horaire-selected" value="{{ request('horaire-selected', '') }}">
     <button type="submit" class="btn-submit">Rechercher</button>
 </form>
 

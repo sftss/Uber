@@ -2,8 +2,8 @@
 
 <link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-   crossorigin=""/>
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin="" />
 
 <body>
 
@@ -13,20 +13,18 @@
 
         <div class="inputs-container">
             <h3 class="section-title">Entrez une adresse de départ :</h3>
-            <input type="text" id="inputDepart" class="form-input" />
+            <input type="text" id="inputDepart" class="form-input" value="{{ request('inputDepart', '') }}" />
             <div id="suggestionsDepart"></div>
 
             <h3 class="section-title">Entrez une adresse d'arrivée :</h3>
-            <input type="text" id="inputArrivee" class="form-input" />
+            <input type="text" id="inputArrivee" class="form-input" value="{{ request('inputArrivee', '') }}" />
             <div id="suggestionsArrivee"></div>
             <label for="dateDepart" class="section-title"><br>Quand voulez-vous partir :</label>
             <input type="datetime-local" id="dateDepart" name="dateDepart" class="form-input"
-                value="2024-12-02T19:30" />
+                value="{{ request('dateDepart', '2024-12-02T19:30') }}" />
             <button id="boutonValider" class="btn-submitmap">Trouver les chauffeurs</button>
-
         </div>
 
-        
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <div id="map"></div>
     </div>

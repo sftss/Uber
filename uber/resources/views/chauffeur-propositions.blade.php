@@ -1,4 +1,4 @@
-@extends('layouts.header')
+@extends('layouts.chauffeur-header')
 
 <link rel="stylesheet" href="{{ URL::asset('assets/style/course.css') }}" />
 <div id="butRetourListCourse">
@@ -43,45 +43,25 @@
                 <li class="terminee">
                     @if ($course->terminee)
                         Terminée
-                    @else
-                        <div>
-                            <p>En cours</p>
-                            <button class="modifyButton" data-course-id="{{ $course->id_course }}">Modifier</button>
-                        </div>
                     @endif
                 </li>
-
             </ul>
 
             <div class="course">
             </div>
 
             @if (!$course->terminee)
-                <form action="{{ route('courses.destroy', $course->id_course) }}" method="POST"
+                <form action="{{ route('courses.accepter', $course->id_course) }}" method="POST"
                     style="display:inline;">
                     @csrf
-                    @method('DELETE')
-                    <button type="submit" class="delete_button"
-                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette course ?');">
-                        Annuler
+                    @method('PUT')
+                    <button type="submit" class="boutonAccepter"
+                        onclick="return confirm('Êtes-vous sûr de vouloir accepter cette course ?');">
+                        
+                        Accepter
                     </button>
                 </form>
             @endif
         </div>
     @endforeach
 </ul>
-<script>
-    document.querySelectorAll('.modifyButton').forEach(function(button) {
-        button.addEventListener('click', function() {
-            var courseElement = this.closest(
-                '.course_container'); // Trouve le conteneur de la course parent
-
-            // Extraction de l'id_course
-            var id = courseElement.querySelector('.course_title').textContent.split(":")[1].trim();
-            console.log(id)
-
-            // Envoie l'utilisateur vers la page de modification avec l'id_course
-            window.location.href = "{{ url('/map') }}/" + encodeURIComponent(id);
-        });
-    });
-</script>

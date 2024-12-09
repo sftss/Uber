@@ -35,25 +35,23 @@
 </div>
 
 <form method="GET" action="{{ route('lieux.show', $lieu->id_lieu_de_vente_pf) }}" class="filter-form">
-    <div class="form-group">
+    <div class="form-group-restau">
         <label for="produit" class="form-label">Rechercher un produit</label>
-        <input type="text" id="produit" name="produit" value="{{ old('produit') }}" class="form-input"
+        <input type="text" id="produit" name="produit" value="{{ request('produit') }}" class="form-input"
             placeholder="Nom du produit">
     </div>
-
-    <div class="form-group">
+    <div class="form-group-restau">
         <label for="categorie" class="form-label">Catégorie</label>
         <select id="categorie" name="categorie" class="form-input">
             <option value="">-- Sélectionner une catégorie --</option>
             @foreach ($categories as $categorie)
                 <option value="{{ $categorie->id_categorie_produit }}"
-                    {{ old('categorie') == $categorie->id_categorie_produit ? 'selected' : '' }}>
+                    {{ request('categorie') == $categorie->id_categorie_produit ? 'selected' : '' }}>
                     {{ $categorie->libelle_categorie }}
                 </option>
             @endforeach
         </select>
     </div>
-
     <button type="submit" class="btn btn-primary">Rechercher</button>
 </form>
 

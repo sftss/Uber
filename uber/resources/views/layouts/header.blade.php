@@ -24,13 +24,13 @@
                         <a class="nav-link" href="https://www.uber.com/fr/fr/business/">Professionnel</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url('/restaurants/search') }}" class="feature-link">Uber Eats</a>
+                        <a href="{{ url('/restaurants/search') }}" class="nav-link">Uber Eats</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url('/courses') }}" class="feature-link">Mes Courses</a>
+                        <a href="{{ url('/courses') }}" class="nav-link">Mes Courses</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url('/chauffeur-main') }}" class="feature-link">Affichage Chauffeur</a>
+                        <a href="{{ url('/chauffeur-main') }}" class="nav-link">Affichage Chauffeur</a>
                     </li>
                 </ul>
             </div>
@@ -38,11 +38,12 @@
             <div class="navbar-connect">
                 @auth
                     <!-- Si l'utilisateur est connecté -->
-                    <span class="navbar-text">Bonjour, <a href="{{ url('/profil/' . auth()->user()->id_client) }}">{{ auth()->user()->prenom_cp }}</a> !</span>
+                    <span class="navbar-text">Bonjour, <a
+                            href="{{ url('/profil/' . auth()->user()->id_client) }}">{{ auth()->user()->prenom_cp }}</a>
+                        !</span>
 
-
-                    <a href="{{ url('/info-compte') }}" class="btn btn-outline-light">Informations du compte</a>
-
+                    <a href="{{ url('/profil/' . auth()->user()->id_client) }}" class="btn btn-outline-light">Informations
+                        du compte</a>
 
                     <!-- Lien de déconnexion avec JavaScript -->
                     <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"

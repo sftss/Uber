@@ -13,7 +13,7 @@
 
         <div class="info-item">
             <strong>Email :</strong>
-            <p>{{ auth()->user()->email }}</p>
+            <p>{{ auth()->user()->mail_client }}</p>
         </div>
 
         <div class="info-item">
@@ -23,7 +23,7 @@
 
         <div class="info-item">
             <strong>Numéro de téléphone :</strong>
-            <p>{{ auth()->user()->telephone }}</p>
+            <p>{{ auth()->user()->tel_client }}</p>
         </div>
 
         <!-- Affichage des informations de la carte bancaire (si elles existent) -->
