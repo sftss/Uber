@@ -3,6 +3,8 @@
 //locationIQ pareil avec plus de requetes possibles mais faut créer un compte (mail temporaire possible) d'où la clé d'api en dessous
 //osrm pour calculer le meilleur itinéraire en voiture entre 2 points et sa durée
 
+
+let map;
 // Initialisation de la carte Leaflet
 if (typeof L === 'undefined') {
   // Charger Leaflet si ce n'est pas déjà fait
@@ -10,7 +12,7 @@ if (typeof L === 'undefined') {
   script.src = 'https://unpkg.com/leaflet/dist/leaflet.js';
   script.onload = function() {
       // Une fois que Leaflet est chargé, exécuter votre code
-      const map = L.map("map").setView([45.9207646, 6.1527482], 13); // Coordonnées de l'IUT par défaut
+      map = L.map("map").setView([45.9207646, 6.1527482], 13); // Coordonnées de l'IUT par défaut
 
       
       // Ajout d'un fond de carte OpenStreetMap
@@ -19,7 +21,7 @@ if (typeof L === 'undefined') {
   document.head.appendChild(script);
 } else {
   // Si Leaflet est déjà chargé, appeler directement la fonction d'initialisation de la carte
-  const map = L.map("map").setView([45.9207646, 6.1527482], 13); // Coordonnées de l'IUT par défaut
+  map = L.map("map").setView([45.9207646, 6.1527482], 13); // Coordonnées de l'IUT par défaut
 
 // Ajout d'un fond de carte OpenStreetMap
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
@@ -34,6 +36,8 @@ const inputDateDepart = document.getElementById("dateDepart");
 const dateToday = new Date();
 const listePropositions = document.getElementById("propositionsList");
 const modification = getUrlParameter('modification');
+
+inputDateDepart.value = dateToday.toISOString().slice(0, 16);
 
 
 const cleAPILocationIQ = "pk.69ac2966071395cd67e8a9a5ed00d2c3"; // clé API LocationIQ
@@ -334,8 +338,7 @@ function geocodeAddress(inputElement, suggestionsBox, marker, isdepart) {
                 const postalCode = address.postcode || ""; // Code postal
                 const country = address.country || ""; // Pays
 
-                const departmentCode =
-                  address["ISO3166-2-lvl6"].substring(3, 5) || ""; // Code du département //0652402353
+                //const departmentCode = address["ISO3166-2-lvl6"].substring(3, 5) || ""; // Code du département //0652402353
 
                 // on construit la suggestion avec les détails pour améliorer la lisibilité
                 const suggestionText = [
@@ -362,7 +365,7 @@ function geocodeAddress(inputElement, suggestionsBox, marker, isdepart) {
                   // Affecter les variables des marqueurs en fonction du booléen donné en paramètres
                   if (isdepart) {
                     markerDepart = marker;
-                    departementDepart = departmentCode;
+                    //departementDepart = departmentCode;
                   } else {
                     markerArrivee = marker;
                   }
@@ -436,6 +439,31 @@ function debounce(func, delay) {
 // fonction pour déterminer les chauffeurs proches de l'adresse de départ
 function geocodeChauffeurs(chauffeurs) {
   let chauffeursProches = [];
+  let index = 0;
+
+  function traiterChauffeur() {
+    if (index < chauffeurs.length) {
+      let chauffeur = chauffeurs[index];
+      index++; // Incrémenter l'index pour traiter le prochain chauffeur
+      calculDistanceChauffeur(chauffeur, (trajet) => {
+        console.log(chauffeur);
+        if (trajet !== null && trajet <= 60) {
+          // Ajouter le temps de trajet et afficher l'adresse si inférieur à 60 minutes
+          AfficheAdresse(chauffeur, trajet); // Passer le chauffeur et le temps de trajet à la fonction
+          console.log("inséré");
+        }
+      });
+
+      // Attendre une seconde avant de traiter le prochain chauffeur
+      setTimeout(traiterChauffeur, 650); // 1000 ms = 1 seconde
+    }
+  }
+
+  // Démarrer le traitement du premier chauffeur
+  traiterChauffeur();
+  /*
+  
+  let chauffeursProches = [];
 
   // Parcourir tous les chauffeurs et filtrer ceux du département souhaité
   chauffeurs.forEach((chauffeur) => {
@@ -457,7 +485,7 @@ function geocodeChauffeurs(chauffeurs) {
         }
       });
     });
-  }
+  }*/
 }
 
 var prixcourse;
@@ -514,7 +542,6 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
     }
     prixint = roundToDecimals(prixint * multiplicateurcourse, 2);
     prixcourse = prixint;
-    console.log(prixcourse)
     prix.textContent = `${prixint} €`;
     div.appendChild(prix);
     div.style.padding = "10px";
@@ -608,6 +635,8 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
           creerCourse(chauffeur);
 
           courseDejaReservee=true
+          reserverBtn.textContent = "Course deja réservée";
+          reserverBtn.disabled=true;
         });
 
         // Ajouter ces informations et le bouton à la div
@@ -658,7 +687,6 @@ function AfficheCategorie(categorie) {
 
   //REGARDE BERKAN 
   prixcourse = prixint;
-  console.log(prixcourse)
 
   prix.textContent = `${prixint} €`;
 
@@ -746,7 +774,6 @@ function roundToDecimals(number, decimals) {
 
 function creerCourse(chauffeur) {
   // Vérifier si une course est déjà réservée
-  console.log(prixcourse)
   if (courseDejaReservee) {
     alert("Vous avez déjà réservé une course.");
     return;
@@ -811,7 +838,8 @@ Promise.all([
   };
 
   
-    fetch("/php/reserver_course.php", {
+  if(coursePourModification){
+    fetch("/php/modifiercourse.php", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -819,33 +847,76 @@ Promise.all([
       body: JSON.stringify(course),
     })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error('Erreur côté serveur');
-        }
-        return response.json(); // Assurez-vous que la réponse est en JSON
+        // Vérifiez la réponse avant de la parser en JSON
+        console.log(response);
+        return response.text(); // Utilisez .text() pour voir la réponse brute
       })
       .then((data) => {
-        // Vérifiez la structure de la réponse
-        console.log(data);
-        if (data.status === 'success') {
-          // Marquer la course comme réservée
-          courseDejaReservee = true;
-          console.log(courseDejaReservee);
+        console.log(data); // Affichez la réponse brute pour mieux comprendre son contenu
+        try {
+          const jsonData = JSON.parse(data); // Tentez de parser en JSON
+          if (jsonData.status === 'success') {
+            // Marquer la course comme réservée
+            courseDejaReservee = true;
+            console.log(courseDejaReservee);
     
-          // Désactiver tous les boutons de réservation
-          const boutonReserver = document.querySelectorAll(".reserver-btn");
-
-          boutonReserver.forEach((btn) => {
-            btn.disabled = true; // Désactiver le bouton
-            btn.textContent = "Course réservée"; // Changer le texte
-          });
-        } else {
-          console.error('Erreur de réservation', data.message);
+            // Désactiver tous les boutons de réservation
+            const boutonReserver = document.querySelectorAll(".reserver-btn");
+            boutonReserver.forEach((btn) => {
+              btn.disabled = true;
+              btn.textContent = "Course Modifiée";
+            });
+          } else {
+            console.error('Erreur de réservation', jsonData.message);
+          }
+        } catch (e) {
+          console.error('Erreur de parsing JSON', e, data); // Affiche l'erreur de parsing
         }
       })
       .catch((error) => {
         console.error("Erreur lors de l'envoi de la course :", error);
       });
+  }
+  else{
+  fetch("/php/reserver_course.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(course),
+  })
+    .then((response) => {
+      // Vérifiez la réponse avant de la parser en JSON
+      console.log(response);
+      return response.text(); // Utilisez .text() pour voir la réponse brute
+    })
+    .then((data) => {
+      console.log(data); // Affichez la réponse brute pour mieux comprendre son contenu
+      try {
+        const jsonData = JSON.parse(data); // Tentez de parser en JSON
+        if (jsonData.status === 'success') {
+          // Marquer la course comme réservée
+          courseDejaReservee = true;
+          console.log(courseDejaReservee);
+  
+          // Désactiver tous les boutons de réservation
+          const boutonReserver = document.querySelectorAll(".reserver-btn");
+          boutonReserver.forEach((btn) => {
+            btn.disabled = true;
+            btn.textContent = "Course Réservée";
+          });
+        } else {
+          console.error('Erreur de réservation', jsonData.message);
+        }
+      } catch (e) {
+        console.error('Erreur de parsing JSON', e, data); // Affiche l'erreur de parsing
+      }
+    })
+    .catch((error) => {
+      console.error("Erreur lors de l'envoi de la course :", error);
+    });
+  
+}
     
   
 

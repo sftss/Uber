@@ -6,13 +6,13 @@
 <div class="txtFilter">Une envie soudaine&nbsp;?<br>Régalez-vous de suite 🍔</div>
 
 <form action="{{ route('restaurants.search') }}" method="GET" class="filter-form">
-    <div class="form-group">
+    <div class="form-group-restau">
         <label for="lieu" class="form-label">Rechercher par ville ou par nom :</label>
         <input type="text" id="lieu" name="lieu" class="form-input" placeholder="Lyon, Annecy, Quick, ..."
             value="{{ $lieu ?? '' }}">
     </div>
 
-    <div class="form-group checkboxes">
+    <div class="form-group-restau checkboxes">
         <p style="font: weight 300px;">Mode de livraison :</p>
         <div class="checkBoxSearchRestau">
             <input type="checkbox" id="livre" name="livre" {{ request('livre') ? 'checked' : '' }}>
@@ -25,7 +25,7 @@
 
     </div>
 
-    <div class="form-group">
+    <div class="form-group-restau">
         <label for="categorie" class="form-label">Catégorie de restaurant :</label>
         <select id="categorie" name="categorie" class="form-input">
             <option value="">Toutes les catégories</option>

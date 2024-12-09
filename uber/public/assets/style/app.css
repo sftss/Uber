@@ -874,6 +874,12 @@ form {
   width: 115%;
   transform: translateX(-5%);
 }
+.form-group-restau {
+  margin-bottom: 15px;
+}
+.form-group-restau label {
+  font-weight: bold;
+}
 
 label {
   margin-bottom: 5px;

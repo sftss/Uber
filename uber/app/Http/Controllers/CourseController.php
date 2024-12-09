@@ -16,6 +16,7 @@ class CourseController extends Controller
         $courses = DB::table('course')
         ->join('adresse as depart', 'course.id_lieu_depart', '=', 'depart.id_adresse')
         ->join('adresse as arrivee', 'course.id_lieu_arrivee', '=', 'arrivee.id_adresse')
+        ->join('chauffeur as ch','course.id_chauffeur','=','ch.id_chauffeur')
         ->select(
             'course.id_course',
             'course.id_chauffeur',
@@ -26,6 +27,7 @@ class CourseController extends Controller
             'course.terminee',
             'course.id_velo',
             'depart.ville as ville_depart',
+            'ch.prenom_chauffeur',
             'arrivee.ville as ville_arrivee'
         )
         ->get();

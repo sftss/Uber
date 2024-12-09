@@ -15,10 +15,10 @@
             <h3 class="course_title">Course numéro : {{ $course->id_course }}</h3>
             <ul class="course_details">
                 <li class="chauffeur">
-                    @if(is_null($course->id_chauffeur))
+                    @if(is_null($course->prenom_chauffeur))
                     Vélo : {{ $course->id_velo }}
                         @else
-                        Chauffeur : {{ $course->id_chauffeur }}
+                        Chauffeur : {{ $course->prenom_chauffeur }}
                         @endif
                 </li>
                 <li class="depart">Lieu de départ : {{ $course->ville_depart }}</li>
