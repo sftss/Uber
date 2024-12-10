@@ -18,7 +18,7 @@
                         <a class="nav-link" href="{{ url('/chauffeur-propositions/7') }}">Propositions de course</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="https://www.uber.com/fr/fr/drive/">Mes Courses</a>
+                        <a class="nav-link" href="{{ url('/chauffeur-archives/7') }}">Mes Courses</a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ url('/') }}" class="nav-link">Affichage Client</a>

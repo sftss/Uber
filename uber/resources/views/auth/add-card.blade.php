@@ -40,12 +40,21 @@
 
 </div>
 
+
+
+
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+
+        <p>Carte ajoutée avec succès</p>
+    </div>
+@endif
+
 @if (session('error'))
-    <script>
-        // Utilisez json_encode pour échapper correctement les caractères spéciaux
-        const errorMessage = @json(session('error'));
-        console.error('Erreur lors de l\'ajout de la carte :', errorMessage);
-    </script>
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
 @endif
 
 @if ($errors->any())

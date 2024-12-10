@@ -27,7 +27,8 @@ Route::delete('/courses/{course}', [CourseController::class, 'destroy'])->name('
 Route::put('/courses/{id}', [CourseController::class, 'update'])->name('courses.update');
 Route::put('/courses/accepter/{course}', [CourseController::class, 'accepter'])->name('courses.accepter');
 
-
+Route::post('/courses/{id}/terminate', [CourseController::class, 'terminate'])->name('courses.terminate');
+Route::post('/courses/{id}/review', [CourseController::class, 'addReview'])->name('courses.addReview');
 
 
 Route::get('/restaurants/search', [RestaurantController::class, 'filter'])->name('restaurants.search');
@@ -71,6 +72,8 @@ Route::get('/chauffeur-main', function() {
 });
 
 Route::get('/chauffeur-propositions/{id}', [ChauffeurController::class, 'AfficherPropositions'])->name('propositions');
+Route::get('/chauffeur-archives/{id}', [ChauffeurController::class, 'AfficherCoursesPassees'])->name('archives');
+
 
 Route::post('/cart/add/{type}/{id}', [CartController::class, 'add'])->name('cart.add');
 

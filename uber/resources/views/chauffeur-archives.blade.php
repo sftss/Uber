@@ -60,7 +60,6 @@
                         
                         Accepter
                     </button>
-
                 </form>
             @endif
         </div>

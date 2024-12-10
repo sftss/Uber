@@ -19,9 +19,17 @@ class CBController extends Controller
 {
     // Validation des champs
     $validatedData = $request->validate([
-        'num_cb' => 'required|numeric|digits:16',  // Validation du numéro de carte
-        'nom_cb' => 'required|string|max:50', // Validation du nom du titulaire
-        'date_fin_validite' => 'required|date_format:Y-m|after_or_equal:' . now()->format('Y-m'), // Validation de la date
+        'num_cb' => 'required|numeric|digits:16',
+        'nom_cb' => 'required|string|max:50',
+        'date_fin_validite' => 'required|date_format:Y-m|after_or_equal:' . now()->format('Y-m'),
+    ], [
+        'num_cb.required' => 'Le numéro de la carte bancaire est requis.',
+        'num_cb.numeric' => 'Le numéro de la carte bancaire doit contenir uniquement des chiffres.',
+        'num_cb.digits' => 'Le numéro de la carte bancaire doit contenir exactement 16 chiffres.',
+        'nom_cb.required' => 'Le nom du titulaire de la carte est requis.',
+        'nom_cb.max' => 'Le nom du titulaire ne doit pas dépasser 50 caractères.',
+        'date_fin_validite.required' => 'La date de validité est requise.',
+        'date_fin_validite.after_or_equal' => 'La date de validité doit être postérieure ou égale au mois actuel.',
     ]);
 
     // Ajouter le jour par défaut à la date (le premier jour du mois)

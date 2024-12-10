@@ -377,12 +377,32 @@ a {
     background-color 0.3s,
     border-color 0.3s;
   cursor: pointer;
-  /* transform: translate(9%, 10%); */
-  transform: scale(1.1) translate(150%, -50%);
+  transform: scale(1.1) translate(270%, -50%);
 }
 
 .delete_button:hover {
   background-color: #a72841;
+  border-color: #b3b3b3;
+  color: white;
+}
+.acceptButton {
+  margin-right: 50px;
+  background-color: #e5e5e5;
+  color: #2d2c2f;
+  border: 1px solid #e5e5e5;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-radius: 50px;
+  transition:
+    background-color 0.3s,
+    border-color 0.3s;
+  cursor: pointer;
+  transform: scale(1.3) translate(10%, 50%);
+}
+.acceptButton:hover {
+  background-color: #28a76a;
   border-color: #b3b3b3;
   color: white;
 }
@@ -404,7 +424,7 @@ a {
 }
 
 .modifyButton:hover {
-  background-color: #28a76a;
+  background-color: #95c243;
   border-color: #b3b3b3;
   color: white;
 }
@@ -434,4 +454,46 @@ a {
   font-weight: bold;
   text-transform: uppercase;
   margin: 7% 0 2% 5%;
+}
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    visibility 0.3s,
+    opacity 0.3s;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+.modal.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.close-button {
+  float: right;
+  font-size: 18px;
+  cursor: pointer;
 }

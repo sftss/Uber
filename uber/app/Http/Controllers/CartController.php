@@ -189,7 +189,9 @@ public function updateMontantPanier($idPanier)
     }
 
     // Mettre à jour le montant dans la table panier
-    \DB::table('panier')->where('id_panier', $idPanier)->update([
+    \DB::table('panier')
+    ->where('id_panier', $idPanier)
+    ->update([
         'montant' => $totalAmount
     ]);
 }
