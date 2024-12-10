@@ -9,6 +9,8 @@
     <form method="POST" action="{{ route('card.store', ['id_client' => auth()->user()->id_client]) }}">
         @csrf
 
+        
+
         <div class="form-group">
             <label for="num_cb">Numéro de la carte</label>
             <input type="text" id="num_cb" name="num_cb" class="form-control" value="{{ old('num_cb') }}" required>

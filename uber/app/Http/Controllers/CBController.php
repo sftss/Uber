@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CB;
 use App\Models\Possede;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 
 class CBController extends Controller
 {
@@ -18,7 +21,7 @@ class CBController extends Controller
     $validatedData = $request->validate([
         'num_cb' => 'required|numeric|digits:16',  // Validation du numéro de carte
         'nom_cb' => 'required|string|max:50', // Validation du nom du titulaire
-        'date_fin_validite' => 'required|date_format:Y-m', // Validation de la date
+        'date_fin_validite' => 'required|date_format:Y-m|after_or_equal:' . now()->format('Y-m'), // Validation de la date
     ]);
 
     // Ajouter le jour par défaut à la date (le premier jour du mois)
@@ -98,4 +101,30 @@ protected function determineCardType($cardNumber)
     {
         return view('auth.add-card');
     }
+
+
+    public function destroy($id_client, $id_cb)
+    {
+        // Vérifier si l'utilisateur est authentifié et qu'il a le droit de supprimer cette carte
+        if (Auth::check() && Auth::user()->id_client == $id_client) {
+            // Supprimer la carte bancaire de la base de données
+
+            DB::table('possede')
+            ->where('id_cb',$id_cb)
+            ->where('id_client',$id_client)
+            ->delete();
+
+            DB::table('cb')
+                ->where('id_cb', $id_cb)
+                ->delete();
+
+            // Rediriger avec un message de succès
+            return redirect()->route('profil', ['id_client' => $id_client])
+                             ->with('success', 'Carte bancaire supprimée avec succès.');
+        }
+
+        // Si l'utilisateur n'est pas autorisé ou non authentifié
+        return redirect()->route('login')->with('error', 'Vous devez être connecté pour effectuer cette action.');
+    }
+
 }

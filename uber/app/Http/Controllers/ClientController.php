@@ -60,7 +60,7 @@ class ClientController extends Controller
     $client = DB::table('client as c')
         ->leftJoin('possede as p', 'p.id_client', '=', 'c.id_client')
         ->leftJoin('cb as cb', 'cb.id_cb', '=', 'p.id_cb')
-        ->select('c.prenom_cp', 'c.nom_cp', 'c.mail_client', 'c.tel_client', 'cb.num_cb', 'cb.nom_cb', 'cb.date_fin_validite','cb.type_cb')
+        ->select('c.prenom_cp', 'c.nom_cp', 'c.mail_client', 'c.tel_client', 'cb.num_cb', 'cb.nom_cb', 'cb.date_fin_validite','cb.type_cb','cb.id_cb')
         ->where('c.id_client', $id)
         ->get();
 
@@ -72,6 +72,8 @@ class ClientController extends Controller
     // Retourner la vue avec les informations du client et des cartes
     return view('auth.profil', ['client' => $client]);
 }
+
+// Ajouter la méthode pour supprimer une carte bancaire
 
 
 

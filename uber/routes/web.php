@@ -55,6 +55,8 @@ Route::prefix('cart')->name('cart.')->group(function () {
 Route::get('/profil/{id_client}', [ClientController::class, 'profil'])->name('profil');
 Route::get('/profil/{id_client}/add-card', [CBController::class, 'create'])->name('card.create');
 Route::post('/profil/{id_client}/add-card', [CBController::class, 'store'])->name('card.store');
+// Route pour supprimer une carte bancaire
+Route::get('/profil/{id_client}/delete-card/{id_cb}', [CBController::class, 'destroy'])->name('card.delete');
 
 
 
