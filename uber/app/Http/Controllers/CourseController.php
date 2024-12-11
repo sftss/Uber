@@ -10,8 +10,7 @@ use App\Http\Controllers\ChauffeurController;
 
 class CourseController extends Controller
 {
-    public function index()
-    {
+    public function index() {
         $courses = DB::table("course")
             ->join(
                 "adresse as depart",
@@ -52,8 +51,7 @@ class CourseController extends Controller
         return view("course-list", ["courses" => $courses]);
     }
 
-    public function destroy($id)
-    {
+    public function destroy($id) {
         $course = Course::findOrFail($id);
         // Vérifier si la course est terminée
         if ($course->terminee) {
@@ -73,8 +71,7 @@ class CourseController extends Controller
             ->with("success", "Course supprimée avec succès");
     }
 
-    public function accepter($id)
-    {
+    public function accepter($id) {
         $course = Course::findOrFail($id);
         $acceptee = "true";
         echo "<script>console.log(".$course.")</script>";
@@ -100,9 +97,40 @@ class CourseController extends Controller
             ->AfficherPropositions($chauffeurId)
             ->with("success", "Course acceptée");
     }
+    public function update(Request $request, $id)
+{
+    // Validation des données
+    $validated = $request->validate([
+        'chauffeur' => 'nullable|string|max:255',   // Permet d'être vide si non renseigné
+        'depart' => 'required|string|max:255',
+        'arrivee' => 'required|string|max:255',
+        'prix' => 'required|numeric',
+        'date' => 'required|date',
+        'duree' => 'required|string|max:255',
+        'temps' => 'nullable|date_format:H:i',
+    ]);
 
-    public function terminate($id)
-    {
+    if ($request->chauffeur === 'Vélo') {
+        $validated['chauffeur'] = null;  // Mettre chauffeur à null si vélo
+    }
+    // Récupérer la course et mettre à jour les données
+    $course = Course::findOrFail($id);
+    $course->update([
+        'id_chauffeur' => $validated['chauffeur'],  // Utilisation de id_chauffeur pour la mise à jour
+        'id_lieu_depart' => $validated['depart'],
+        'id_lieu_arrivee' => $validated['arrivee'],
+        'prix_reservation' => $validated['prix'],
+        'date_prise_en_charge' => $validated['date'],
+        'duree_course' => $validated['duree'],
+        'heure_arrivee' => $validated['temps'],
+    ]);
+
+    return response()->json(['success' => 'Course updated successfully']);
+}
+
+
+
+    public function terminate($id) {
         $course = Course::findOrFail($id);
 
         if ($course->terminee) {
@@ -115,11 +143,9 @@ class CourseController extends Controller
         return redirect()->route('courses.index')->with('success', 'Course terminée avec succès.');
     }
     
-    public function addReview(Request $request, $id)
-    {
+    public function addReview(Request $request, $id) {
         $request->validate([
             'note' => 'required|integer|min:1|max:5',
-            'avis' => 'nullable|string|max:500',
             'pourboire' => 'nullable|numeric|min:0'
         ]);
 
@@ -128,11 +154,11 @@ class CourseController extends Controller
         if (!$course->terminee) {
             return response()->json(['error' => 'La course n\'est pas encore terminée.'], 400);
         }
+    
+        if ($request->has('note')) {
+            $course->note = $request->input('note');
+        }
 
-        $course->note = $request->input('note');
-        $course->avis = $request->input('avis');
-        
-        // If you want to add a tip functionality
         if ($request->has('pourboire')) {
             $course->pourboire = $request->input('pourboire');
         }

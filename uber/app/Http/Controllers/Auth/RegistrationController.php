@@ -7,6 +7,7 @@ use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\MailController; // Import du MailController
 use Illuminate\Support\Str;
 use App\Mail\ConfirmationEmail;
 
@@ -65,28 +66,15 @@ class RegistrationController extends Controller
 
         $client->save(); // Enregistrer le client dans la base de données
 
-        // Rediriger vers la page d'accueil ou une autre page après l'inscription
-        return redirect()->route('home')->with('success', 'Inscription réussie');
+        // Génération d'un code ou d'un lien de vérification
+        $verificationLink = route('verify.email', ['code' => Str::random(32)]);
+
+        // Envoi de l'email de vérification
+        $mailController = new MailController();
+        $mailController->sendVerificationEmail($client->mail_client, $client->PRENOM_CP);
+
+        // Rediriger vers une page avec un message de succès
+        return redirect()->route('home')->with('success', 'Inscription réussie. Veuillez vérifier votre email pour confirmer votre compte.');
     }
 
-
-
-
-
-    public function confirmEmail($code)
-    {
-        // Vérifier le code de confirmation
-        $user = User::where('confirmation_code', $code)->first();
-
-        if (!$user) {
-            return redirect()->route('login')->with('error', 'Code de confirmation invalide.');
-        }
-
-        // Confirmer l'email
-        $user->email_verified_at = now();
-        $user->confirmation_code = null;  // Supprimer le code
-        $user->save();
-
-        return redirect()->route('login')->with('status', 'Votre email a été confirmé.');
-    }
 }

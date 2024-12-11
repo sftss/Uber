@@ -24,7 +24,9 @@ Route::get('/', function() {
 
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 Route::delete('/courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');
-Route::put('/courses/{id}', [CourseController::class, 'update'])->name('courses.update');
+
+Route::put('/courses/{id}', [ChauffeurController::class, 'index'])->name('courses.update');
+
 Route::put('/courses/accepter/{course}', [CourseController::class, 'accepter'])->name('courses.accepter');
 
 Route::post('/courses/{id}/terminate', [CourseController::class, 'terminate'])->name('courses.terminate');
@@ -40,6 +42,7 @@ Route::get('/lieux/{id}', [LieuVenteController::class, 'show'])->name('lieux.sho
 
 Route::get('/panierclient', [ClientController::class, 'panierclient']);
 
+Route::get('/send-email', [MailController::class, 'sendVerificationEmail']);
 
 Route::get('/map',[ChauffeurController::class, "index" ]);
 Route::get('/map/{id?}', [ChauffeurController::class, 'index'])->name('map');
@@ -59,6 +62,21 @@ Route::post('/profil/{id_client}/add-card', [CBController::class, 'store'])->nam
 
 Route::get('/profil/{id_client}/delete-card/{id_cb}', [CBController::class, 'destroy'])->name('card.delete');
 
+use Illuminate\Support\Facades\Mail;
+
+Route::get('/test-email', function () {
+    try {
+        Mail::raw('Ceci est un test d\'email envoyé avec SendGrid.', function ($message) {
+            $message->to('mat.servonnet@gmail.com') // Remplace par un email valide
+                    ->subject('Test SendGrid')
+                    ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME')); // Utilise l'email configuré dans .env
+        });
+
+        return 'Email envoyé avec succès !';
+    } catch (\Exception $e) {
+        return 'Erreur lors de l\'envoi de l\'email : ' . $e->getMessage();
+    }
+});
 
 
 
@@ -84,8 +102,8 @@ Route::patch('update/{id}', [CartController::class, 'update'])->name('update');
 
 Route::get('/panier/confirm', [CartController::class, 'passercomande'])->name('cart.confirm');
 
-
-
+Route::get('/ajouteradresse',[ClientController::class ,'ajtadresse'])->name('ajtadresse');
+Route::post('/ajouter-adresse', [ClientController::class, 'valideadresse'])->name('ajouter.adresse');
 
 Route::post('add/{type}/{id}', [CartController::class, 'add'])->name('cart.add');
 

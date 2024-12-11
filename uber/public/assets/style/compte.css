@@ -12,8 +12,6 @@ body {
   padding-top: 80px;
 }
 
-/*#region Navbar */
-
 a {
   text-decoration: none;
   color: inherit;
@@ -66,6 +64,9 @@ a:hover {
   color: #fff;
   padding: 0.5rem 1rem;
   border-radius: 0.25rem;
+  text-decoration: none;
+  display: flex;
+  flex-wrap: nowrap;
 }
 
 .navbar-nav .nav-link:hover {
@@ -90,6 +91,7 @@ a:hover {
   background: transparent;
   border: 2px solid #fff;
   transition: all 0.3s ease;
+  align-content: center;
 }
 
 .navbar-connect .btn-outline-light:hover {
@@ -108,7 +110,6 @@ a:hover {
   background-color: #f0f0f0;
 }
 
-/*#endregion Navbar */
 .footer {
   background-color: #000;
   color: #fff;
@@ -202,103 +203,91 @@ a:hover {
 
 /* Container principal pour la page des informations du compte */
 .container.info-compte {
-  max-width: 900px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
   background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
   margin-top: 5%;
   margin-bottom: 5%;
+  font-family: "Arial", sans-serif;
+  color: #333;
 }
 
 /* Titre principal */
 .info-compte h1 {
   text-align: center;
-  font-size: 2rem;
+  font-size: 2.5rem;
   color: #333;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
 }
 
-/* Section des informations de compte */
-.account-info {
-  padding: 1rem;
-  font-size: 1.1rem;
-  color: #333;
-}
-
-/* Style des éléments d'informations */
-.info-item {
-  margin-bottom: 1.5rem;
-}
-
-.info-item strong {
-  font-weight: bold;
-  color: #333;
-}
-
-.info-item p {
-  margin-top: 0.5rem;
-  color: #555;
-  word-wrap: break-word; /* Pour gérer les textes longs comme les numéros de carte */
-}
-
-/* Style du titre pour les informations bancaires */
-h3 {
-  margin-top: 2rem;
-  font-size: 1.4rem;
-  color: #333;
-  border-top: 2px solid #ddd;
-  padding-top: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-/* Bouton d'action pour la modification des informations */
-.actions {
+.form-container {
+  max-width: 500px;
+  margin: 50px auto;
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   text-align: center;
-  margin-top: 2rem;
 }
 
-.actions .btn {
-  background-color: #06c167;
-  color: white;
-  padding: 1rem 2rem;
-  border: none;
-  border-radius: 30px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.actions .btn:hover {
-  background-color: #04a957;
-}
-
-/* Style spécifique pour les petits écrans */
-@media screen and (max-width: 768px) {
-  .container.info-compte {
-    padding: 1rem;
-  }
-
-  .info-compte h1 {
-    font-size: 1.6rem;
-  }
-
-  .info-item {
-    font-size: 1rem;
-  }
-
-  .actions .btn {
-    width: 100%;
-    padding: 1rem;
-  }
-}
-
-.invis {
-  display: none;
-}
-.ajouterCB {
-  font-size: large;
+.form-container h1 {
+  font-size: 2rem;
   font-weight: bold;
-  margin: 4% 0 0 0%;
+  margin-bottom: 1.5rem;
+  color: #06c167;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.form-group label {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  display: block;
+  color: #333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  border-color: #06c167;
+  outline: none;
+  box-shadow: 0 0 8px rgba(6, 193, 103, 0.2);
+}
+
+.btn-submit {
+  background: #06c167;
+  color: #ffffff;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.btn-submit:hover {
+  background: #04a957;
+  transform: translateY(-2px);
+}
+
+.btn-submit:active {
+  background: #03894a;
+  transform: translateY(1px);
 }

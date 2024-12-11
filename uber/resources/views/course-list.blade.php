@@ -46,16 +46,17 @@
                         <div class="review-form">
                             <form class="reviewForm" data-course-id="{{ $course->id_course }}">
                                 @csrf
-                                <label for="note">Note :</label>
-                                <select name="note" required>
+                                <label id="txtNoteCourse" for="note">Note :</label>
+                                <select id="selectNoteCourse" name="note" required>
                                     <option value="1">1 - Très mauvais</option>
                                     <option value="2">2 - Mauvais</option>
                                     <option value="3">3 - Moyen</option>
                                     <option value="4">4 - Bon</option>
-                                    <option value="5">5 - Excellent</option>
+                                    <option selected value="5">5 - Excellent</option>
                                 </select>
-                                <label for="pourboire">Pourboire (€) :</label>
-                                <input name="pourboire" type="number" min="0" step="1">
+                                <label id="txtPourboireCourse" for="pourboire">Pourboire (€) :</label>
+                                <input value=0 id="champPourboier" name="pourboire" type="number" min="0"
+                                    step="1">
                                 <button type="button" class="submitReview">Soumettre</button>
                             </form>
                         </div>
@@ -65,7 +66,11 @@
                             @csrf
                             <button class="acceptButton" type="submit">Terminé</button>
                         </form>
-                        <button class=modifyButton data-course-id="{{ $course->id_course }}">Modifier</button>
+                        <form action="{{ route('courses.update', ['id' => $course->id_course]) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <button class="modifyButton" type="submit" data-course-id="{{ $course->id_course }}">Modifier</button>
+                        </form>
                     @endif
                     <div class=course></div>
                     @if (!$course->terminee)
@@ -75,9 +80,9 @@
                                 onclick='return confirm("Êtes-vous sûr de vouloir supprimer cette course ?")'>Annuler</button>
                         </form>
                     @endif
-                </div>
-            </div>
-    </li>
+        </div>
+        </div>
+        </li>
 </ul>
 </div>
 @endforeach

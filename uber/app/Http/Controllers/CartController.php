@@ -9,6 +9,8 @@ use App\Models\Menu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;  // Utilisation de la session pour stocker le panier
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 
 class CartController extends Controller
 {
@@ -345,22 +347,51 @@ public function getPanierId($idClient)
 
 
 
-
 public function passercomande(){
-
-        if (Auth::check()) {
-            $idClient = Auth::user()->id_client;
-            $idPanier = $this->getPanierId($idClient);
-            
-            $client = DB::table('client as c')
+    if (Auth::check()) {
+        $idClient = Auth::user()->id_client;
+        $idPanier = $this->getPanierId($idClient);
+        
+        $client = DB::table('client as c')
             ->leftJoin('possede as p', 'p.id_client', '=', 'c.id_client')
             ->leftJoin('cb as cb', 'cb.id_cb', '=', 'p.id_cb')
-            ->select('c.prenom_cp', 'c.nom_cp', 'c.mail_client', 'c.tel_client', 'cb.num_cb', 'cb.nom_cb', 'cb.date_fin_validite','cb.type_cb','cb.id_cb')
+            ->select('c.prenom_cp', 'c.nom_cp', 'c.mail_client', 'c.tel_client', 'cb.num_cb', 'cb.nom_cb', 'cb.date_fin_validite', 'cb.type_cb', 'cb.id_cb')
             ->where('c.id_client', $idClient)
             ->get();
-        
-        return view('cart.confirm',compact('client','',''));
+    
+        $cart = session()->get('cart', []);
+        $total = 0;
+
+        $menus = [];
+        $plats = [];
+        $produits = [];
+
+        // Séparer les éléments du panier par catégorie
+        foreach ($cart as $key => $item) {
+            $total += $item['price'] * $item['quantity'];
+
+            // Déterminer le type de l'élément à partir de la clé
+            if (str_contains($key, 'menu')) {
+                $menus[$key] = $item;
+            } elseif (str_contains($key, 'plat')) {
+                $plats[$key] = $item;
+            } elseif (str_contains($key, 'produit')) {
+                $produits[$key] = $item;
+            }
         }
+
+        // Récupérer toutes les adresses du client
+        $adresses = DB::table('se_fait_livrer_a as sf')
+            ->join('adresse as a', 'sf.id_adresse', '=', 'a.id_adresse')
+            ->where('sf.id_client', $idClient)
+            ->select('a.ville', 'a.cp', 'a.rue')
+            ->get(); // Utilisation de `get()` pour récupérer toutes les adresses
+
+        return view('cart.confirm', compact('client', 'menus', 'produits', 'plats', 'adresses', 'total'));
     }
+
+    return redirect()->route('login');
+}
+
 
 }

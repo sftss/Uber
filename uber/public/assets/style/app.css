@@ -67,6 +67,9 @@ button {
   color: #fff;
   padding: 0.5rem 1rem;
   border-radius: 0.25rem;
+  text-decoration: none;
+  display: flex;
+  flex-wrap: nowrap;
 }
 
 .navbar-nav .nav-link:hover {
@@ -91,6 +94,7 @@ button {
   background: transparent;
   border: 2px solid #fff;
   transition: all 0.3s ease;
+  align-content: center;
 }
 
 .navbar-connect .btn-outline-light:hover {

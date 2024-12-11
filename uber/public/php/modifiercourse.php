@@ -104,6 +104,7 @@ try {
         $duree_course = $heurescourse . ":" . $minutescourse . ":" . $secondescourse;
 
         $terminée = 'false';
+        $acceptee = 'false';
 
         $stm_update_course = $db->prepare("UPDATE course SET 
         ID_CHAUFFEUR = :id_chauffeur,
@@ -128,6 +129,7 @@ try {
         ':duree_course' => $duree_course,
         ':heure_arrivee' => null,
         ':terminee' => $terminee,
+        ':acceptee' => $acceptee,
         ':id_course' => $id_course,
     ]);
 
