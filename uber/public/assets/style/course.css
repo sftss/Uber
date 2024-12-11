@@ -358,7 +358,7 @@ a {
 }
 
 .btn-modifier:hover {
-  background-color: #28a745;
+  background-color: #6ca728;
   border-color: #4a4a4a;
   color: #0ce96f;
   font-weight: bold;
@@ -377,7 +377,7 @@ a {
     background-color 0.3s,
     border-color 0.3s;
   cursor: pointer;
-  transform: scale(1.1) translate(270%, -50%);
+  transform: scale(1.1) translate(270%, -30%);
 }
 
 .delete_button:hover {

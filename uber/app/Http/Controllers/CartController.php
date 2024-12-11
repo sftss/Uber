@@ -154,7 +154,6 @@ public function remove($id)
             $idClient = Auth::user()->id_client;
             $idPanier = $this->getPanierId($idClient);
 
-            // Extraire le type (produit, plat, menu) et l'ID de l'élément
             $item = explode('_', $id);
             $type = $item[0];
             $idElement = $item[1];
@@ -342,5 +341,26 @@ public function getPanierId($idClient)
 
     return null; // Si aucun panier n'est trouvé
 }
+
+
+
+
+
+public function passercomande(){
+
+        if (Auth::check()) {
+            $idClient = Auth::user()->id_client;
+            $idPanier = $this->getPanierId($idClient);
+            
+            $client = DB::table('client as c')
+            ->leftJoin('possede as p', 'p.id_client', '=', 'c.id_client')
+            ->leftJoin('cb as cb', 'cb.id_cb', '=', 'p.id_cb')
+            ->select('c.prenom_cp', 'c.nom_cp', 'c.mail_client', 'c.tel_client', 'cb.num_cb', 'cb.nom_cb', 'cb.date_fin_validite','cb.type_cb','cb.id_cb')
+            ->where('c.id_client', $idClient)
+            ->get();
+        
+        return view('cart.confirm',compact('client','',''));
+        }
+    }
 
 }

@@ -156,4 +156,8 @@
     @endif
 </div>
 
+<div class="commande">
+    <a href="{{route('cart.confirm')}}">Passer commande</a>
+</div>
+
 <script src="{{ asset('js/main.js') }}"></script>

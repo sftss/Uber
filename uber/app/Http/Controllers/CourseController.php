@@ -72,6 +72,7 @@ class CourseController extends Controller
             ->route("courses.index")
             ->with("success", "Course supprimée avec succès");
     }
+
     public function accepter($id)
     {
         $course = Course::findOrFail($id);
@@ -81,10 +82,10 @@ class CourseController extends Controller
         
         //$course->update(["acceptee" => $acceptee]);
         \DB::table('course')
-    ->where('id_course', $course->id_course)
-    ->update([
-        'acceptee' => $acceptee
-    ]);
+        ->where('id_course', $course->id_course)
+        ->update([
+            'acceptee' => $acceptee
+        ]);
         
         
         
@@ -108,12 +109,12 @@ class CourseController extends Controller
             return redirect()->route('courses.index')->with('error', 'Cette course est déjà terminée.');
         }
 
-        // Mettre à jour l'attribut 'terminee'
         $course->terminee = true;
         $course->save();
 
         return redirect()->route('courses.index')->with('success', 'Course terminée avec succès.');
     }
+    
     public function addReview(Request $request, $id)
     {
         $request->validate([

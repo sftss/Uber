@@ -56,7 +56,7 @@ Route::prefix('cart')->name('cart.')->group(function () {
 Route::get('/profil/{id_client}', [ClientController::class, 'profil'])->name('profil');
 Route::get('/profil/{id_client}/add-card', [CBController::class, 'create'])->name('card.create');
 Route::post('/profil/{id_client}/add-card', [CBController::class, 'store'])->name('card.store');
-// Route pour supprimer une carte bancaire
+
 Route::get('/profil/{id_client}/delete-card/{id_cb}', [CBController::class, 'destroy'])->name('card.delete');
 
 
@@ -76,12 +76,16 @@ Route::get('/chauffeur-archives/{id}', [ChauffeurController::class, 'AfficherCou
 
 
 Route::post('/cart/add/{type}/{id}', [CartController::class, 'add'])->name('cart.add');
-
 Route::post('/cart/add/{productId}', [CartController::class, 'addToCart'])->name('cart.add');
 Route::get('/panier', [CartController::class, 'index'])->name('cart.index');
 Route::post('/panier/ajouter/{id}', [CartController::class, 'add'])->name('cart.add');
 Route::delete('/panier/supprimer/{id}', [CartController::class, 'remove'])->name('cart.remove');
 Route::patch('update/{id}', [CartController::class, 'update'])->name('update');
+
+Route::get('/panier/confirm', [CartController::class, 'passercomande'])->name('cart.confirm');
+
+
+
 
 Route::post('add/{type}/{id}', [CartController::class, 'add'])->name('cart.add');
 
