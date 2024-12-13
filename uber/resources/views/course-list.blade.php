@@ -4,7 +4,8 @@
 <link href="{{ URL::asset('assets/style/course.css') }}" rel="stylesheet">
 
 <div id="butRetourListCourse">
-    <a class="back_button" href="{{ url('/') }}"><span class="back_icon">←</span>
+    <a class="back_button" href="{{ url('/') }}">
+        <span class="back_icon">←</span>
         <p>Retour</p>
     </a>
     <h2>Les courses</h2>
@@ -25,20 +26,28 @@
                 <li class="depart">Lieu de départ : {{ $course->ville_depart }}</li>
                 <li class="arrivee">Lieu d'arrivée : {{ $course->ville_arrivee }}</li>
                 <li class="prix">Prix : {{ $course->prix_reservation }} €</li>
-                <li class="date_prise_en_charge">Date de la course : {{ $course->date_prise_en_charge }}</li>
-                <li class="duree">Durée : {{ $course->duree_course }}</li>
-                <li class="temps_arrivee">Heure d'arrivée : @if ($course->heure_arrivee)
-                        {{ $course->heure_arrivee }}
+                <li class="date_prise_en_charge">Date de la course :
+                    {{ \Carbon\Carbon::parse($course->date_prise_en_charge)->format('d-m-Y') }}</li>
+                <li class="duree">Durée :
+                    {{ \Carbon\Carbon::parse($course->duree_course)->format('H') }}h
+                    {{ \Carbon\Carbon::parse($course->duree_course)->format('i') }}min
+                </li>
+                <li class="temps_arrivee">Heure d'arrivée :
+                    @if ($course->heure_arrivee)
+                        {{ \Carbon\Carbon::parse($course->heure_arrivee)->format('H') }}h
+                        {{ \Carbon\Carbon::parse($course->heure_arrivee)->format('i') }}min
                     @else
                         Non spécifiée
                     @endif
                 </li>
                 <li class="acceptee">
-                    @if ($course->acceptee)
-                        Acceptée
-                    @else
-                        En attente de réponse chauffeur
-                    @endif
+                @if ($course->acceptee === true)
+                    Acceptée
+                @elseif ($course->acceptee === false)
+                    Refusée
+                @else
+                    En attente de réponse chauffeur
+                @endif
                 </li>
                 <li class="terminee">
                     @if ($course->terminee)
@@ -46,85 +55,124 @@
                         <div class="review-form">
                             <form class="reviewForm" data-course-id="{{ $course->id_course }}">
                                 @csrf
-                                <label id="txtNoteCourse" for="note">Note :</label>
+                                <label for="note" id="txtNoteCourse">Note :</label>
                                 <select id="selectNoteCourse" name="note" required>
-                                    <option value="1">1 - Très mauvais</option>
-                                    <option value="2">2 - Mauvais</option>
-                                    <option value="3">3 - Moyen</option>
-                                    <option value="4">4 - Bon</option>
-                                    <option selected value="5">5 - Excellent</option>
+                                    <option value=1>1 - Très mauvais</option>
+                                    <option value=2>2 - Mauvais</option>
+                                    <option value=3>3 - Moyen</option>
+                                    <option value=4>4 - Bon</option>
+                                    <option value=5 selected>5 - Excellent</option>
                                 </select>
-                                <label id="txtPourboireCourse" for="pourboire">Pourboire (€) :</label>
-                                <input value=0 id="champPourboier" name="pourboire" type="number" min="0"
-                                    step="1">
-                                <button type="button" class="submitReview">Soumettre</button>
+                                <label for="pourboire" id="txtPourboireCourse">Pourboire (€) :</label>
+                                <input id="champPourboir" min="0" name="pourboire" step="1" type="number"
+                                    value="0">
+                                <button class="submitReview" type="button">Soumettre</button>
                             </form>
                         </div>
-                    @else
+                    @elseif ($course->acceptee === true || is_null($course->acceptee))
                         <form action="{{ route('courses.terminate', $course->id_course) }}" method="POST"
-                            style="display:inline;">
+                            style="display:inline">
                             @csrf
                             <button class="acceptButton" type="submit">Terminé</button>
                         </form>
                         <form action="{{ route('courses.update', ['id' => $course->id_course]) }}" method="POST">
                             @csrf
                             @method('PUT')
-                            <button class="modifyButton" type="submit" data-course-id="{{ $course->id_course }}">Modifier</button>
+                            <button class="modifyButton" type="submit"
+                                data-course-id="{{ $course->id_course }}">Modifier</button>
                         </form>
                     @endif
-                    <div class=course></div>
-                    @if (!$course->terminee)
-                        <form action="{{ route('courses.destroy', $course->id_course) }}"method=POST
-                            style=display:inline>@csrf
-                            @method('DELETE') <button class=delete_button type=submit
+
+                    <div class="course"></div>
+
+                    @if (!$course->terminee && ($course->acceptee === true || is_null($course->acceptee)))
+                        <form action="{{ route('courses.destroy', $course->id_course) }}" method="POST"
+                            style="display:inline">
+                            @csrf
+                            @method('DELETE')
+                            <button class="delete_button" type="submit"
                                 onclick='return confirm("Êtes-vous sûr de vouloir supprimer cette course ?")'>Annuler</button>
                         </form>
                     @endif
+                </li>
+            </ul>
         </div>
-        </div>
-        </li>
-</ul>
-</div>
-@endforeach
+    @endforeach
 </ul>
 
-</ul>
+<!-- Boutons de pagination -->
+<div id="butPagination">
+    {{ $courses->links('pagination::default') }}
+</div>
+
+<!-- <script src="{{ 'js/course.js' }}" defer></script> -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Écouter les soumissions de formulaire pour l'avis
-        document.querySelectorAll('.submitReview').forEach(button => {
-            button.addEventListener('click', function() {
-                const form = this.closest('.reviewForm');
-                const courseId = form.getAttribute('data-course-id');
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".submitReview").forEach((button) => {
+            button.addEventListener("click", function() {
+                const form = this.closest(".reviewForm");
+                const courseId = form.getAttribute("data-course-id");
                 const formData = new FormData(form);
 
+                // Ajouter le courseId manuellement si ce n'est pas déjà dans le formulaire
+                formData.append("course_id", courseId);
+
+                // Soumission de l'avis
                 fetch(`/courses/${courseId}/review`, {
-                        method: 'POST',
+                        method: "POST",
                         headers: {
-                            'X-CSRF-TOKEN': document.querySelector(
-                                'meta[name="csrf-token"]').getAttribute('content'),
-                            'Accept': 'application/json'
+                            "X-CSRF-TOKEN": document
+                                .querySelector('meta[name="csrf-token"]')
+                                .getAttribute("content"),
+                            Accept: "application/json",
                         },
-                        body: formData
+                        body: formData,
                     })
-                    .then(response => response.json())
-                    .then(data => {
+                    .then((response) => response.json())
+                    .then((data) => {
                         if (data.success) {
-                            alert('Avis soumis avec succès !');
-                            // Optionnel : Mettre à jour l'interface sans recharger la page
-                            form.innerHTML =
-                                '<p>Merci pour votre avis !</p>'; // Remplacer le formulaire par un message de confirmation
+                            alert("Avis soumis avec succès !");
+                            // Appeler l'API pour générer la facture si nécessaire
+                            generateInvoice(courseId, formData);
                         } else {
-                            alert('Erreur lors de la soumission de l\'avis.');
+                            alert(
+                                "Erreur lors de la soumission de l'avis : " +
+                                (data.error || "Une erreur inconnue."),
+                            );
                         }
                     })
-                    .catch(error => {
-                        console.error('Erreur:', error);
-                        alert(
-                            'Une erreur s\'est produite lors de la soumission de l\'avis.'
-                        );
+                    .catch((error) => {
+                        console.error("Erreur:", error);
+                        alert("Une erreur s'est produite lors de la soumission de l'avis.");
                     });
             });
         });
+
+        function generateInvoice(courseId, formData) {
+            fetch(`/courses/${courseId}/generate-invoice`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": document
+                            .querySelector('meta[name="csrf-token"]')
+                            .getAttribute("content"),
+                        Accept: "application/json",
+                    },
+                    body: formData,
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        alert("Facture générée avec succès !");
+                        console.log("Facture :", data.invoice);
+                        // Optionnel : Afficher ou télécharger la facture
+                    } else {
+                        alert("Erreur lors de la génération de la facture.");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Erreur:", error);
+                    alert("Une erreur s'est produite lors de la génération de la facture.");
+                });
+        }
     });
 </script>

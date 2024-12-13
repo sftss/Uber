@@ -27,10 +27,16 @@ Route::delete('/courses/{course}', [CourseController::class, 'destroy'])->name('
 
 Route::put('/courses/{id}', [ChauffeurController::class, 'index'])->name('courses.update');
 
+Route::put('/courses/refuser/{course}', [CourseController::class, 'refuser'])->name('courses.refuser');
 Route::put('/courses/accepter/{course}', [CourseController::class, 'accepter'])->name('courses.accepter');
 
 Route::post('/courses/{id}/terminate', [CourseController::class, 'terminate'])->name('courses.terminate');
-Route::post('/courses/{id}/review', [CourseController::class, 'addReview'])->name('courses.addReview');
+Route::post('/courses/{courseId}/review', [CourseController::class, 'submitReview'])->name('courses.submitReview');
+
+
+
+Route::post('/courses/{id}/generate-invoice', [CourseController::class, 'generateTranslatedInvoice'])->name('courses.generateInvoice');
+
 
 
 Route::get('/restaurants/search', [RestaurantController::class, 'filter'])->name('restaurants.search');
@@ -104,6 +110,8 @@ Route::get('/panier/confirm', [CartController::class, 'passercomande'])->name('c
 
 Route::get('/ajouteradresse',[ClientController::class ,'ajtadresse'])->name('ajtadresse');
 Route::post('/ajouter-adresse', [ClientController::class, 'valideadresse'])->name('ajouter.adresse');
+Route::delete('/supprimer-adresse/{id}', [ClientController::class, 'supprimerAdresse'])->name('supprimer.adresse');
+
 
 Route::post('add/{type}/{id}', [CartController::class, 'add'])->name('cart.add');
 

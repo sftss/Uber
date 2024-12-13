@@ -384,7 +384,7 @@ public function passercomande(){
         $adresses = DB::table('se_fait_livrer_a as sf')
             ->join('adresse as a', 'sf.id_adresse', '=', 'a.id_adresse')
             ->where('sf.id_client', $idClient)
-            ->select('a.ville', 'a.cp', 'a.rue')
+            ->select('a.ville', 'a.cp', 'a.rue','a.id_adresse')
             ->get(); // Utilisation de `get()` pour récupérer toutes les adresses
 
         return view('cart.confirm', compact('client', 'menus', 'produits', 'plats', 'adresses', 'total'));

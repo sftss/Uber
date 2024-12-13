@@ -246,7 +246,6 @@ a {
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
-  height: 60%;
 }
 
 .course_container:hover {
@@ -313,7 +312,7 @@ a {
 }
 
 .course_details li::before {
-  content: "•";
+  content: "";
   color: #58b947;
   font-weight: bold;
   position: absolute;
@@ -381,7 +380,7 @@ a {
     background-color 0.3s,
     border-color 0.3s;
   cursor: pointer;
-  transform: scale(1.1) translate(270%, -120%);
+  transform: scale(1.1) translate(10%, 20%);
 }
 
 .delete_button:hover {
@@ -403,7 +402,7 @@ a {
     background-color 0.3s,
     border-color 0.3s;
   cursor: pointer;
-  transform: scale(1.3) translate(10%, 50%);
+  transform: scale(1.3) translate(10%, 40%);
 }
 .acceptButton:hover {
   background-color: #28a76a;
@@ -424,7 +423,7 @@ a {
     background-color 0.3s,
     border-color 0.3s;
   cursor: pointer;
-  transform: scale(1.3) translate(120%, -25%);
+  transform: scale(1.3) translate(120%, -35%);
 }
 
 .modifyButton:hover {
@@ -433,6 +432,23 @@ a {
   color: white;
 }
 .boutonAccepter {
+  background-color: #e5e5e5;
+  color: #2d2c2f;
+  border: 1px solid #e5e5e5;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-radius: 50px;
+  transition:
+    background-color 0.3s,
+    border-color 0.3s;
+  cursor: pointer;
+  transform: scale(1.3) translate(25%, 10%);
+}
+
+.boutonRefuser {
+  margin-left: 50px;
   background-color: #e5e5e5;
   color: #2d2c2f;
   border: 1px solid #e5e5e5;
@@ -459,6 +475,11 @@ a {
   text-transform: uppercase;
   margin: 10% 0 2% 5%;
 }
+li.acceptee {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
 .modal {
   display: flex;
   justify-content: center;
@@ -522,7 +543,7 @@ a {
 }
 
 #selectNoteCourse,
-#champPourboier {
+#champPourboir {
   padding: 8px;
   font-size: 14px;
   border: 1px solid #ccc;
@@ -535,7 +556,7 @@ a {
 }
 
 #selectNoteCourse:focus,
-#champPourboier:focus {
+#champPourboir:focus {
   border-color: #58b947;
 }
 
@@ -564,4 +585,49 @@ a {
   display: flex;
   align-items: center;
   gap: 16px;
+}
+#butPagination {
+  margin: 2% 0 2% 5%;
+}
+.pagination {
+  display: inline-flex;
+  list-style: none;
+}
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination .page-item {
+  margin: 0 5px;
+}
+
+.pagination .page-item .page-link {
+  color: #06c167;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 5px 10px;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #06c167;
+  color: #fff;
+  border: 1px solid #06c167;
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #ccc;
+  pointer-events: none;
+  border: 1px solid #ddd;
+}
+
+.pagination .page-item:hover .page-link {
+  background-color: #048f4c;
+  color: #fff;
+  border-color: #048f4c;
 }

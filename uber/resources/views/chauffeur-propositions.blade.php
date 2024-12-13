@@ -34,11 +34,13 @@
                     @endif
                 </li>
                 <li class="acceptee">
-                    @if ($course->acceptee)
-                        Acceptée
-                    @else
-                        En attente de réponse chauffeur
-                    @endif
+                @if ($course->acceptee === true)
+                    Acceptée
+                @elseif ($course->acceptee === false)
+                    Refusée
+                @else
+                    En attente de réponse chauffeur
+                @endif
                 </li>
                 <li class="terminee">
                     @if ($course->terminee)
@@ -50,7 +52,7 @@
             <div class="course">
             </div>
 
-            @if (!$course->acceptee)
+            @if (is_null($course->acceptee))
                 <form action="{{ route('courses.accepter', $course->id_course) }}" method="POST"
                     style="display:inline;">
                     @csrf
@@ -59,6 +61,18 @@
                         onclick="return confirm('Êtes-vous sûr de vouloir accepter cette course ?');">
                         
                         Accepter
+                    </button>
+
+                </form>
+
+                <form action="{{ route('courses.refuser', $course->id_course) }}" method="POST"
+                    style="display:inline;">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit" class="boutonRefuser"
+                        onclick="return confirm('Êtes-vous sûr de vouloir refuser cette course ?');">
+                        
+                        Refuser
                     </button>
 
                 </form>

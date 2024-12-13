@@ -153,12 +153,19 @@
     @endif
 </div>
 <div class="info_chauffeur">
-    @if ($adresses->isNotEmpty())  <!-- Vérifie si la collection n'est pas vide -->
-        @foreach ($adresses as $adresse) <!-- Boucle à travers toutes les adresses -->
+    @if ($adresses->isNotEmpty())
+        @foreach ($adresses as $adresse)
             <p>Adresse : {{ $adresse->rue }}, {{ $adresse->cp }}, {{ $adresse->ville }}</p>
+            <form action="{{ route('supprimer.adresse', $adresse->id_adresse) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette adresse ?');">
+                @csrf
+                @method('DELETE')
+                <!-- Passer le paramètre 'from' via un champ caché -->
+                <input type="hidden" name="from" value="cart">
+                <button type="submit">Supprimer</button>
+            </form>
         @endforeach
     @else
         <p>Vous n'avez pas d'adresse enregistrée, veuillez en enregistrer une.</p>
     @endif
-    <a href="{{ route('ajtadresse') }}">Ajouter une adresse</a>
+    <a href="{{ route('ajtadresse', ['from' => 'cart']) }}">Ajouter une adresse</a>
 </div>

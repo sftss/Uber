@@ -1,31 +1,35 @@
 @extends('layouts.header')
-<link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
+<link rel="stylesheet" href="{{ URL::asset('assets/style/compte.css') }}" />
 
-<form action="{{ route('ajouter.adresse') }}" method="POST">
+<form action="{{ route('ajouter.adresse') }}" method="POST" class="adresse-form">
     @csrf
-    <div>
-        <label for="rue">Rue :</label>
-        <input type="text" id="rue" name="rue" required maxlength="255">
+    <div class="form-group">
+        <label for="rue" class="form-label">Rue :</label>
+        <input type="text" id="rue" name="rue" required maxlength="255" class="form-input">
         @error('rue')
-        <span class="error-message">{{ $message }}</span>
+            <span class="error-message">{{ $message }}</span>
         @enderror
     </div>
 
-    <div>
-        <label for="cp">Code postal :</label>
-        <input type="text" id="cp" name="cp" required pattern="\d{5}" title="Entrez un code postal valide à 5 chiffres">
+    <div class="form-group">
+        <label for="cp" class="form-label">Code postal :</label>
+        <input type="text" id="cp" name="cp" required pattern="\d{5}"
+            title="Entrez un code postal valide à 5 chiffres" class="form-input">
         @error('cp')
-        <span class="error-message">{{ $message }}</span>
-        @enderror
-    </div>
-    
-    <div>
-        <label for="ville">Ville :</label>
-        <input type="text" id="ville" name="ville" required maxlength="100">
-        @error('ville')
-        <span class="error-message">{{ $message }}</span>
+            <span class="error-message">{{ $message }}</span>
         @enderror
     </div>
 
-    <button type="submit">Soumettre</button>
+    <div class="form-group">
+        <label for="ville" class="form-label">Ville :</label>
+        <input type="text" id="ville" name="ville" required maxlength="100" class="form-input">
+        @error('ville')
+            <span class="error-message">{{ $message }}</span>
+        @enderror
+    </div>
+
+    <!-- Champ caché pour déterminer d'où provient l'utilisateur -->
+    <input type="hidden" name="from" value="{{ request()->query('from') }}" class="form-input">
+
+    <button type="submit" class="form-submit-btn">Soumettre</button>
 </form>

@@ -74,11 +74,32 @@
             @endif
 
             <a href="{{ route('card.create', ['id_client' => auth()->user()->id_client]) }}"
-                class="btn btn-primary ajouterCB">Ajouter une carte bancaire dès maintenant 💳</a>
+                class="btn btn-primary ajouterInfo">Ajouter une carte bancaire dès maintenant 💳</a>
+
+            <div class="info_chauffeur">
+                @if ($client->isNotEmpty() && !empty($client->first()->ville))
+                    @foreach ($client as $adresse)
+                        <p>Adresse : {{ $adresse->rue }}, {{ $adresse->cp }}, {{ $adresse->ville }}</p>
+                        <form action="{{ route('supprimer.adresse', $adresse->id_adresse) }}" method="POST"
+                            onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette adresse ?');">
+                            @csrf
+                            @method('DELETE')
+                            <!-- Passer le paramètre 'from' via un champ caché -->
+                            <input type="hidden" name="from" value="profil">
+                            <button type="submit">Supprimer</button>
+                        </form>
+                    @endforeach
+                @else
+                    <p id="sansAdresse">Vous n'avez pas d'adresse enregistrée, veuillez en enregistrer une.</p>
+                @endif
+                <a href="{{ route('ajtadresse', ['from' => 'profil']) }}"
+                    class="btn btn-outline-light ajouterInfo">Ajouter une adresse 🏠</a>
+            </div>
 
             <!-- Bouton pour modifier les informations -->
             <div class="actions">
-                <a href="{{ url('/info-compte/edit') }}" class="btn btn-outline-light">Modifier mes informations</a>
+                <a href="{{ url('/info-compte/edit') }}" class="btn btn-outline-light ajouterInfo">Modifier mes
+                    informations</a>
             </div>
         </div>
     @endif

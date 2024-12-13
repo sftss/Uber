@@ -151,13 +151,14 @@
         @endif
 
         <p class="panierTotal">Total : {{ number_format($total, 2) }} €</p>
+        <div class="commande">
+            <a href="{{route('cart.confirm')}}">Passer commande</a>
+        </div>
+
     @else
         <p id="panier-vide">Votre panier est vide 😭</p>
     @endif
 </div>
 
-<div class="commande">
-    <a href="{{route('cart.confirm')}}">Passer commande</a>
-</div>
 
 <script src="{{ asset('js/main.js') }}"></script>

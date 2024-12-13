@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\ChauffeurController;
 
+
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+
+
 class CourseController extends Controller
 {
     public function index() {
@@ -97,38 +102,63 @@ class CourseController extends Controller
             ->AfficherPropositions($chauffeurId)
             ->with("success", "Course acceptée");
     }
-    public function update(Request $request, $id)
-{
-    // Validation des données
-    $validated = $request->validate([
-        'chauffeur' => 'nullable|string|max:255',   // Permet d'être vide si non renseigné
-        'depart' => 'required|string|max:255',
-        'arrivee' => 'required|string|max:255',
-        'prix' => 'required|numeric',
-        'date' => 'required|date',
-        'duree' => 'required|string|max:255',
-        'temps' => 'nullable|date_format:H:i',
-    ]);
 
-    if ($request->chauffeur === 'Vélo') {
-        $validated['chauffeur'] = null;  // Mettre chauffeur à null si vélo
+    public function refuser($id) {
+        $course = Course::findOrFail($id);
+        $acceptee = "false";
+        echo "<script>console.log(".$course.")</script>";
+
+        
+        //$course->update(["acceptee" => $acceptee]);
+        \DB::table('course')
+        ->where('id_course', $course->id_course)
+        ->update([
+            'acceptee' => $acceptee
+        ]);
+        
+        
+        
+        echo "<script>console.log(".$course.")</script>";
+        $chauffeurId = $course->id_chauffeur;
+
+        echo $chauffeurId;
+
+        $chauffeurController = new ChauffeurController();
+
+        return $chauffeurController
+            ->AfficherPropositions($chauffeurId)
+            ->with("success", "Course acceptée");
     }
-    // Récupérer la course et mettre à jour les données
-    $course = Course::findOrFail($id);
-    $course->update([
-        'id_chauffeur' => $validated['chauffeur'],  // Utilisation de id_chauffeur pour la mise à jour
-        'id_lieu_depart' => $validated['depart'],
-        'id_lieu_arrivee' => $validated['arrivee'],
-        'prix_reservation' => $validated['prix'],
-        'date_prise_en_charge' => $validated['date'],
-        'duree_course' => $validated['duree'],
-        'heure_arrivee' => $validated['temps'],
-    ]);
 
-    return response()->json(['success' => 'Course updated successfully']);
-}
+    public function update(Request $request, $id) {
+        // Validation des données
+        $validated = $request->validate([
+            'chauffeur' => 'nullable|string|max:255',   // Permet d'être vide si non renseigné
+            'depart' => 'required|string|max:255',
+            'arrivee' => 'required|string|max:255',
+            'prix' => 'required|numeric',
+            'date' => 'required|date',
+            'duree' => 'required|string|max:255',
+            'temps' => 'nullable|date_format:H:i',
+        ]);
 
+        if ($request->chauffeur === 'Vélo') {
+            $validated['chauffeur'] = null;  // Mettre chauffeur à null si vélo
+        }
+        // Récupérer la course et mettre à jour les données
+        $course = Course::findOrFail($id);
+        $course->update([
+            'id_chauffeur' => $validated['chauffeur'],  // Utilisation de id_chauffeur pour la mise à jour
+            'id_lieu_depart' => $validated['depart'],
+            'id_lieu_arrivee' => $validated['arrivee'],
+            'prix_reservation' => $validated['prix'],
+            'date_prise_en_charge' => $validated['date'],
+            'duree_course' => $validated['duree'],
+            'heure_arrivee' => $validated['temps'],
+        ]);
 
+        return response()->json(['success' => 'Course updated successfully']);
+    }
 
     public function terminate($id) {
         $course = Course::findOrFail($id);
@@ -143,28 +173,129 @@ class CourseController extends Controller
         return redirect()->route('courses.index')->with('success', 'Course terminée avec succès.');
     }
     
-    public function addReview(Request $request, $id) {
+    public function submitReview(Request $request, $id) {
+        // Validation des données entrantes
         $request->validate([
-            'note' => 'required|integer|min:1|max:5',
-            'pourboire' => 'nullable|numeric|min:0'
+            'note' => 'nullable|integer|min:1|max:5',
+            'pourboire' => 'nullable|numeric|min:0',
         ]);
 
-        $course = Course::findOrFail($id);
+        // Vérification des données fournies
+        if (!$request->has('note') && !$request->has('pourboire')) {
+            return response()->json(['error' => 'Veuillez fournir une note ou un pourboire.'], 400);
+        }
 
+        // Vérification de l'existence de la course
+        $course = DB::table('course')->where('id_course', $id)->first();
+        if (!$course) {
+            return response()->json(['error' => 'Course introuvable.'], 404);
+        }
+
+        // Vérification que la course est terminée
         if (!$course->terminee) {
             return response()->json(['error' => 'La course n\'est pas encore terminée.'], 400);
         }
-    
-        if ($request->has('note')) {
-            $course->note = $request->input('note');
+
+        // Démarrage de la transaction
+        DB::beginTransaction();
+        try {
+            // Gestion de la note
+            if ($request->has('note')) {
+                // Insertion de la note
+                $noteId = DB::table('note')->insertGetId([
+                    'valeur_note' => $request->input('note'),
+                ]);
+
+                // Association de la note au chauffeur via EST_NOTE
+                if ($course->id_chauffeur) {
+                    DB::table('est_note')->insert([
+                        'id_note' => $noteId,
+                        'id_chauffeur' => $course->id_chauffeur,
+                    ]);
+
+                    // Mise à jour de la moyenne des notes du chauffeur
+                    $moyenneNote = DB::table('est_note')
+                        ->join('note', 'est_note.id_note', '=', 'note.id_note')
+                        ->where('est_note.id_chauffeur', $course->id_chauffeur)
+                        ->avg('note.valeur_note');
+
+                    DB::table('chauffeur')
+                        ->where('id_chauffeur', $course->id_chauffeur)
+                        ->update(['note_chauffeur' => $moyenneNote]);
+                }
+            }
+
+            // Gestion du pourboire
+            if ($request->has('pourboire')) {
+                DB::table('facture')
+                    ->where('id_course', $course->id_course)
+                    ->update([
+                        'pourboire' => $request->input('pourboire'),
+                    ]);
+            }
+
+            // Validation de la transaction
+            DB::commit();
+
+            return response()->json(['success' => 'Avis et pourboire ajoutés avec succès.']);
+        } catch (\Exception $e) {
+            // Annulation de la transaction en cas d'erreur
+            DB::rollBack();
+            return response()->json(['error' => 'Une erreur est survenue lors de la soumission.'], 500);
         }
-
-        if ($request->has('pourboire')) {
-            $course->pourboire = $request->input('pourboire');
-        }
-
-        $course->save();
-
-        return response()->json(['success' => 'Avis et note ajoutés avec succès.']);
     }
+
+    public function generateTranslatedInvoice(Request $request, $id) {
+            $validated = $request->validate([
+                'note' => 'required|integer|min:1|max:5',
+                'pourboire' => 'required|numeric|min:0',
+            ]);
+
+            // Récupérer les détails de la course
+            $course = Course::findOrFail($id);
+
+            // Préparer les données pour le script Python
+            $invoiceData = [
+                'id_course' => $course->id_course,
+                'ville_depart' => $course->ville_depart,
+                'ville_arrivee' => $course->ville_arrivee,
+                'prix_reservation' => $course->prix_reservation,
+                'date_prise_en_charge' => $course->date_prise_en_charge,
+                'duree_course' => $course->duree_course,
+                'note' => $validated['note'],
+                'pourboire' => $validated['pourboire'],
+            ];
+
+            // Convertir en JSON
+            $inputJson = json_encode([
+                'invoice_data' => $invoiceData,
+                'language' => 'fr', // Vous pouvez le rendre dynamique si nécessaire
+            ]);
+
+            // Chemin vers le script Python
+            $scriptPath = public_path('python/facture.py');
+
+            $process = new Process(['python3', $scriptPath]);
+            $process->setInput($inputJson);
+
+            try {
+                $process->mustRun();
+
+                // Lire la sortie JSON
+                $output = $process->getOutput();
+                $translatedInvoice = json_decode($output, true);
+
+                return response()->json([
+                    'success' => true,
+                    'invoice' => $translatedInvoice,
+                ]);
+
+            } catch (ProcessFailedException $exception) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la génération de la facture.',
+                ], 500);
+            }
+    }
+
 }

@@ -1183,3 +1183,10 @@ input[type="number"] {
   font-size: 2.5em;
   margin-bottom: 10px;
 }
+.pageLoginErreur {
+  margin: 0 0 0 -80%;
+  top: 0;
+  background-color: rgb(209, 94, 94);
+  border-color: rgb(66, 3, 3);
+  color: white;
+}

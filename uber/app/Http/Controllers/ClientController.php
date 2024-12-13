@@ -64,7 +64,9 @@ class ClientController extends Controller
     $client = DB::table('client as c')
         ->leftJoin('possede as p', 'p.id_client', '=', 'c.id_client')
         ->leftJoin('cb as cb', 'cb.id_cb', '=', 'p.id_cb')
-        ->select('c.prenom_cp', 'c.nom_cp', 'c.mail_client', 'c.tel_client', 'cb.num_cb', 'cb.nom_cb', 'cb.date_fin_validite','cb.type_cb','cb.id_cb')
+        ->leftJoin('se_fait_livrer_a as sf','sf.id_client','=','c.id_client')
+        ->leftJoin('adresse as a','a.id_adresse','=','sf.id_adresse')
+        ->select('c.prenom_cp', 'c.id_client','c.nom_cp', 'c.mail_client', 'c.tel_client', 'cb.num_cb', 'cb.nom_cb', 'cb.date_fin_validite','cb.type_cb','cb.id_cb','a.ville','a.rue','a.cp','a.id_adresse')
         ->where('c.id_client', $id)
         ->get();
 
@@ -116,9 +118,48 @@ class ClientController extends Controller
     $sfla->id_adresse = $id_adresse;
     $sfla->save();
 
-    // Redirection vers la confirmation de commande
-    return redirect()->route('cart.confirm');
+    // Vérifier si la demande vient du profil ou du panier
+    $from = $request->input('from');
+    // Si 'from' est 'cart', rediriger vers la confirmation du panier
+    if ($from === 'cart') {
+        return redirect()->route('cart.confirm'); // Redirige vers le panier
+    } else {
+        // Sinon, rediriger vers la page du profil
+        return redirect()->route('profil', ['id_client' => auth()->user()->id_client])->with('success', 'Adresse ajoutée avec succès');
+    }
 }
+
+
+
+public function supprimerAdresse($id, Request $request)
+{
+    // Trouver l'adresse avec l'ID
+    $adresse = Adresse::find($id);
+
+    // Vérifier si l'adresse existe et la supprimer
+    if ($adresse) {
+        // Supprimer la relation avec SeFaitLivrerA
+        SeFaitLivrerA::where('id_adresse', $id)->delete();
+
+        // Supprimer l'adresse
+        $adresse->delete();
+
+        // Vérifier d'où provient la requête (le paramètre 'from')
+        $from = $request->input('from');
+
+        // Si 'from' est 'cart', rediriger vers la confirmation du panier
+        if ($from === 'cart') {
+            return redirect()->route('cart.confirm')->with('success', 'L\'adresse a été supprimée avec succès.');
+        } else {
+            // Sinon, rediriger vers la page du profil
+            return redirect()->route('profil', ['id_client' => auth()->user()->id_client])->with('success', 'L\'adresse a été supprimée avec succès.');
+        }
+    } else {
+        // Si l'adresse n'existe pas, rediriger avec un message d'erreur
+        return redirect()->route('cart.confirm')->with('error', 'Adresse non trouvée.');
+    }
+}
+
 
 
 

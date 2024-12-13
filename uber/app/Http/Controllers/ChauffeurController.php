@@ -36,10 +36,7 @@ public function AfficherPropositions($id)
         ->join('adresse as arrivee', 'course.id_lieu_arrivee', '=', 'arrivee.id_adresse')
         ->join('chauffeur as ch','course.id_chauffeur','=','ch.id_chauffeur')
         ->where('ch.id_chauffeur', '=', $id)
-        ->where(function ($query) {
-            $query->where('course.acceptee', '!=', 'true')
-                  ->orWhereNull('course.acceptee');
-        })
+        ->where('course.terminee','!=','true')
         ->select(
             'course.id_course',
             'course.id_chauffeur',
