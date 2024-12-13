@@ -87,6 +87,41 @@ public function AfficherCoursesPassees($id)
     return view('chauffeur-propositions', ['courses' => $courses]);
 }
 
+public function terminer($id) {
+    $course = Course::findOrFail($id);
+    $terminee = "true";
+    $validationClient= DB::table('course')
+                  ->where('id_course', $course->id_course)
+                  ->value('validationclient'); 
+
+    
+    \DB::table('course')
+    ->where('id_course', $course->id_course)
+    ->update([
+        'validationchauffeur' => $terminee
+    ]);
+
+    if (json_encode($validationClient) == "true")
+    {
+        \DB::table('course')
+    ->where('id_course', $course->id_course)
+    ->update([
+        'terminee' => $terminee
+    ]);
+    }
+    
+    
+    
+    $chauffeurId = $course->id_chauffeur;
+
+    echo $chauffeurId;
+
+    $chauffeurController = new ChauffeurController();
+
+    return $chauffeurController
+        ->AfficherPropositions($chauffeurId)
+        ->with("success", "Course terminée");
+}
 
 
 }

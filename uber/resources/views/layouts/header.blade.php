@@ -18,19 +18,13 @@
                         <a class="nav-link" href="{{ url('/map') }}">Déplacez-vous avec Uber</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="https://www.uber.com/fr/fr/drive/">Conduire</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://www.uber.com/fr/fr/business/">Professionnel</a>
-                    </li>
-                    <li class="nav-item">
                         <a href="{{ url('/restaurants/search') }}" class="nav-link">Uber Eats</a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ url('/courses') }}" class="nav-link">Mes Courses</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url('/chauffeur-main') }}" class="nav-link">Affichage Chauffeur</a>
+                        <a href="{{ url('/chauffeur-main') }}" class="nav-link">Professionnel</a>
                     </li>
                 </ul>
             </div>
@@ -68,15 +62,16 @@
             <div class="footer-section">
                 <h4>Entreprise</h4>
                 <ul>
-                    <li><a href="#">À propos</a></li>
-                    <li><a href="#">Nos services</a></li>
+                    <li><a href="https://www.uber.com/fr/fr/about/?uclick_id=dad98e94-ee51-496b-9dc6-4f7a52496398">À
+                            propos</a></li>
+                    <li><a href="https://www.uber.com/fr/fr/about/uber-offerings/">Nos services</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h4>Produits</h4>
                 <ul>
-                    <li><a href="#">Déplacez-vous avec Uber</a></li>
-                    <li><a href="#">Conduire</a></li>
+                    <li><a href="{{ route('map') }}">Déplacez-vous avec Uber</a></li>
+                    <li><a href="{{ url('/chauffeur-archives') }}">Conduire</a></li>
                     <li><a href="#">Livrez</a></li>
                     <li><a href="#">Commandez un repas</a></li>
                 </ul>
@@ -84,19 +79,12 @@
             <div class="footer-section">
                 <h4>Déplacements</h4>
                 <ul>
-                    <li><a href="#">Réservez</a></li>
-                    <li><a href="#">Villes</a></li>
+                    <li><a href="{{ route('map') }}">Réservez</a></li>
                 </ul>
             </div>
         </div>
 
         <div class="footer-bottom">
-            <div class="footer-icons">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-youtube"></i></a>
-                <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
             <div class="app-links">
                 <a href="#"><img
                         src="https://d1a3f4spazzrp4.cloudfront.net/uber-com/1.3.8/d1a3f4spazzrp4.cloudfront.net/illustrations/app-store-google-4d63c31a3e.svg"
@@ -107,9 +95,8 @@
             </div>
             <p>© {{ date('Y') }} Uber Technologies Inc.</p>
             <div class="footer-meta">
-                <a href="{{ route('politique') }}">Confidentialité</a> |
+                <a href="{{ route('politique') }}">| Confidentialité</a> |
                 <a href="#">Accessibilité</a> |
-                <a href="#">Conditions</a>
             </div>
         </div>
     </footer>

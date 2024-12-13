@@ -3,27 +3,24 @@
 //locationIQ pareil avec plus de requetes possibles mais faut créer un compte (mail temporaire possible) d'où la clé d'api en dessous
 //osrm pour calculer le meilleur itinéraire en voiture entre 2 points et sa durée
 
-
-
 let map;
 // Initialisation de la carte Leaflet
-if (typeof L === 'undefined') {
+if (typeof L === "undefined") {
   // Charger Leaflet si ce n'est pas déjà fait
-  var script = document.createElement('script');
-  script.src = 'https://unpkg.com/leaflet/dist/leaflet.js';
+  var script = document.createElement("script");
+  script.src = "https://unpkg.com/leaflet/dist/leaflet.js";
 
-  var scriptcss = document.createElement('script');
-  scriptcss.src = 'https://unpkg.com/leaflet/dist/leaflet.css';
+  var scriptcss = document.createElement("script");
+  scriptcss.src = "https://unpkg.com/leaflet/dist/leaflet.css";
 
-  
-  
-  script.onload = function() {
-      // Une fois que Leaflet est chargé, exécuter votre code
-      map = L.map("map").setView([45.9207646, 6.1527482], 13); // Coordonnées de l'IUT par défaut
+  script.onload = function () {
+    // Une fois que Leaflet est chargé, exécuter votre code
+    map = L.map("map").setView([45.9207646, 6.1527482], 13); // Coordonnées de l'IUT par défaut
 
-      
-      // Ajout d'un fond de carte OpenStreetMap
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map); // Appeler la fonction d'initialisation de la carte
+    // Ajout d'un fond de carte OpenStreetMap
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
+      map,
+    ); // Appeler la fonction d'initialisation de la carte
   };
   document.head.appendChild(script);
   document.head.appendChild(scriptcss);
@@ -31,8 +28,8 @@ if (typeof L === 'undefined') {
   // Si Leaflet est déjà chargé, appeler directement la fonction d'initialisation de la carte
   map = L.map("map").setView([45.9207646, 6.1527482], 13); // Coordonnées de l'IUT par défaut
 
-// Ajout d'un fond de carte OpenStreetMap
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+  // Ajout d'un fond de carte OpenStreetMap
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 }
 
 var divcrée;
@@ -44,10 +41,11 @@ const suggestionsArrivee = document.getElementById("suggestionsArrivee");
 const inputDateDepart = document.getElementById("dateDepart");
 const dateToday = new Date();
 const listePropositions = document.getElementById("propositionsList");
-const modification = getUrlParameter('modification');
+const modification = getUrlParameter("modification");
 
 inputDateDepart.value = dateToday.toISOString().slice(0, 16);
 
+console.log(coursePourModification.id_course);
 
 const cleAPILocationIQ = "pk.69ac2966071395cd67e8a9a5ed00d2c3"; // clé API LocationIQ
 
@@ -55,60 +53,59 @@ var markerDepart = null;
 var markerArrivee = null;
 var departementDepart = "";
 let durationInSeconds;
-    // Fonction pour obtenir les paramètres d'URL
-    function getUrlParameter(name) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(name);
-  }
-
-  // Function to fetch address details using the ID
-function fetchAddressDetails(id, callback) {
-  fetch(`/adresse/${id}`)  // Make sure this endpoint is set up in your backend
-      .then(response => response.json())
-      .then(data => {
-          callback(data);
-      })
-      .catch(error => {
-          console.error('Error fetching address details:', error);
-      });
+// Fonction pour obtenir les paramètres d'URL
+function getUrlParameter(name) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(name);
 }
 
-  
+// Function to fetch address details using the ID
+function fetchAddressDetails(id, callback) {
+  fetch(`/adresse/${id}`) // Make sure this endpoint is set up in your backend
+    .then((response) => response.json())
+    .then((data) => {
+      callback(data);
+    })
+    .catch((error) => {
+      console.error("Error fetching address details:", error);
+    });
+}
+
 ///////MATHIEU C EST ICI
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener("DOMContentLoaded", function () {
   if (coursePourModification) {
-      // Pre-fill departure input
-      const inputDepart = document.getElementById('inputDepart');
-      inputDepart.value = coursePourModification.lieu_depart ? 
-          `${coursePourModification.lieu_depart.rue},${coursePourModification.lieu_depart.cp}, ${coursePourModification.lieu_depart.ville}, France ` : 
-          '';
+    // Pre-fill departure input
+    const inputDepart = document.getElementById("inputDepart");
+    inputDepart.value = coursePourModification.lieu_depart
+      ? `${coursePourModification.lieu_depart.rue},${coursePourModification.lieu_depart.cp}, ${coursePourModification.lieu_depart.ville}, France `
+      : "";
 
-      // Pre-fill arrival input
-      const inputArrivee = document.getElementById('inputArrivee');
-      inputArrivee.value = coursePourModification.lieu_arrivee ? 
-          `${coursePourModification.lieu_arrivee.rue}, ${coursePourModification.lieu_arrivee.cp}, ${coursePourModification.lieu_arrivee.ville}, France ` : 
-          '';
+    // Pre-fill arrival input
+    const inputArrivee = document.getElementById("inputArrivee");
+    inputArrivee.value = coursePourModification.lieu_arrivee
+      ? `${coursePourModification.lieu_arrivee.rue}, ${coursePourModification.lieu_arrivee.cp}, ${coursePourModification.lieu_arrivee.ville}, France `
+      : "";
 
-      // Pre-fill date and time
-      const dateDepart = document.getElementById('dateDepart');
-      dateDepart.value = formatDateForInput(coursePourModification.date_prise_en_charge);
+    // Pre-fill date and time
+    const dateDepart = document.getElementById("dateDepart");
+    dateDepart.value = formatDateForInput(
+      coursePourModification.date_prise_en_charge,
+    );
 
-      setupAddressModification();
-
-
+    setupAddressModification();
   }
 });
 
 ///////MATHIEU C EST ICI
 function setupAddressModification() {
-  const inputDepart = document.getElementById('inputDepart');
-  const inputArrivee = document.getElementById('inputArrivee');
-  const suggestionsDepart = document.getElementById('suggestionsDepart');
-  const suggestionsArrivee = document.getElementById('suggestionsArrivee');
-  
+  const inputDepart = document.getElementById("inputDepart");
+  const inputArrivee = document.getElementById("inputArrivee");
+  const suggestionsDepart = document.getElementById("suggestionsDepart");
+  const suggestionsArrivee = document.getElementById("suggestionsArrivee");
+
   // Configurer la géocodification pour les inputs de départ et d'arrivée
-  geocodeAddressModif(inputDepart,suggestionsDepart, markerDepart, true);
-  geocodeAddressModif(inputArrivee,suggestionsArrivee, markerArrivee, false);
+  geocodeAddressModif(inputDepart, suggestionsDepart, markerDepart, true);
+  geocodeAddressModif(inputArrivee, suggestionsArrivee, markerArrivee, false);
 }
 
 function geocodeAddressModif(inputElement, suggestionsBox, marker, isdepart) {
@@ -117,7 +114,7 @@ function geocodeAddressModif(inputElement, suggestionsBox, marker, isdepart) {
   if (query.length > 3) {
     // Effectuer la requête uniquement si la saisie a plus de 3 caractères
     fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${query}&addressdetails=1&limit=1`
+      `https://nominatim.openstreetmap.org/search?format=json&q=${query}&addressdetails=1&limit=1`,
     )
       .then((response) => response.json())
       .then((data) => {
@@ -137,7 +134,11 @@ function geocodeAddressModif(inputElement, suggestionsBox, marker, isdepart) {
           map.setView([latitude, longitude], 13);
 
           // Mettre à jour le marqueur avec les informations trouvées
-          marker = updateMarker(marker, { lat: latitude, lon: longitude }, addressDetails);
+          marker = updateMarker(
+            marker,
+            { lat: latitude, lon: longitude },
+            addressDetails,
+          );
 
           // Mettre à jour les variables selon le type de marqueur (départ ou arrivée)
           if (isdepart) {
@@ -163,21 +164,14 @@ function geocodeAddressModif(inputElement, suggestionsBox, marker, isdepart) {
   }
 }
 
-
-
-
-
-
-
-
 function formatDateForInput(dateString) {
   const date = new Date(dateString);
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
@@ -188,10 +182,10 @@ document.getElementById("boutonValider").addEventListener("click", function () {
     return;
   }
   isProcessing = true;
-  
+
   trouverChauffeurs();
-  
-  setTimeout(function() {
+
+  setTimeout(function () {
     isProcessing = false;
   }, 1000);
 });
@@ -341,8 +335,7 @@ function geocodeAddress(inputElement, suggestionsBox, marker, isdepart) {
                 const address = result.address;
                 const number = address.house_number || ""; // Numéro de rue
                 const street = address.road || ""; // Rue
-                const city =
-                   address.town || address.village || ""; // Ville
+                const city = address.town || address.village || ""; // Ville
                 const agglo = address.city || "";
                 const postalCode = address.postcode || ""; // Code postal
                 const country = address.country || ""; // Pays
@@ -356,8 +349,10 @@ function geocodeAddress(inputElement, suggestionsBox, marker, isdepart) {
                   postalCode && postalCode,
                   city && city,
                   agglo && agglo,
-                  country && country
-              ].filter(Boolean).join(', ');
+                  country && country,
+                ]
+                  .filter(Boolean)
+                  .join(", ");
                 const div = document.createElement("div");
                 div.textContent = suggestionText.trim();
 
@@ -410,7 +405,7 @@ function trouverChauffeurs() {
   isProcessing = false;
 
   dateDepart = new Date(inputDateDepart.value);
-  
+
   // Clear previous propositions
   while (propositionsList.firstChild) {
     propositionsList.removeChild(propositionsList.firstChild);
@@ -420,7 +415,7 @@ function trouverChauffeurs() {
   if (isProcessing) {
     return;
   }
-  
+
   isProcessing = true;
 
   if (getDate(dateDepart) == getDate(dateToday)) {
@@ -643,9 +638,9 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
           // Créer la course
           creerCourse(chauffeur);
 
-          courseDejaReservee=true
+          courseDejaReservee = true;
           reserverBtn.textContent = "Course deja réservée";
-          reserverBtn.disabled=true;
+          reserverBtn.disabled = true;
         });
 
         // Ajouter ces informations et le bouton à la div
@@ -667,7 +662,7 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
 
 function AfficheCategorie(categorie) {
   const div = document.createElement("div");
-    div.className = "proposition"; // Utilisez une classe, pas un ID
+  div.className = "proposition"; // Utilisez une classe, pas un ID
   let multiplicateurcourse = 1;
   var prixint = durationInSeconds / 50;
 
@@ -693,8 +688,7 @@ function AfficheCategorie(categorie) {
   }
   prixint = roundToDecimals(prixint * multiplicateurcourse, 2);
 
-
-  //REGARDE BERKAN 
+  //REGARDE BERKAN
   prixcourse = prixint;
 
   prix.textContent = `${prixint} €`;
@@ -708,19 +702,19 @@ function AfficheCategorie(categorie) {
   div.style.backgroundColor = "#f9f9f9";
   div.style.cursor = "pointer";
   div.style.transition = "all 0.3s ease";
-  
+
   div.style.position = "relative";
-  
+
   div.addEventListener("mouseover", function () {
     div.style.backgroundColor = "#e0e0e0";
     div.style.boxShadow = "0px 6px 12px rgba(0, 0, 0, 0.2)";
   });
-  
+
   div.addEventListener("mouseout", function () {
     div.style.backgroundColor = "#f9f9f9";
     div.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.1)";
   });
-  
+
   const reserverBtn = document.createElement("button");
   reserverBtn.textContent = "Réserver";
   reserverBtn.style.marginTop = "10px";
@@ -730,7 +724,7 @@ function AfficheCategorie(categorie) {
   reserverBtn.style.color = "white";
   reserverBtn.style.cursor = "pointer";
   reserverBtn.style.borderRadius = "5px";
-  
+
   // Centrer verticalement le bouton
   reserverBtn.style.position = "absolute";
   reserverBtn.style.top = "50%";
@@ -741,36 +735,34 @@ function AfficheCategorie(categorie) {
 
   reserverBtn.addEventListener("click", function () {
     // Créer la course
-    creerCourseCategorie(categorie,this.dataset.prix);
-    reserverBtn.classList.replace("reserver-btn","courseclique")
+    creerCourseCategorie(categorie, this.dataset.prix);
+    reserverBtn.classList.replace("reserver-btn", "courseclique");
 
     // Mettre à jour le bouton pour afficher "Course réservée"
-    
-    if(coursePourModification){
-        const boutonReserver = document.querySelectorAll(".reserver-btn");
-        boutonReserver.forEach((btn) => {
-          btn.disabled = true;
-          btn.textContent = "Une autre course a deja été modifiée";
-        });
-        const boutonclique = document.querySelector(".courseclique");
-        boutonclique.textContent ="Course Modifiée";
-        boutonclique.disabled =true;
-    }
 
-    else{
-        const boutonReserver = document.querySelectorAll(".reserver-btn");
-        boutonReserver.forEach((btn) => {
-          btn.disabled = true;
-          btn.textContent = "Une autre course a deja été réservée";
-        });
-        const boutonclique = document.querySelector(".courseclique");
-        boutonclique.textContent ="Course Réservée";
-        boutonclique.disabled =true;
+    if (coursePourModification) {
+      const boutonReserver = document.querySelectorAll(".reserver-btn");
+      boutonReserver.forEach((btn) => {
+        btn.disabled = true;
+        btn.textContent = "Une autre course a deja été modifiée";
+      });
+      const boutonclique = document.querySelector(".courseclique");
+      boutonclique.textContent = "Course Modifiée";
+      boutonclique.disabled = true;
+    } else {
+      const boutonReserver = document.querySelectorAll(".reserver-btn");
+      boutonReserver.forEach((btn) => {
+        btn.disabled = true;
+        btn.textContent = "Une autre course a deja été réservée";
+      });
+      const boutonclique = document.querySelector(".courseclique");
+      boutonclique.textContent = "Course Réservée";
+      boutonclique.disabled = true;
     }
   });
-  
+
   div.appendChild(reserverBtn);
-  
+
   isProcessing = false;
 }
 
@@ -778,8 +770,6 @@ function roundToDecimals(number, decimals) {
   const factor = Math.pow(10, decimals);
   return Math.round(number * factor) / factor;
 }
-
-
 
 function creerCourse(chauffeur) {
   // Vérifier si une course est déjà réservée
@@ -824,119 +814,110 @@ function creerCourse(chauffeur) {
       });
   }
 
+  // Obtenir les détails des lieux de départ et d'arrivée
+  Promise.all([
+    getLieuDetails(departCoords.lat, departCoords.lng),
+    getLieuDetails(arriveeCoords.lat, arriveeCoords.lng),
+  ]).then(([lieuDepart, lieuArrivee]) => {
+    // Construire la course avec les données enrichies
+    const course = {
+      chauffeur_nom: chauffeur.nom_chauffeur,
+      chauffeur_prenom: chauffeur.prenom_chauffeur,
+      lieu_depart_rue: lieuDepart.rue,
+      lieu_depart_ville: lieuDepart.ville,
+      lieu_depart_cp: lieuDepart.code_postal,
+      lieu_arrivee_rue: lieuArrivee.rue,
+      lieu_arrivee_ville: lieuArrivee.ville,
+      lieu_arrivee_cp: lieuArrivee.code_postal,
+      prix_reservation: prixcourse,
+      tempscourse: durationInSeconds,
+      date_trajet: dateDepart,
+      id_course: coursePourModification.id_course || null,
+    };
 
-
-// Obtenir les détails des lieux de départ et d'arrivée
-Promise.all([
-  getLieuDetails(departCoords.lat, departCoords.lng),
-  getLieuDetails(arriveeCoords.lat, arriveeCoords.lng),
-]).then(([lieuDepart, lieuArrivee]) => {
-  // Construire la course avec les données enrichies
-  const course = {
-    chauffeur_nom: chauffeur.nom_chauffeur,
-    chauffeur_prenom: chauffeur.prenom_chauffeur,
-    lieu_depart_rue: lieuDepart.rue,
-    lieu_depart_ville: lieuDepart.ville,
-    lieu_depart_cp: lieuDepart.code_postal,
-    lieu_arrivee_rue: lieuArrivee.rue,
-    lieu_arrivee_ville: lieuArrivee.ville,
-    lieu_arrivee_cp: lieuArrivee.code_postal,
-    prix_reservation: prixcourse,
-    tempscourse: durationInSeconds,
-    date_trajet: dateDepart,
-  };
-
-  
-  if(coursePourModification){
-    fetch("/php/modifiercourse.php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(course),
-    })
-      .then((response) => {
-        // Vérifiez la réponse avant de la parser en JSON
-        console.log(response);
-        return response.text(); // Utilisez .text() pour voir la réponse brute
+    if (coursePourModification) {
+      fetch("/php/modifiercourse.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(course),
       })
-      .then((data) => {
-        console.log(data); // Affichez la réponse brute pour mieux comprendre son contenu
-        try {
-          const jsonData = JSON.parse(data); // Tentez de parser en JSON
-          if (jsonData.status === 'success') {
-            // Marquer la course comme réservée
-            courseDejaReservee = true;
-            console.log(courseDejaReservee);
-    
-            // Désactiver tous les boutons de réservation
-            const boutonReserver = document.querySelectorAll(".reserver-btn");
-            boutonReserver.forEach((btn) => {
-              btn.disabled = true;
-              btn.textContent = "Course Modifiée";
-            });
-          } else {
-            console.error('Erreur de réservation', jsonData.message);
+        .then((response) => {
+          // Vérifiez la réponse avant de la parser en JSON
+          console.log(response);
+          return response.text(); // Utilisez .text() pour voir la réponse brute
+        })
+        .then((data) => {
+          console.log(data); // Affichez la réponse brute pour mieux comprendre son contenu
+          try {
+            const jsonData = JSON.parse(data); // Tentez de parser en JSON
+            if (jsonData.status === "success") {
+              // Marquer la course comme réservée
+              courseDejaReservee = true;
+              console.log(courseDejaReservee);
+
+              // Désactiver tous les boutons de réservation
+              const boutonReserver = document.querySelectorAll(".reserver-btn");
+              boutonReserver.forEach((btn) => {
+                btn.disabled = true;
+                btn.textContent = "Course Modifiée";
+              });
+            } else {
+              console.error("Erreur de réservation", jsonData.message);
+            }
+          } catch (e) {
+            console.error("Erreur de parsing JSON", e, data); // Affiche l'erreur de parsing
           }
-        } catch (e) {
-          console.error('Erreur de parsing JSON', e, data); // Affiche l'erreur de parsing
-        }
+        })
+        .catch((error) => {
+          console.error("Erreur lors de l'envoi de la course :", error);
+        });
+    } else {
+      fetch("/php/reserver_course.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(course),
       })
-      .catch((error) => {
-        console.error("Erreur lors de l'envoi de la course :", error);
-      });
-  }
-  else{
-  fetch("/php/reserver_course.php", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(course),
-  })
-    .then((response) => {
-      // Vérifiez la réponse avant de la parser en JSON
-      console.log(response);
-      return response.text(); // Utilisez .text() pour voir la réponse brute
-    })
-    .then((data) => {
-      console.log(data); // Affichez la réponse brute pour mieux comprendre son contenu
-      try {
-        const jsonData = JSON.parse(data); // Tentez de parser en JSON
-        if (jsonData.status === 'success') {
-          // Marquer la course comme réservée
-          courseDejaReservee = true;
-          console.log(courseDejaReservee);
-  
-          // Désactiver tous les boutons de réservation
-          const boutonReserver = document.querySelectorAll(".reserver-btn");
-          boutonReserver.forEach((btn) => {
-            btn.disabled = true;
-            btn.textContent = "Course Réservée";
-          });
-        } else {
-          console.error('Erreur de réservation', jsonData.message);
-        }
-      } catch (e) {
-        console.error('Erreur de parsing JSON', e, data); // Affiche l'erreur de parsing
-      }
-    })
-    .catch((error) => {
-      console.error("Erreur lors de l'envoi de la course :", error);
-    });
-  
+        .then((response) => {
+          // Vérifiez la réponse avant de la parser en JSON
+          console.log(response);
+          return response.text(); // Utilisez .text() pour voir la réponse brute
+        })
+        .then((data) => {
+          console.log(data); // Affichez la réponse brute pour mieux comprendre son contenu
+          try {
+            const jsonData = JSON.parse(data); // Tentez de parser en JSON
+            if (jsonData.status === "success") {
+              // Marquer la course comme réservée
+              courseDejaReservee = true;
+              console.log(courseDejaReservee);
+
+              // Désactiver tous les boutons de réservation
+              const boutonReserver = document.querySelectorAll(".reserver-btn");
+              boutonReserver.forEach((btn) => {
+                btn.disabled = true;
+                btn.textContent = "Course Réservée";
+              });
+            } else {
+              console.error("Erreur de réservation", jsonData.message);
+            }
+          } catch (e) {
+            console.error("Erreur de parsing JSON", e, data); // Affiche l'erreur de parsing
+          }
+        })
+        .catch((error) => {
+          console.error("Erreur lors de l'envoi de la course :", error);
+        });
+    }
+
+    // Envoyer les données au serveur
+  });
 }
-    
-  
 
-  // Envoyer les données au serveur
-  
-});
-  }
-  
-
-
-function creerCourseCategorie(categorie,prix) {
+function creerCourseCategorie(categorie, prix) {
   if (courseDejaReservee) {
     alert("Vous avez déjà réservé une course.");
     return;
@@ -983,7 +964,7 @@ function creerCourseCategorie(categorie,prix) {
     getLieuDetails(arriveeCoords.lat, arriveeCoords.lng),
   ]).then(([lieuDepart, lieuArrivee]) => {
     const course = {
-      categorie: categorie.lib_categorie_vehicule,  // Utilisez le nom de la catégorie
+      categorie: categorie.lib_categorie_vehicule, // Utilisez le nom de la catégorie
       lieu_depart_rue: lieuDepart.rue,
       lieu_depart_ville: lieuDepart.ville,
       lieu_depart_cp: lieuDepart.code_postal,
@@ -993,9 +974,11 @@ function creerCourseCategorie(categorie,prix) {
       prix_reservation: prix,
       tempscourse: durationInSeconds,
       date_trajet: dateDepart,
-      id_course: coursePourModification ? coursePourModification.id_course : null,
+      id_course: coursePourModification
+        ? coursePourModification.id_course
+        : null,
     };
-    if(coursePourModification){
+    if (coursePourModification) {
       fetch("/php/modifiercourse.php", {
         method: "POST",
         headers: {
@@ -1012,11 +995,11 @@ function creerCourseCategorie(categorie,prix) {
           console.log(data); // Affichez la réponse brute pour mieux comprendre son contenu
           try {
             const jsonData = JSON.parse(data); // Tentez de parser en JSON
-            if (jsonData.status === 'success') {
+            if (jsonData.status === "success") {
               // Marquer la course comme réservée
               courseDejaReservee = true;
               console.log(courseDejaReservee);
-      
+
               // Désactiver tous les boutons de réservation
               const boutonReserver = document.querySelectorAll(".reserver-btn");
               boutonReserver.forEach((btn) => {
@@ -1024,55 +1007,53 @@ function creerCourseCategorie(categorie,prix) {
                 btn.textContent = "Course Modifiée";
               });
             } else {
-              console.error('Erreur de réservation', jsonData.message);
+              console.error("Erreur de réservation", jsonData.message);
             }
           } catch (e) {
-            console.error('Erreur de parsing JSON', e, data); // Affiche l'erreur de parsing
+            console.error("Erreur de parsing JSON", e, data); // Affiche l'erreur de parsing
+          }
+        })
+        .catch((error) => {
+          console.error("Erreur lors de l'envoi de la course :", error);
+        });
+    } else {
+      fetch("/php/reservercoursecategorie.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(course),
+      })
+        .then((response) => {
+          // Vérifiez la réponse avant de la parser en JSON
+          console.log(response);
+          return response.text(); // Utilisez .text() pour voir la réponse brute
+        })
+        .then((data) => {
+          console.log(data); // Affichez la réponse brute pour mieux comprendre son contenu
+          try {
+            const jsonData = JSON.parse(data); // Tentez de parser en JSON
+            if (jsonData.status === "success") {
+              // Marquer la course comme réservée
+              courseDejaReservee = true;
+              console.log(courseDejaReservee);
+
+              // Désactiver tous les boutons de réservation
+              const boutonReserver = document.querySelectorAll(".reserver-btn");
+              boutonReserver.forEach((btn) => {
+                btn.disabled = true;
+                btn.textContent = "Course Réservée";
+              });
+            } else {
+              console.error("Erreur de réservation", jsonData.message);
+            }
+          } catch (e) {
+            console.error("Erreur de parsing JSON", e, data); // Affiche l'erreur de parsing
           }
         })
         .catch((error) => {
           console.error("Erreur lors de l'envoi de la course :", error);
         });
     }
-    else{
-    fetch("/php/reservercoursecategorie.php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(course),
-    })
-      .then((response) => {
-        // Vérifiez la réponse avant de la parser en JSON
-        console.log(response);
-        return response.text(); // Utilisez .text() pour voir la réponse brute
-      })
-      .then((data) => {
-        console.log(data); // Affichez la réponse brute pour mieux comprendre son contenu
-        try {
-          const jsonData = JSON.parse(data); // Tentez de parser en JSON
-          if (jsonData.status === 'success') {
-            // Marquer la course comme réservée
-            courseDejaReservee = true;
-            console.log(courseDejaReservee);
-    
-            // Désactiver tous les boutons de réservation
-            const boutonReserver = document.querySelectorAll(".reserver-btn");
-            boutonReserver.forEach((btn) => {
-              btn.disabled = true;
-              btn.textContent = "Course Réservée";
-            });
-          } else {
-            console.error('Erreur de réservation', jsonData.message);
-          }
-        } catch (e) {
-          console.error('Erreur de parsing JSON', e, data); // Affiche l'erreur de parsing
-        }
-      })
-      .catch((error) => {
-        console.error("Erreur lors de l'envoi de la course :", error);
-      });
-    
-  }
-});
+  });
 }

@@ -7,8 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Course extends Model
 {
+    use HasFactory;
+
     protected $table = "course";
     protected $primaryKey = "id_course";
+    protected $fillable = [
+        'id_course','id_chauffeur','id_lieu_depart','id_lieu_arrivee','id_client','prix_reservation','date_prise_en_charge','duree_course','heure_arrivee','id_velo','terminee',"acceptee","validationclient","validationchauffeur","pourboire"
+    ];
+
     public $timestamps = false;
 
     public function index()
@@ -29,8 +35,9 @@ class Course extends Model
         return $this->belongsTo(Adresse::class, 'id_lieu_arrivee', 'id_adresse');
     }
 
-    // Ajoutez ici toutes les colonnes qui peuvent être assignées en masse
-    protected $fillable = [
-        'id_course','id_chauffeur','id_lieu_depart','id_lieu_arrivee','id_client','prix_reservation','date_prise_en_charge','duree_course','heure_arrivee','id_velo','terminee'
-    ];
+    public function chauffeur()
+    {
+        return $this->belongsTo(Chauffeur::class, 'id_chauffeur', 'id_chauffeur');
+    }
+
 }

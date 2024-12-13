@@ -30,9 +30,13 @@ Route::put('/courses/{id}', [ChauffeurController::class, 'index'])->name('course
 Route::put('/courses/refuser/{course}', [CourseController::class, 'refuser'])->name('courses.refuser');
 Route::put('/courses/accepter/{course}', [CourseController::class, 'accepter'])->name('courses.accepter');
 
+Route::put('/courses/terminer-chauffeur/{course}', [ChauffeurController::class, 'terminer'])->name('chauffeur.terminer');
+Route::put('/courses/terminer-client/{course}', [ClientController::class, 'terminer'])->name('client.terminer');
+
 Route::post('/courses/{id}/terminate', [CourseController::class, 'terminate'])->name('courses.terminate');
 Route::post('/courses/{courseId}/review', [CourseController::class, 'submitReview'])->name('courses.submitReview');
 
+Route::post('/courses/{id_course}/review', [CourseController::class, 'submitReview'])->name('courses.submitReview');
 
 
 Route::post('/courses/{id}/generate-invoice', [CourseController::class, 'generateTranslatedInvoice'])->name('courses.generateInvoice');
@@ -68,25 +72,6 @@ Route::post('/profil/{id_client}/add-card', [CBController::class, 'store'])->nam
 
 Route::get('/profil/{id_client}/delete-card/{id_cb}', [CBController::class, 'destroy'])->name('card.delete');
 
-use Illuminate\Support\Facades\Mail;
-
-Route::get('/test-email', function () {
-    try {
-        Mail::raw('Ceci est un test d\'email envoyé avec SendGrid.', function ($message) {
-            $message->to('mat.servonnet@gmail.com') // Remplace par un email valide
-                    ->subject('Test SendGrid')
-                    ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME')); // Utilise l'email configuré dans .env
-        });
-
-        return 'Email envoyé avec succès !';
-    } catch (\Exception $e) {
-        return 'Erreur lors de l\'envoi de l\'email : ' . $e->getMessage();
-    }
-});
-
-
-
-
 Route::get('/info-compte', function() {
     return view('info-compte');
 });
@@ -111,6 +96,12 @@ Route::get('/panier/confirm', [CartController::class, 'passercomande'])->name('c
 Route::get('/ajouteradresse',[ClientController::class ,'ajtadresse'])->name('ajtadresse');
 Route::post('/ajouter-adresse', [ClientController::class, 'valideadresse'])->name('ajouter.adresse');
 Route::delete('/supprimer-adresse/{id}', [ClientController::class, 'supprimerAdresse'])->name('supprimer.adresse');
+
+Route::post('/panier/selection-adresse/{adresse}', [ClientController::class, 'validerAvecAdresse'])->name('valider.panier');
+
+
+
+
 
 
 Route::post('add/{type}/{id}', [CartController::class, 'add'])->name('cart.add');

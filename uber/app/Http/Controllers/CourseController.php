@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Course;
+use App\Models\Note;
+use App\Models\EstNote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\ChauffeurController;
+use Illuminate\Support\Facades\Auth;
 
 
 use Symfony\Component\Process\Process;
@@ -173,77 +176,103 @@ class CourseController extends Controller
         return redirect()->route('courses.index')->with('success', 'Course terminée avec succès.');
     }
     
-    public function submitReview(Request $request, $id) {
-        // Validation des données entrantes
-        $request->validate([
-            'note' => 'nullable|integer|min:1|max:5',
-            'pourboire' => 'nullable|numeric|min:0',
-        ]);
+    // public function submitReview(Request $request, $id) {
+    //     // // Validation des données entrantes
+    //     // $request->validate([
+    //     //     'note' => 'nullable|integer|min:1|max:5',
+    //     //     'pourboire' => 'nullable|numeric|min:0',
+    //     // ]);
 
-        // Vérification des données fournies
-        if (!$request->has('note') && !$request->has('pourboire')) {
-            return response()->json(['error' => 'Veuillez fournir une note ou un pourboire.'], 400);
-        }
+    //     // // Vérification des données fournies
+    //     // if (!$request->has('note') && !$request->has('pourboire')) {
+    //     //     return response()->json(['error' => 'Veuillez fournir une note ou un pourboire.'], 400);
+    //     // }
 
-        // Vérification de l'existence de la course
-        $course = DB::table('course')->where('id_course', $id)->first();
-        if (!$course) {
-            return response()->json(['error' => 'Course introuvable.'], 404);
-        }
+    //     // // Vérification de l'existence de la course
+    //     // $course = DB::table('course')->where('id_course', $id)->first();
+    //     // if (!$course) {
+    //     //     return response()->json(['error' => 'Course introuvable.'], 404);
+    //     // }
 
-        // Vérification que la course est terminée
-        if (!$course->terminee) {
-            return response()->json(['error' => 'La course n\'est pas encore terminée.'], 400);
-        }
+    //     // // Vérification que la course est terminée
+    //     // if (!$course->terminee) {
+    //     //     return response()->json(['error' => 'La course n\'est pas encore terminée.'], 400);
+    //     // }
 
-        // Démarrage de la transaction
-        DB::beginTransaction();
-        try {
-            // Gestion de la note
-            if ($request->has('note')) {
-                // Insertion de la note
-                $noteId = DB::table('note')->insertGetId([
-                    'valeur_note' => $request->input('note'),
-                ]);
+    //     // // Démarrage de la transaction
+    //     // DB::beginTransaction();
+    //     // try {
+    //     //     // Gestion de la note
+    //     //     if ($request->has('note')) {
+    //     //         // Insertion de la note
+    //     //         $noteId = DB::table('note')->insertGetId([
+    //     //             'valeur_note' => $request->input('note'),
+    //     //         ]);
 
-                // Association de la note au chauffeur via EST_NOTE
-                if ($course->id_chauffeur) {
-                    DB::table('est_note')->insert([
-                        'id_note' => $noteId,
-                        'id_chauffeur' => $course->id_chauffeur,
-                    ]);
+    //     //         // Association de la note au chauffeur via EST_NOTE
+    //     //         if ($course->id_chauffeur) {
+    //     //             DB::table('est_note')->insert([
+    //     //                 'id_note' => $noteId,
+    //     //                 'id_chauffeur' => $course->id_chauffeur,
+    //     //             ]);
 
-                    // Mise à jour de la moyenne des notes du chauffeur
-                    $moyenneNote = DB::table('est_note')
-                        ->join('note', 'est_note.id_note', '=', 'note.id_note')
-                        ->where('est_note.id_chauffeur', $course->id_chauffeur)
-                        ->avg('note.valeur_note');
+    //     //             // Mise à jour de la moyenne des notes du chauffeur
+    //     //             $moyenneNote = DB::table('est_note')
+    //     //                 ->join('note', 'est_note.id_note', '=', 'note.id_note')
+    //     //                 ->where('est_note.id_chauffeur', $course->id_chauffeur)
+    //     //                 ->avg('note.valeur_note');
 
-                    DB::table('chauffeur')
-                        ->where('id_chauffeur', $course->id_chauffeur)
-                        ->update(['note_chauffeur' => $moyenneNote]);
-                }
-            }
+    //     //             DB::table('chauffeur')
+    //     //                 ->where('id_chauffeur', $course->id_chauffeur)
+    //     //                 ->update(['note_chauffeur' => $moyenneNote]);
+    //     //         }
+    //     //     }
 
-            // Gestion du pourboire
-            if ($request->has('pourboire')) {
-                DB::table('facture')
-                    ->where('id_course', $course->id_course)
-                    ->update([
-                        'pourboire' => $request->input('pourboire'),
-                    ]);
-            }
+    //     //     // Gestion du pourboire
+    //     //     if ($request->has('pourboire')) {
+    //     //         DB::table('facture')
+    //     //             ->where('id_course', $course->id_course)
+    //     //             ->update([
+    //     //                 'pourboire' => $request->input('pourboire'),
+    //     //             ]);
+    //     //     }
 
-            // Validation de la transaction
-            DB::commit();
+    //     //     // Validation de la transaction
+    //     //     DB::commit();
 
-            return response()->json(['success' => 'Avis et pourboire ajoutés avec succès.']);
-        } catch (\Exception $e) {
-            // Annulation de la transaction en cas d'erreur
-            DB::rollBack();
-            return response()->json(['error' => 'Une erreur est survenue lors de la soumission.'], 500);
-        }
-    }
+    //     //     return response()->json(['success' => 'Avis et pourboire ajoutés avec succès.']);
+    //     // } catch (\Exception $e) {
+    //     //     // Annulation de la transaction en cas d'erreur
+    //     //     DB::rollBack();
+    //     //     return response()->json(['error' => 'Une erreur est survenue lors de la soumission.'], 500);
+    //     // }
+    //     // Récupérer la course par son ID
+    // }
+
+public function submitReview(Request $request, $courseId)
+{
+    // Validation des données entrantes
+    $validated = $request->validate([
+        'note' => 'required|integer|min:1|max:5',
+        'pourboire' => 'required|numeric|min:0',
+    ]);
+
+    $note = $validated['note'];
+    $pourboire = $validated['pourboire'];
+
+    // Récupérer la course et mettre à jour le pourboire
+    $course = Course::findOrFail($courseId);
+    $course->pourboire = $pourboire;
+    $course->save(); // Enregistre les modifications dans la base de données
+
+    // Enregistrement de la note dans la table est_note
+    $estnote = new EstNote();
+    $estnote->id_note = $note;
+    $estnote->id_chauffeur = $course->id_chauffeur; // Récupération de l'id du chauffeur via la course
+    $estnote->save();
+
+    return redirect()->back()->with('success', 'Votre avis a été enregistré.');
+}
 
     public function generateTranslatedInvoice(Request $request, $id) {
             $validated = $request->validate([

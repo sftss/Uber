@@ -152,20 +152,29 @@
         <p id="panier-vide">Votre panier est vide 😭</p>
     @endif
 </div>
-<div class="info_chauffeur">
-    @if ($adresses->isNotEmpty())
-        @foreach ($adresses as $adresse)
-            <p>Adresse : {{ $adresse->rue }}, {{ $adresse->cp }}, {{ $adresse->ville }}</p>
-            <form action="{{ route('supprimer.adresse', $adresse->id_adresse) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette adresse ?');">
+
+@if (session('message'))
+    <div class="alert">
+        {{ session('message') }}
+    </div>
+@endif
+
+@if (count($menus) > 0 || count($plats) > 0 || count($produits) > 0)
+    <div class="panier-footer">
+        @if ($adresses->isEmpty())
+            <p>Vous n'avez pas d'adresse enregistrée. Veuillez <a href="{{ route('ajtadresse', ['from' => 'cart']) }}">ajouter une adresse</a> pour valider votre panier.</p>
+        @elseif ($adresses->count() == 1)
+            <p>Votre panier sera validé avec l'adresse suivante : {{ $adresses->first()->rue }}, {{ $adresses->first()->cp }}, {{ $adresses->first()->ville }}.</p>
+            <form action="{{ route('valider.panier', ['adresse' => $adresses->first()->id_adresse]) }}" method="POST">
                 @csrf
-                @method('DELETE')
-                <!-- Passer le paramètre 'from' via un champ caché -->
-                <input type="hidden" name="from" value="cart">
-                <button type="submit">Supprimer</button>
+                <button type="submit">Valider avec l'adresse</button>
             </form>
-        @endforeach
-    @else
-        <p>Vous n'avez pas d'adresse enregistrée, veuillez en enregistrer une.</p>
-    @endif
-    <a href="{{ route('ajtadresse', ['from' => 'cart']) }}">Ajouter une adresse</a>
-</div>
+
+
+        @else
+            <p>Choisissez une adresse pour valider votre panier.</p>
+        @endif
+    </div>
+@else
+    <p id="panier-vide">Votre panier est vide 😭</p>
+@endif

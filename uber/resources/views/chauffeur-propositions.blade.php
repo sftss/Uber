@@ -77,6 +77,19 @@
 
                 </form>
             @endif
+            @if ($course->terminee != true)
+            <form action="{{ route('chauffeur.terminer', $course->id_course) }}" method="POST"
+                    style="display:inline;">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit" class="boutonTerminer"
+                        onclick="return confirm('Êtes-vous sûr de vouloir terminer cette course ?');">
+                        
+                        Terminer
+                    </button>
+
+                </form>
+                    @endif
         </div>
     @endforeach
 </ul>

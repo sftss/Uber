@@ -15,16 +15,9 @@ use Illuminate\Support\Facades\DB;
 class CartController extends Controller
 {
     // Afficher le panier
-    public function index()
-{
+    public function index() {
     $cart = session()->get('cart', []);
     $total = 0;
-
-
-
-    
-
-
 
     $menus = [];
     $plats = [];
@@ -48,20 +41,7 @@ class CartController extends Controller
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-public function add(Request $request, $type, $id)
-{
+public function add(Request $request, $type, $id) {
     // Récupérer l'élément en fonction du type
     $item = null;
     if ($type === 'produit') {
@@ -120,23 +100,6 @@ public function add(Request $request, $type, $id)
     return redirect()->back()->with('success', 'Votre article a correctement été ajouté au panier !');
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 public function remove($id)
 {
@@ -198,15 +161,6 @@ public function updateMontantPanier($idPanier)
 }
 
 
-
-
-
-
-
-
-
-
-
 private function saveToDatabase($type, $id, $idPanier, $cartItem)
 {
     if ($type === 'produit') {
@@ -255,8 +209,6 @@ private function saveToDatabase($type, $id, $idPanier, $cartItem)
         }
     }
 }
-
-
 
 
 public function update(Request $request, $uniqueId)
@@ -326,10 +278,6 @@ public function update(Request $request, $uniqueId)
 }
 
 
-
-
-
-
 public function getPanierId($idClient)
 {
     // Récupérer le panier associé au client qui a est_commande à false
@@ -343,9 +291,6 @@ public function getPanierId($idClient)
 
     return null; // Si aucun panier n'est trouvé
 }
-
-
-
 
 public function passercomande(){
     if (Auth::check()) {
@@ -392,6 +337,5 @@ public function passercomande(){
 
     return redirect()->route('login');
 }
-
 
 }

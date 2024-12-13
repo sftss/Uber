@@ -6,7 +6,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Adresse;
 use App\Models\SeFaitLivrerA;
-
+use App\Models\CommandeRepas;
+use App\Models\EstContenuDansMenu;
+use App\Models\EstContenuDansPlat;
+use App\Models\EstContenuDans;
+use App\Models\Course;
 
 
 class ClientController extends Controller
@@ -162,6 +166,154 @@ public function supprimerAdresse($id, Request $request)
 
 
 
+
+
+public function validerPanier(Request $request)
+{
+    // Récupérer les adresses de l'utilisateur
+    $adresses = DB::table('adresse as a')
+        ->leftJoin('se_fait_livrer_a as sfla', 'sfla.id_adresse', '=', 'a.id_adresse')
+        ->select('a.id_adresse')
+        ->where('sfla.id_client', Auth::user()->id_client)
+        ->get();
+
+    // Debug : Voir les adresses récupérées
+    dd($adresses);
+
+    // Si la collection est vide (aucune adresse)
+    if ($adresses->isEmpty()) {
+        return redirect()->route('ajtadresse', ['from' => 'cart'])->with('message', 'Veuillez ajouter une adresse avant de valider votre panier.');
+    } elseif (count($adresses)>1) {
+        // Si l'utilisateur a exactement une adresse, l'utiliser pour valider le panier
+        $adresse = $adresses[0]; 
+        if($adresse == null){
+            echo "<script>console.log('Ceci est un message PHP dans la console');</script>";
+        } // Récupérer la première adresse
+        else {
+            $this->validerAvecAdresse($adresse, $request);
+        }
+    } else {
+        // Si l'utilisateur a plusieurs adresses, afficher la page pour en sélectionner une
+        return view('cart.selection_adresse', compact('adresses'));
+    }
+}
+
+
+
+public function validerAvecAdresse($adresse, Request $request)
+{
+
+ 
+
+    // Créer une commande
+    $commande = new CommandeRepas();
+    $commande->id_adresse = $adresse;
+    $commande->id_chauffeur = null;
+    $commande->id_client = Auth::user()->id_client;
+    $commande->type_livraison = 'commande';
+    $commande->horaire_livraison = null;
+    $commande->temps_de_livraison = null;
+    $commande->save();
+
+    // ID de la commande
+    $idcommanderepas = $commande->id_commande_repas;
+
+    // Récupérer le panier de l'utilisateur
+    $idpanier = DB::table('contient as c')
+        ->leftJoin('panier as p', 'p.id_panier', '=', 'c.id_panier')
+        ->select('p.id_panier')
+        ->where('p.id_client', Auth::user()->id_client)
+        ->first();
+
+    if (!$idpanier) {
+        return redirect()->route('panier')->with('error', 'Aucun panier trouvé.');
+    }
+
+    // Récupérer les produits, plats et menus du panier
+    $produits = DB::table('contient as c')
+        ->join('produit as p', 'c.id_produit', '=', 'p.id_produit')
+        ->where('c.id_panier', $idpanier->id_panier)
+        ->select('c.id_produit', 'c.quantite', 'p.nom_produit', 'p.prix_produit')
+        ->get();
+
+    $plats = DB::table('contient_plat as c')
+        ->join('plat as p', 'c.id_plat', '=', 'p.id_plat')
+        ->where('c.id_panier', $idpanier->id_panier)
+        ->select('c.id_plat', 'c.quantite', 'p.libelle_plat', 'p.prix_plat')
+        ->get();
+
+    $menus = DB::table('contient_menu as c')
+        ->join('menu as m', 'c.id_menu', '=', 'm.id_menu')
+        ->where('c.id_panier', $idpanier->id_panier)
+        ->select('c.id_menu', 'c.quantite', 'm.libelle_menu', 'm.prix_menu')
+        ->get();
+
+    // Enregistrer les produits dans la table 'EstContenuDans'
+    foreach ($produits as $produit) {
+        $estcontenudans = new EstContenuDans();
+        $estcontenudans->id_produit = $produit->id_produit;
+        $estcontenudans->id_commande_repas = $idcommanderepas;
+        $estcontenudans->quantite = $produit->quantite;
+        $estcontenudans->save();
+    }
+
+    // Enregistrer les plats dans la table 'EstContenuDansPlat'
+    foreach ($plats as $plat) {
+        $estcontenudansplat = new EstContenuDansPlat();
+        $estcontenudansplat->id_plat = $plat->id_plat;
+        $estcontenudansplat->id_commande_repas = $idcommanderepas;
+        $estcontenudansplat->quantite = $plat->quantite;
+        $estcontenudansplat->save();
+    }
+
+    // Enregistrer les menus dans la table 'EstContenuDansMenu'
+    foreach ($menus as $menu) {
+        $estcontenudansmenu = new EstContenuDansMenu();
+        $estcontenudansmenu->id_menu = $menu->id_menu;
+        $estcontenudansmenu->id_commande_repas = $idcommanderepas;
+        $estcontenudansmenu->quantite = $menu->quantite;
+        $estcontenudansmenu->save();
+    }
+
+    // Rediriger vers la page de confirmation
+    return redirect()->route('confirmation')->with('message', 'Votre panier a été validé avec succès!');
+}
+
+public function terminer($id) {
+    $course = Course::findOrFail($id);
+    $terminee = "true";
+    echo "<script>console.log(".$course.")</script>";
+
+    $validationChauffeur= DB::table('course')
+                  ->where('id_course', $course->id_course)
+                  ->value('validationchauffeur'); 
+
+    
+    \DB::table('course')
+    ->where('id_course', $course->id_course)
+    ->update([
+        'validationclient' => $terminee
+    ]);
+    
+    if (json_encode($validationChauffeur) == "true")
+    {
+        \DB::table('course')
+    ->where('id_course', $course->id_course)
+    ->update([
+        'terminee' => $terminee
+    ]);
+    }
+    
+    
+    echo "<script>console.log(".$course.")</script>";
+    $chauffeurId = $course->id_chauffeur;
+
+    echo $chauffeurId;
+
+    $chauffeurController = new ChauffeurController();
+
+    return redirect()->route('courses.index')->with('success', 'Course terminée avec succès.');
+}
 
 
 }
