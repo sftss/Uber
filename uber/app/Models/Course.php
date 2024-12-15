@@ -40,4 +40,8 @@ class Course extends Model
         return $this->belongsTo(Chauffeur::class, 'id_chauffeur', 'id_chauffeur');
     }
 
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'id_client', 'id_client');
+    }
 }

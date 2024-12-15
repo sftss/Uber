@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\ChauffeurController;
 use Illuminate\Support\Facades\Auth;
 
-
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
@@ -163,19 +162,17 @@ class CourseController extends Controller
         return response()->json(['success' => 'Course updated successfully']);
     }
 
-    public function terminate($id) {
-        $course = Course::findOrFail($id);
-
-        if ($course->terminee) {
-            return redirect()->route('courses.index')->with('error', 'Cette course est déjà terminée.');
-        }
-
+    public function terminer(Request $request, $id_course)
+    {
+        // Mettre à jour le statut de la course
+        $course = Course::findOrFail($id_course);
         $course->terminee = true;
         $course->save();
 
-        return redirect()->route('courses.index')->with('success', 'Course terminée avec succès.');
-    }
-    
+        // Ajouter un message de confirmation (facultatif)
+        return redirect()->back()->with('success', 'La course a été terminée. Vous pouvez maintenant donner votre avis.');
+    }   
+     
     public function submitReview(Request $request, $courseId) {
         $validated = $request->validate([
             'note' => 'required|integer|min:1|max:5',
@@ -203,6 +200,6 @@ class CourseController extends Controller
         $course = Course::findOrFail($courseId);
 
         // Exemple : Informations pour tester la page de facture
-        return view('invoice', ['course' => $course]);
+        return view('Facture', ['course' => $course]);
     }
 }

@@ -37,14 +37,14 @@ Route::put('/courses/accepter/{course}', [CourseController::class, 'accepter'])-
 Route::put('/courses/terminer-chauffeur/{course}', [ChauffeurController::class, 'terminer'])->name('chauffeur.terminer');
 Route::put('/courses/terminer-client/{course}', [ClientController::class, 'terminer'])->name('client.terminer');
 
-Route::post('/courses/{id}/terminate', [CourseController::class, 'terminate'])->name('courses.terminate');
+Route::put('/courses/{id}/terminer', [CourseController::class, 'terminer'])->name('client.terminer');
 Route::post('/courses/{courseId}/review', [CourseController::class, 'submitReview'])->name('courses.submitReview');
 
 Route::post('/courses/{id_course}/review', [CourseController::class, 'submitReview'])->name('courses.submitReview');
 
 Route::get('/facture', [FactureController::class, 'genererFacture']);
-Route::post('/courses/{id_course}/invoice', [FactureController::class, 'genererFacture'])
-    ->name('courses.invoice');
+Route::post('/courses/{id_course}/Facture', [FactureController::class, 'genererFacture'])
+    ->name('courses.Facture');
 
 
 Route::get('/restaurants/search', [RestaurantController::class, 'filter'])->name('restaurants.search');
