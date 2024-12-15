@@ -41,8 +41,9 @@
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="cardModalLabel">Cartes Bancaires Associées</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <h4 class="modal-title" id="cardModalLabel">Cartes Bancaires Associées</h4>
+                                <button title="Supprimer cette carte" type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -74,7 +75,7 @@
             @endif
 
             <a href="{{ route('card.create', ['id_client' => auth()->user()->id_client]) }}"
-                class="btn btn-primary ajouterInfo">Ajouter une carte bancaire dès maintenant 💳</a>
+                class="ajouterInfo">Ajouter une carte bancaire dès maintenant 💳</a>
 
             <div class="info_chauffeur">
                 @if ($client->isNotEmpty() && !empty($client->first()->ville))

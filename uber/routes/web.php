@@ -13,14 +13,18 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\AdresseController;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers;
-use App\Http\Controllers\MailController;
 use App\Http\Controllers\CBController;
+use App\Http\Controllers\FactureController;
 
-Route::get('/', function() {
+Route::get('/', function () {
     return view('main');
-});
+})->name('home');
+
+
+Route::get('/test-mail', [MailController::class, 'sendMail']);
 
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 Route::delete('/courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');
@@ -38,9 +42,9 @@ Route::post('/courses/{courseId}/review', [CourseController::class, 'submitRevie
 
 Route::post('/courses/{id_course}/review', [CourseController::class, 'submitReview'])->name('courses.submitReview');
 
-
-Route::post('/courses/{id}/generate-invoice', [CourseController::class, 'generateTranslatedInvoice'])->name('courses.generateInvoice');
-
+Route::get('/facture', [FactureController::class, 'genererFacture']);
+Route::post('/courses/{id_course}/invoice', [FactureController::class, 'genererFacture'])
+    ->name('courses.invoice');
 
 
 Route::get('/restaurants/search', [RestaurantController::class, 'filter'])->name('restaurants.search');
@@ -101,6 +105,9 @@ Route::post('/panier/selection-adresse/{adresse}', [ClientController::class, 'va
 
 
 
+Route::get('/commande-list',[ClientController::class ,'voircommandes'])->name('voircommande');
+
+
 
 
 
@@ -129,4 +136,9 @@ Route::get('/verify', [RegisterController::class, 'showVerificationForm'])->name
 Route::post('/verify', [RegisterController::class, 'verifyCode'])->name('verify.code');
 
 Route::get('/verification', [VerificationController::class, 'showVerificationPage'])->name('verification.page');
-Route::post('/verification', [VerificationController::class, 'verifyCode'])->name('verification.submit');
+
+
+Route::post('/verification', [MailController::class, 'verifyCode'])->name('verification.submit');
+
+
+Route::get('/verificationmail', [MailController::class, 'sendMail'])->name('verifiermail');

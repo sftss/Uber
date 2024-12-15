@@ -1,15 +1,11 @@
 @extends('layouts.header')
 <link rel="stylesheet" href="{{ URL::asset('assets/style/compte.css') }}" />
 
-<a href="{{ route('profil', ['id_client' => auth()->user()->id_client]) }}" class="btn btn-primary">Annuler</a>
-
 <div class="container info-compte">
     <h1>Ajouter une carte bancaire</h1>
 
     <form method="POST" action="{{ route('card.store', ['id_client' => auth()->user()->id_client]) }}">
         @csrf
-
-        
 
         <div class="form-group">
             <label for="num_cb">Numéro de la carte</label>
@@ -21,7 +17,8 @@
 
         <div class="form-group">
             <label for="nom_cb">Nom du titulaire</label>
-            <input type="text" id="nom_cb" name="nom_cb" class="form-control" value="{{ old('nom_cb') }}" required>
+            <input type="text" id="nom_cb" name="nom_cb" class="form-control" value="{{ old('nom_cb') }}"
+                required>
             @error('nom_cb')
                 <div class="alert alert-danger">{{ $message }}</div>
             @enderror
@@ -29,40 +26,17 @@
 
         <div class="form-group">
             <label for="date_fin_validite">Date d’expiration</label>
-            <input type="month" id="date_fin_validite" name="date_fin_validite" class="form-control" value="{{ old('date_fin_validite') }}" required>
+            <input type="month" id="date_fin_validite" name="date_fin_validite" class="form-control"
+                value="{{ old('date_fin_validite') }}" required>
             @error('date_fin_validite')
                 <div class="alert alert-danger">{{ $message }}</div>
             @enderror
         </div>
-
-        <button type="submit" class="btn btn-primary">Ajouter la carte</button>
+        <div id="butAddCard">
+            <a href="{{ route('profil', ['id_client' => auth()->user()->id_client]) }}"
+                class="btn btn-primary annuler">Annuler</a>
+            <button type="submit" class="btn btn-primary">Ajouter la carte</button>
+        </div>
     </form>
 
 </div>
-
-
-
-
-@if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-
-        <p>Carte ajoutée avec succès</p>
-    </div>
-@endif
-
-@if (session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-@endif
-
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif

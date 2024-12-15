@@ -51,6 +51,15 @@
         </div>
     </div>
 
+    <div class="card">
+        <img src="{{ asset('assets/img/course.webp') }}" loading="lazy" alt="Courses" class="icon" />
+        <div class="content">
+            <h3>Commandes</h3>
+            <p>Visualisez vos anciennes commandes.</p>
+            <a href="{{ route('voircommande') }}" class="details">Voir</a>
+        </div>
+    </div>
+
 </section>
 
 <a href="{{ url('/panier') }}" id="panier">🛒</a>

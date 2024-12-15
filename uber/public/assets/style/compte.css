@@ -22,6 +22,22 @@ a:hover {
   color: #06c167;
 }
 
+.btn-primary {
+  background-color: #06c167;
+  color: #fff;
+  padding: 0.7rem 2rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  transition: background-color 0.3s;
+  border: none;
+  cursor: pointer;
+  margin-top: 1%;
+  margin-bottom: 3%;
+}
+
+.btn-primary:hover {
+  background-color: #048f4c;
+}
 .header {
   z-index: 1000;
   top: 0;
@@ -211,8 +227,6 @@ a:hover {
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
   margin-top: 5%;
   margin-bottom: 5%;
-  font-family: "Arial", sans-serif;
-  color: #333;
 }
 
 /* Titre principal */
@@ -293,7 +307,6 @@ a:hover {
 }
 .ajouterInfo {
   font-weight: bold;
-  margin: 2% 0 0 0;
 }
 .ajouterInfo:hover {
   transform: scale(1.1);
@@ -362,4 +375,70 @@ a:hover {
 /* Pour les champs avec focus */
 .form-input:focus {
   border-color: #048f4c;
+}
+.annuler {
+  background-color: #ff4d4d;
+}
+.annuler:hover {
+  background-color: #b13636;
+  color: white;
+}
+#butAddCard {
+  display: flex;
+  justify-content: space-between;
+}
+.btn-info {
+  background-color: #06c167;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  margin: 1% 0 1% 0%;
+
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.btn-info:hover {
+  background-color: #03894a;
+}
+.btn-secondary {
+  background-color: #ff4d4d;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+  margin: 2% 0 2% 0%;
+  transition: background-color 0.3s;
+}
+.btn-secondary:hover {
+  background-color: #b13636;
+}
+.btn-danger:hover {
+  color: white;
+  background-color: #b13636;
+  padding: 1% 1%;
+  transition: background-color 0.3s;
+  border-radius: 5px;
+  margin: 1% 0 1% 0%;
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+}
+.close {
+  background-color: black;
+  color: #fff;
+  border-radius: 5px;
+  transition:
+    background-color 0.3s,
+    transform 0.3s;
+  border: none;
+  cursor: pointer;
+  margin: 0 0 0 2%;
+  padding: 0.2rem 0.5rem;
+}
+
+.close:hover {
+  transform: scale(1.05);
 }

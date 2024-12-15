@@ -32,13 +32,19 @@ class LoginController extends Controller
 
             Auth::login($client);
 
-            return redirect('/');
+
+            if($client->est_verif == null){
+                return redirect()->route('verifiermail')->with('success', 'Inscription réussie. Un email de confirmation vous a été envoyé.');
+
+            }else{
+                return redirect('/');
+            }
         }
         return redirect()->back()->withErrors(['mail_client' => 'Les informations de connexion sont incorrectes.']);
     }
     public function logout()
     {
         Auth::logout();
-        return redirect()->route('login')->with('success', 'Déconnexion réussie.');
+        return redirect()->route('home')->with('success', 'Déconnexion réussie.');
     }
 }

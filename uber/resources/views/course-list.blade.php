@@ -50,19 +50,19 @@
                     @endif
                 </li>
                 <li class="terminee">
-                    @if ($course->terminee)
-                        Terminée
+                    @if (!session('review_submitted_' . $course->id_course))
+                        <!-- Affiche le formulaire uniquement si l'avis n'a pas été soumis -->
                         <div class="review-form">
-                            <form class="reviewForm" action="{{ route('courses.submitReview', $course->id_course) }}"
-                                method="POST">
+                            <form action="{{ route('courses.submitReview', $course->id_course) }}" method="POST"
+                                class="reviewForm">
                                 @csrf
                                 <label for="note" id="txtNoteCourse">Note :</label>
                                 <select id="selectNoteCourse" name="note" required>
-                                    <option value=1>1 - Très mauvais</option>
-                                    <option value=2>2 - Mauvais</option>
-                                    <option value=3>3 - Moyen</option>
-                                    <option value=4>4 - Bon</option>
-                                    <option value=5 selected>5 - Excellent</option>
+                                    <option value="1">1 - Très mauvais</option>
+                                    <option value="2">2 - Mauvais</option>
+                                    <option value="3">3 - Moyen</option>
+                                    <option value="4">4 - Bon</option>
+                                    <option value="5" selected>5 - Excellent</option>
                                 </select>
                                 <label for="pourboire" id="txtPourboireCourse">Pourboire (€) :</label>
                                 <input id="champPourboire" min="0" name="pourboire" step="1" type="number"
@@ -70,6 +70,12 @@
                                 <button class="submitReview" type="submit">Soumettre</button>
                             </form>
                         </div>
+                    @elseif ($course->terminee === true)
+                        <form class="formGenereFacture" action="{{ route('courses.invoice', $course->id_course) }}"
+                            method="POST" style="display:inline;">
+                            @csrf
+                            <button class="generateInvoiceButton" type="submit">Générer ma facture</button>
+                        </form>
                     @elseif ($course->acceptee === true || is_null($course->acceptee))
                         @if ($course->terminee != true && $course->acceptee === true)
                             <form action="{{ route('client.terminer', $course->id_course) }}" method="POST"

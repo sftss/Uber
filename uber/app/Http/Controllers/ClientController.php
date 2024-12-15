@@ -276,7 +276,7 @@ public function validerAvecAdresse($adresse, Request $request)
     }
 
     // Rediriger vers la page de confirmation
-    return redirect()->route('confirmation')->with('message', 'Votre panier a été validé avec succès!');
+    return view('cart.confirmed');
 }
 
 public function terminer($id) {
@@ -314,6 +314,51 @@ public function terminer($id) {
 
     return redirect()->route('courses.index')->with('success', 'Course terminée avec succès.');
 }
+
+
+public function voircommandes(){
+    $currentUser = auth()->user();
+
+    $clientId = Auth::user()->id_client;
+
+
+
+
+    // Récupération des données du client et des cartes bancaires associées
+    $client = DB::table('client as c')
+    ->leftJoin('commande_repas as cr', 'cr.id_client', '=', 'c.id_client')
+    ->leftJoin('est_contenu_dans as ecd', 'ecd.id_commande_repas', '=', 'cr.id_commande_repas')
+    ->leftJoin('produit as p', 'ecd.id_produit', '=', 'p.id_produit')
+    ->leftJoin('est_contenu_dans_menu as ecdm', 'ecdm.id_commande_repas', '=', 'cr.id_commande_repas')
+    ->leftJoin('menu as m', 'ecdm.id_menu', '=', 'm.id_menu')
+    ->leftJoin('est_contenu_dans_plat as ecdp', 'ecdp.id_commande_repas', '=', 'cr.id_commande_repas')
+    ->leftJoin('plat as pl', 'ecdp.id_plat', '=', 'pl.id_plat')
+    ->select(
+        'cr.id_commande_repas',
+        'pl.libelle_plat',
+        'ecdp.quantite as quantite_plat',
+        'pl.prix_plat as prix_plat', // Correction : Utilisation de pl pour les plats
+        'p.nom_produit',
+        'ecd.quantite as quantite_produit',
+        'p.prix_produit as prix_produit', // Correction : Utilisation de p pour les produits
+        'm.libelle_menu',
+        'ecdm.quantite as quantite_menu',
+        'm.prix_menu as prix_menu' // Correction : Utilisation de m pour les menus
+    )
+    ->where('cr.id_client', '=', $clientId)
+    ->get();
+
+
+
+    if ($client->isEmpty()) {
+        return redirect('/')->with('error', 'Utilisateur introuvable.');
+    }
+
+
+    // Retourner la vue avec les informations du client et des cartes
+    return view('commande-list', ['client' => $client]);
+}
+
 
 
 }

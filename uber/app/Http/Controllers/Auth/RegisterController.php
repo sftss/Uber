@@ -72,18 +72,11 @@ class RegisterController extends Controller
     $client->photo = null;
     $client->est_verif = false;
     $client->code_verif = Str::random(6);
-    $client->newsletter =
     $client->newsletter = $request->has('newsletter') ? true : false;
     
 
     
-
-
-
-    
     $client->save();
-
-
 
     
         

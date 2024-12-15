@@ -40,7 +40,8 @@
                         du compte</a>
 
                     <!-- Lien de déconnexion avec JavaScript -->
-                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                    <a href="{{ url('/') }}"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                         class="btn btn-outline-light">Déconnexion</a>
 
                     <!-- Formulaire de déconnexion -->
@@ -96,7 +97,7 @@
             <p>© {{ date('Y') }} Uber Technologies Inc.</p>
             <div class="footer-meta">
                 <a href="{{ route('politique') }}">| Confidentialité</a> |
-                <a href="#">Accessibilité</a> |
+                <a href="{{ route('politique') }}">Accessibilité</a> |
             </div>
         </div>
     </footer>

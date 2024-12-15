@@ -13,18 +13,18 @@ class SignUp extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct()
-    {
+    public $code_verif; // Déclarez une propriété publique
 
+    public function __construct($code_verif)
+    {
+        $this->code_verif = $code_verif; // Initialisez la propriété
     }
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
     public function build()
     {
-        return $this->view('SignUpView');
+        return $this->subject('Berkan Mange mon paf !')
+            ->from('mathieu.servonnet@etu.univ-smb.fr', 's231_Uber')
+            ->view('SignUpView') // Utilisez la vue Blade
+            ->with(['code_verif' => $this->code_verif]); // Passez le code_verif à la vue
     }
 }
