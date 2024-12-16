@@ -8,7 +8,7 @@ use App\Models\Adresse;
 use App\Models\SeFaitLivrerA;
 use App\Models\CommandeRepas;
 use App\Models\EstContenuDansMenu;
-use App\Models\EstContenuDansPlat;
+use App\Models\EstContenuPlat;
 use App\Models\EstContenuDans;
 use App\Models\Course;
 
@@ -86,7 +86,7 @@ class ClientController extends Controller
 
     public function ajtadresse()
     {
-        return view('client.client_ajt_adresse'); // Assurez-vous que le fichier client_ajt_adresse.blade.php existe
+        return view('client.client_ajt_adresse');
     }
 
     public function valideadresse(Request $request)
@@ -165,9 +165,6 @@ public function supprimerAdresse($id, Request $request)
 }
 
 
-
-
-
 public function validerPanier(Request $request)
 {
     // Récupérer les adresses de l'utilisateur
@@ -178,7 +175,7 @@ public function validerPanier(Request $request)
         ->get();
 
     // Debug : Voir les adresses récupérées
-    dd($adresses);
+
 
     // Si la collection est vide (aucune adresse)
     if ($adresses->isEmpty()) {
@@ -197,7 +194,6 @@ public function validerPanier(Request $request)
         return view('cart.selection_adresse', compact('adresses'));
     }
 }
-
 
 
 public function validerAvecAdresse($adresse, Request $request)
@@ -219,8 +215,7 @@ public function validerAvecAdresse($adresse, Request $request)
     $idcommanderepas = $commande->id_commande_repas;
 
     // Récupérer le panier de l'utilisateur
-    $idpanier = DB::table('contient as c')
-        ->leftJoin('panier as p', 'p.id_panier', '=', 'c.id_panier')
+    $idpanier = DB::table('panier as p')
         ->select('p.id_panier')
         ->where('p.id_client', Auth::user()->id_client)
         ->first();
@@ -248,7 +243,7 @@ public function validerAvecAdresse($adresse, Request $request)
         ->select('c.id_menu', 'c.quantite', 'm.libelle_menu', 'm.prix_menu')
         ->get();
 
-    // Enregistrer les produits dans la table 'EstContenuDans'
+        
     foreach ($produits as $produit) {
         $estcontenudans = new EstContenuDans();
         $estcontenudans->id_produit = $produit->id_produit;
@@ -259,7 +254,7 @@ public function validerAvecAdresse($adresse, Request $request)
 
     // Enregistrer les plats dans la table 'EstContenuDansPlat'
     foreach ($plats as $plat) {
-        $estcontenudansplat = new EstContenuDansPlat();
+        $estcontenudansplat = new EstContenuPlat();
         $estcontenudansplat->id_plat = $plat->id_plat;
         $estcontenudansplat->id_commande_repas = $idcommanderepas;
         $estcontenudansplat->quantite = $plat->quantite;
@@ -274,8 +269,14 @@ public function validerAvecAdresse($adresse, Request $request)
         $estcontenudansmenu->quantite = $menu->quantite;
         $estcontenudansmenu->save();
     }
-
     // Rediriger vers la page de confirmation
+
+    
+    
+
+
+
+
     return view('cart.confirmed');
 }
 

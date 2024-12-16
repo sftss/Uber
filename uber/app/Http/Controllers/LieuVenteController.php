@@ -56,18 +56,6 @@ class LieuVenteController extends Controller
     ->get();
 
     return view('lieux.filter', compact('lieux'));
-
-
-
-
-
-
-
-
-
-
-
-   
 }
 
 
@@ -98,17 +86,14 @@ class LieuVenteController extends Controller
         ->select('produit.id_produit', 'produit.nom_produit', 'produit.prix_produit', 'produit.photo_produit', 'categorie_produit.libelle_categorie')
         ->where('est_vendu.id_lieu_de_vente_pf', $id_lieu_de_vente_pf);
 
-    // Filtrer par nom de produit si recherché
     if ($produitRecherche) {
         $produits->whereRaw('LOWER(produit.nom_produit) LIKE LOWER(?)', ['%' . $produitRecherche . '%']);
     }
 
-    // Filtrer par catégorie si sélectionnée
     if ($categorieRecherche) {
         $produits->where('produit.id_categorie_produit', $categorieRecherche);
     }
 
-    // Récupérer les produits filtrés
     $produits = $produits->get();
 
     return view('lieux.show', compact('lieu', 'produits', 'categories'));

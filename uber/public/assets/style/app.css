@@ -228,7 +228,7 @@ button {
 }
 
 .CreerCompte::after {
-  content: "👉";
+  content: " 👉";
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -974,7 +974,7 @@ h2 {
 /* Table générale */
 table {
   width: 90%;
-  margin: 0 auto 20px auto;
+  margin: 0 auto 10% auto;
   border-collapse: collapse;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   table-layout: auto;
@@ -1203,4 +1203,210 @@ input[type="number"] {
   margin: 5% 0 2% 0;
   display: flex;
   flex-direction: column;
+}
+#butPagination {
+  margin: 2% 0;
+  display: flex;
+  justify-content: flex-end; /* Align the entire container to the right */
+  align-items: center;
+  width: 100%;
+}
+
+.pagination-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.pagination {
+  display: inline-flex;
+  list-style: none;
+}
+
+.pagination .page-item {
+  margin: 0 5px;
+}
+
+.pagination .page-item .page-link {
+  color: #06c167;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 5px 10px;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #06c167;
+  color: #fff;
+  border: 1px solid #06c167;
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #ccc;
+  pointer-events: none;
+  border: 1px solid #ddd;
+}
+
+.pagination .page-item:hover .page-link {
+  background-color: #048f4c;
+  color: #fff;
+  border-color: #048f4c;
+}
+
+#CreerRestauTxt {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0 5% 0 0;
+  transition: all 0.3s ease;
+  transform: translate(0, -70%);
+  padding: 8px 12px;
+  border-radius: 5px;
+}
+
+#CreerRestauTxt:hover {
+  color: #06c167;
+}
+
+#panier {
+  margin-left: 20px;
+}
+
+#CreerRestauTxt:hover {
+  background-color: rgba(59, 246, 103, 0.1);
+  color: #048f4c;
+  transform: translateY(-80%);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+#CreerRestauTxt::after {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#CreerRestauTxt:hover::after {
+  opacity: 1;
+}
+#AncienneCommandeTxt {
+  display: flex;
+  justify-content: center;
+  margin: 3% 5%;
+}
+#PasserCommandeTxt {
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin: 0 0 0 2.5%;
+  transition: all 0.3s ease;
+  transform: translate(0, -70%);
+  padding: 8px 12px;
+  border-radius: 5px;
+}
+#PasserCommandeTxt:hover {
+  background-color: rgba(59, 246, 103, 0.1);
+  color: #048f4c;
+  transform: translateY(-80%);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+#PasserCommandeTxt::after {
+  content: " 👉";
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#PasserCommandeTxt:hover::after {
+  opacity: 1;
+}
+.panier-footer {
+  font-weight: bold;
+  font-size: 1.3rem;
+  margin: 0 0 5% 4%;
+}
+textarea {
+  resize: none;
+}
+
+#formCreateProduit {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin: 3% 25% 5% 35%;
+  min-width: 35%;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+
+input[type="text"],
+input[type="time"],
+input[type="file"],
+textarea,
+select {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #06c167;
+  box-shadow: 0 0 5px rgba(6, 193, 103, 0.3);
+}
+
+/* Boutons */
+button.btn-primary {
+  background-color: #06c167;
+  color: #fff;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button.btn-primary:hover {
+  background-color: #048f4c;
+}
+
+textarea {
+  resize: none; /* Désactiver le redimensionnement */
+}
+
+/* Options (checkboxes) */
+.form-group input[type="checkbox"] {
+  margin-right: 0.5rem;
+  transform: scale(1.2); /* Agrandir légèrement les cases */
+}
+
+/* Espacement des options */
+.form-group > div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+/* Ajustement des catégories */
+select {
+  cursor: pointer;
+}
+
+/* Centrer le bouton */
+.form-group button {
+  align-self: center;
+  width: 50%;
 }

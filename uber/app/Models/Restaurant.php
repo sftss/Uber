@@ -10,4 +10,17 @@ class Restaurant extends Model
     protected $table = "restaurant";
     protected $primaryKey = "id_restaurant";
     public $timestamps = false;
+
+    protected $fillable = [
+        'nom_etablissement',
+        'horaires_ouverture',
+        'horaires_fermeture',
+        'description_etablissement',
+        'propose_livraison',
+        'propose_retrait',
+        'photo_restaurant',
+        'id_propriétaire',
+        'id_adresse',
+        
+    ];
 }

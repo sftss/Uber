@@ -13,11 +13,11 @@ class SignUp extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $code_verif; // Déclarez une propriété publique
+    public $code_verif;
 
     public function __construct($code_verif)
     {
-        $this->code_verif = $code_verif; // Initialisez la propriété
+        $this->code_verif = $code_verif;
     }
 
     public function build()

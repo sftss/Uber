@@ -80,6 +80,9 @@
         <p class="no-results">Aucun restaurant ne correspond à vos critères.</p>
     @endif
 </section>
-<a href="{{ url('/panier') }}" id="panier">🛒</a>
-
+<div id="butPagination" class="pagination-container">
+    {{ $restaurants->appends(request()->query())->links('pagination::default') }}
+    <a href="{{ url('/panier') }}" id="panier">🛒</a>
+    <a id="CreerRestauTxt" href="{{ url('/creer-restaurant') }}">Créer mon restaurant 🍴</a>
+</div>
 <script src="{{ asset('js/main.js') }}"></script>

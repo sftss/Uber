@@ -45,14 +45,15 @@ const modification = getUrlParameter("modification");
 
 inputDateDepart.value = dateToday.toISOString().slice(0, 16);
 
-console.log(coursePourModification.id_course);
-
 const cleAPILocationIQ = "pk.69ac2966071395cd67e8a9a5ed00d2c3"; // clé API LocationIQ
 
 var markerDepart = null;
 var markerArrivee = null;
 var departementDepart = "";
 let durationInSeconds;
+
+geocodeAddress(inputDepart, suggestionsDepart, markerDepart, true);
+geocodeAddress(inputArrivee, suggestionsArrivee, markerArrivee, false);
 // Fonction pour obtenir les paramètres d'URL
 function getUrlParameter(name) {
   const urlParams = new URLSearchParams(window.location.search);
@@ -152,14 +153,12 @@ function geocodeAddressModif(inputElement, suggestionsBox, marker, isdepart) {
             getRoute(markerDepart, markerArrivee);
           }
         } else {
-          console.log("Pas d'adresse trouvée.");
         }
       })
       .catch((error) => {
         console.error("Erreur lors de la récupération des données :", error);
       });
   } else {
-    console.log("Saisie insuffisante pour effectuer une recherche.");
     suggestionsBox.innerHTML = ""; // Vider les suggestions si la saisie est insuffisante
   }
 }
@@ -190,9 +189,7 @@ document.getElementById("boutonValider").addEventListener("click", function () {
   }, 1000);
 });
 
-// Appliquer la fonction pour les deux inputs
-geocodeAddress(inputDepart, suggestionsDepart, markerDepart, true);
-geocodeAddress(inputArrivee, suggestionsArrivee, markerArrivee, false);
+
 
 function getDate(date) {
   const day = String(date.getDate()).padStart(2, "0"); //padstart pour ajouter un 0 si le jour n'a qu'un chiffre
@@ -832,7 +829,9 @@ function creerCourse(chauffeur) {
       prix_reservation: prixcourse,
       tempscourse: durationInSeconds,
       date_trajet: dateDepart,
-      id_course: coursePourModification.id_course || null,
+      id_course: coursePourModification
+      ? coursePourModification.id_course
+      : null,
     };
 
     if (coursePourModification) {

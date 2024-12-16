@@ -21,7 +21,9 @@ a {
 a:hover {
   color: #06c167;
 }
-
+hr {
+  margin-top: 1%;
+}
 .btn-primary {
   background-color: #06c167;
   color: #fff;
@@ -307,6 +309,10 @@ a:hover {
 }
 .ajouterInfo {
   font-weight: bold;
+  font-size: 1.3rem;
+}
+.ajouterInfo:last-child {
+  margin-top: 1%;
 }
 .ajouterInfo:hover {
   transform: scale(1.1);
@@ -414,6 +420,9 @@ a:hover {
 .btn-secondary:hover {
   background-color: #b13636;
 }
+.btn-danger {
+  margin: 1% 0 1% 0;
+}
 .btn-danger:hover {
   color: white;
   background-color: #b13636;
@@ -441,4 +450,39 @@ a:hover {
 
 .close:hover {
   transform: scale(1.05);
+}
+#cardModalLabel {
+  font-size: 1.3rem;
+  color: #000000;
+}
+.infoAdresse {
+  margin: 2% 0 0 0;
+}
+.infoAdresse:last-child {
+  margin: 2% 0 2% 0;
+}
+.affichageCB {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 2%;
+  margin: 2% 0 2% 0;
+}
+
+
+#suggestionsDepart {
+  border: solid black 1px;
+  margin-bottom: 10px;
+}
+
+
+
+#suggestionsDepart div {
+  padding: 8px;
+  cursor: pointer;
+  border: black;
+}
+
+#suggestionsDepart div:hover {
+  background-color: #f0f0f0;
+  border: solid black 1px;
 }

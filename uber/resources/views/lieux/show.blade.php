@@ -56,7 +56,7 @@
 </form>
 
 <section class="menus-container">
-    <h2>Plats disponibles</h2>
+    <h2>Produits disponibles</h2>
     <div class="menus">
         @if ($produits->isNotEmpty())
             @foreach ($produits as $produit)

@@ -12,12 +12,14 @@ class MailController extends Controller
 {
     public function sendMail(){
 
+        
         if(Auth::check()){
 
         
         $mail = Auth::user()->mail_client;
         $codeverif=Auth::user()->code_verif;
-        Mail::to($mail)->send(new SignUp($codeverif));
+        Mail::to("tanguyabdoulvaid@gmail.com")->send(new SignUp($codeverif));
+        echo("<script>console.log('Code de vérification : " . $mail . "');</script>");
 
         return view('auth.verification');
         }
@@ -32,8 +34,8 @@ class MailController extends Controller
 
     $userInputCode = $request->input('code');
 
-    // Exemple : Supposons que le code correct est stocké dans la base de données pour l'utilisateur actuel
-    $correctCode = auth()->user()->code_verif; // À adapter selon votre structure
+
+    $correctCode = auth()->user()->code_verif;
 
     if ($userInputCode === $correctCode) {
         $user = auth()->user();

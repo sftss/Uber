@@ -26,10 +26,12 @@
         @error('ville')
             <span class="error-message">{{ $message }}</span>
         @enderror
-    </div>
 
+    </div>
+    <div id="suggestionsDepart"></div>
     <!-- Champ caché pour déterminer d'où provient l'utilisateur -->
     <input type="hidden" name="from" value="{{ request()->query('from') }}" class="form-input">
 
     <button type="submit" class="form-submit-btn">Soumettre</button>
+    <script src="{{ URL::asset('js/autocompletion.js') }}" defer></script>
 </form>

@@ -156,8 +156,9 @@
                     {{ $chauffeur->prenom_chauffeur }}
                 </p>
                 <p><strong>Email :</strong> {{ $chauffeur->mail_chauffeur }}</p>
-                <p><strong>Nom entreprise :</strong> {{ $chauffeur->nom_entreprise }}</p>
                 <p><strong>Téléphone :</strong> 0{{ $chauffeur->tel_chauffeur }}</p>
+                <p><strong>Nom entreprise :</strong> {{ $chauffeur->nom_entreprise }}</p>
+                <!-- <p><strong>Numéro SIRET :</strong> {{ $chauffeur->num_siret }}</p> -->
                 <!-- <p><strong>Type de chauffeur :</strong> {{ $chauffeur->type_chauffeur }}</p> -->
             </div>
         </div>

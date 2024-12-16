@@ -46,6 +46,7 @@ Route::get('/facture', [FactureController::class, 'genererFacture']);
 Route::post('/courses/{id_course}/Facture', [FactureController::class, 'genererFacture'])
     ->name('courses.Facture');
 
+Route::get('/restaurants/filter', [RestaurantController::class, 'filter'])->name('restaurants.filter');
 
 Route::get('/restaurants/search', [RestaurantController::class, 'filter'])->name('restaurants.search');
 Route::get('/restaurants/{id}', [RestaurantController::class, 'show'])->name('restaurants.show');
@@ -107,13 +108,14 @@ Route::post('/panier/selection-adresse/{adresse}', [ClientController::class, 'va
 
 Route::get('/commande-list',[ClientController::class ,'voircommandes'])->name('voircommande');
 
+Route::get('/creer-restaurant', [RestaurantController::class, 'affichercreation'])->name('affichercreation');
+Route::post('/restaurants', [RestaurantController::class, 'store'])->name('restaurants.store');
 
 
 
 
 Route::post('add/{type}/{id}', [CartController::class, 'add'])->name('cart.add');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register.form');

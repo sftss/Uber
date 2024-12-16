@@ -9,7 +9,7 @@
         class="restaurant-image">
     <div class="restaurant-details">
         <h3>{{ $restaurant->nom_etablissement }}</h3>
-        <p><strong>Description : </strong> Restaurant proposant {{ $restaurant->description_etablissement }}</p>
+        <p><strong>Description : </strong> {{ $restaurant->description_etablissement }}</p>
         <p><strong>Adresse : </strong>{{ $restaurant->rue }}, {{ $restaurant->cp }} {{ $restaurant->ville }}</p>
         <p><strong>Livraison :</strong> {{ $restaurant->propose_livraison ? 'Oui' : 'Non' }}</p>
         <p><strong>À emporter :</strong> {{ $restaurant->propose_retrait ? 'Oui' : 'Non' }}</p>
@@ -21,7 +21,13 @@
     </div>
 </div>
 
-</section>
+@if($restaurant->id_proprietaire == auth()->user()->id_client)
+
+
+     <p>Vous êtes le propriétaire</p>
+@endif
+<p>{{ auth()->user()->id_client}}1</p>
+<p>{{ $restaurant->id_proprietaire}}2</p>
 
 @if (session('success'))
     <div class="alert alert-success">
@@ -39,7 +45,7 @@
 <form id="formRechercherProd" method="GET" action="{{ route('restaurants.show', $restaurant->id_restaurant) }}">
     <div class="RechercherProduitMagasin">
         <label for="search">Recherche</label>
-        <input type="text" id="search" name="search" value="{{ old('search') }}"
+        <input type="text" id="search" name="recherche" value="{{ old('recherche') }}"
             placeholder="Rechercher dans les menus, plats, produits...">
     </div>
     <div class="RechercherProduitMagasin">
@@ -56,6 +62,7 @@
     </div>
     <button class="filter-but-eat" type="submit">Filtrer</button>
 </form>
+
 
 <a href="{{ url('/panier') }}" id="panier">🛒</a>
 
@@ -78,7 +85,6 @@
                     </form>
                 </div>
             @endforeach
-
         @endif
     </div>
 </section>
