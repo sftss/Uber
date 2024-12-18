@@ -21,6 +21,7 @@ use App\Http\Controllers\FactureController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PlatController;
+use App\Http\Controllers\SmsController;
 
 Route::get('/', function () {
     return view('main');
@@ -142,9 +143,33 @@ Route::post('add/{type}/{id}', [CartController::class, 'add'])->name('cart.add')
 
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register.form');
 Route::post('register', [RegisterController::class, 'register'])->name('register');
+
+Route::get('registerch', [RegisterController::class, 'showRegistrationFormch'])->name('register.formch');
+Route::post('registerch', [RegisterController::class, 'registerch'])->name('registerch');
+
+
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('login.post');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+
+
+
+
+
+
+
+Route::get('loginch', [LoginController::class, 'showLoginFormch'])->name('loginch');
+Route::post('loginch', [LoginController::class, 'loginch'])->name('login.postch');
+Route::post('logoutch', [LoginController::class, 'logoutch'])->name('logoutch');
+
+
+
+
+
+
+
+
+
 
 Route::get('/politique', function () {
     return view('politique');
@@ -166,3 +191,5 @@ Route::post('/verification', [MailController::class, 'verifyCode'])->name('verif
 
 
 Route::get('/verificationmail', [MailController::class, 'sendMail'])->name('verifiermail');
+
+Route::get('/envoi-sms', [SmsController::class, 'sendSms']);

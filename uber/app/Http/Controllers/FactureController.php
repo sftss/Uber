@@ -3,50 +3,46 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Facture;
 use App\Models\Course;
-use App\Models\Adresse;
-use App\Models\Chauffeur;
-use App\Models\Client;
-use Carbon\Carbon; 
+use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class FactureController extends Controller
 {
-    public function genererFacture($id_course) {
-        $course = Course::with(['client', 'chauffeur', 'lieuDepart', 'lieuArrivee'])
-            ->find($id_course);
+    public function genererFacture($id_course)
+    {
+        $course = Course::with(['client', 'chauffeur', 'lieuDepart', 'lieuArrivee'])->find($id_course);
 
-        if (!$course) {
-            return abort(404, 'Course non trouvée');
-        }
-
-        $company_name = "Uber";
-
-        $items = [
-            ['name' => 'Course', 'quantity' => 1, 'price' => $course->prix_reservation],
-            ['name' => 'Pourboire', 'quantity' => 1, 'price' => $course->pourboire],
-        ];
-        $total = collect($items)->sum(fn($item) => $item['quantity'] * $item['price']);
-
-        $date_prise_en_charge = Carbon::parse($course->date_prise_en_charge)
-            ->locale('fr')
-            ->isoFormat('D MMMM YYYY');
-
-        // Correction pour la durée
-        $duree = \Carbon\Carbon::parse($course->duree_course);
+        $date_prise_en_charge = Carbon::parse($course->date_prise_en_charge)->locale('fr')->isoFormat('D MMMM YYYY');
+        $duree = Carbon::parse($course->duree_course);
         $duree_course = $duree->format('H') . ' heure(s) et ' . $duree->format('i') . ' minute(s)';
 
+        $items = [
+            ['name' => 'Course', 'quantity' => 1, 'price' => $course->prix_reservation, 'tva' => '20%'],
+            ['name' => 'Pourboire', 'quantity' => 1, 'price' => $course->pourboire, 'tva' => '-'], 
+        ];
 
-        $totalHT = collect($items)->sum(fn($item) => $item['quantity'] * $item['price']); // Total hors taxes
+        $totalHT = collect($items)->where('tva', '20%')->sum(fn($item) => $item['quantity'] * $item['price']);
         $tva = $totalHT * 0.20; 
-        $totalTTC = $totalHT + $tva; 
-        
+        $totalTTC = $totalHT + $tva + $course->pourboire;
+
+        $facture = Facture::create([
+            'id_course' => $id_course,
+            'montant_facture' => $totalTTC,
+            'description_facture' => 'Facture pour la course ID ' . $id_course,
+            'pourboire' => $course->pourboire,
+            'date_course' => $course->date_prise_en_charge,
+            'taux_tva' => 0.20,
+            'numero_mois' => Carbon::parse($course->date_prise_en_charge)->month,
+            'est_particulier' => true,
+        ]);
+
         $data = [
-            'company_name' => $company_name,
+            'company_name' => 'Uber',
             'id_course' => $id_course,
             'items' => $items,
-            'totalHT' => $totalHT,  
+            'totalHT' => $totalHT,
             'tva' => $tva,
             'totalTTC' => $totalTTC,
             'client' => $course->client,
@@ -58,7 +54,7 @@ class FactureController extends Controller
             'duree_course' => $duree_course,
         ];
 
-        $pdf = PDF::loadView('facture', $data);
+        $pdf = Pdf::loadView('facture', $data);
         $file = 'Facture_id_course_' . $id_course . '.pdf';
 
         return $pdf->stream($file);

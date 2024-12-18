@@ -7,7 +7,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
+                    <form id="formInscription" method="POST" action="{{ route('register') }}">
                         @csrf
 
                         <!-- Première ligne avec deux champs côte à côte -->
@@ -112,6 +112,8 @@
                                         </option>
                                         <option value="F" {{ old('sexe_cp') == 'F' ? 'selected' : '' }}>Femme
                                         </option>
+                                        <option value="A" {{ old('sexe_cp') == 'A' ? 'selected' : '' }}>Autre
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -125,7 +127,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-12 form-group d-flex align-items-center">
+                            <div class="col-12 form-group d-flex align-items-center ButFormInsciption">
                                 <input type="checkbox" name="newsletter" id="newsletter"
                                     {{ old('newsletter') ? 'checked' : '' }}>
                                 <label for="newsletter" class="ml-2">
@@ -133,23 +135,23 @@
                                 </label>
                             </div>
                         </div>
-                        <!-- Politique de confidentialité -->
                         <div class="row">
-                            <div class="col-12 form-group d-flex align-items-center">
+                            <div class="col-12 form-group d-flex align-items-center ButFormInsciption">
                                 <input type="checkbox" name="politique_confidentialite" id="politique_confidentialite"
                                     required>
                                 <label for="politique_confidentialite" class="ml-2">
                                     J'ai lu et j'accepte la <a class="txtPolConf" href="{{ route('politique') }}"
-                                        target="_blank">politique de confidentialité</a>
+                                        target="_blank">politique de confidentialité (voir ici)</a>
                                 </label>
                             </div>
                         </div>
-
-                        <button class="btn-submit" type="submit">S'inscrire</button>
+                        <div style="display: flex; justify-content: center;">
+                            <button class="btn-submit" type="submit">S'inscrire</button>
+                        </div>
                     </form>
 
                     @if ($errors->any())
-                        <div class="alert alert-danger">
+                        <div class="alert alert-danger mechantAlert">
                             <ul>
                                 @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
@@ -159,20 +161,13 @@
                     @endif
                 </div>
             </div>
+            <div style="background-color: #f3f3f3; margin: 0 0;" id="butPagination" class="pagination-container">
+            <a id="CreerRestauTxt" style="background-color: #f3f3f3;" href="{{ route('register.formch') }}" class="btn btn-outline-light">S'inscrire en tant que chauffeur 🚗</a>
+        </div>
         </div>
     </div>
 </div>
 
-<script>
-    function toggleProfessionnelFields() {
-        const clientType = document.getElementById('est_particulier').value;
-        const professionnelFields = document.getElementById('professionnel_fields');
-        professionnelFields.style.display = clientType === '0' ? 'block' : 'none';
-    }
-
-    // Appel initial pour gérer l'affichage correct au chargement
-    document.addEventListener('DOMContentLoaded', toggleProfessionnelFields);
-</script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         // Sélectionner l'alerte

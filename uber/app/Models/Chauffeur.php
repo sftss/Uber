@@ -31,4 +31,10 @@ class Chauffeur extends Model
             "id_chauffeur"
         );
     }
+
+    protected $fillable = [
+        'id_chauffeur', 'id_sd', 'photo', 'tel_chauffeur', 'mail_chauffeur', 
+        'num_siret', 'sexe_chauffeur', 'prenom_chauffeur', 'nom_chauffeur', 'date_naissance_chauffeur', 
+         'mdp_chauffeur', 'newsletter'
+    ];
 }

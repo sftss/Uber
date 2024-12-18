@@ -1,5 +1,5 @@
 @extends('layouts.chauffeur-header')
-<link href="{{ URL::asset('assets/style/course.css') }}" rel="stylesheet">
+<link href="{{ URL::asset('assets/style/coursechauffeur.css') }}" rel="stylesheet">
 
 <div id="butRetourListCourse">
     <a class="back_button" href="{{ url('/') }}">
@@ -24,7 +24,7 @@
                 <li class="depart">Lieu de départ : {{ $course->ville_depart }}</li>
                 <li class="arrivee">Lieu d'arrivée : {{ $course->ville_arrivee }}</li>
                 <li class="prix">Prix : {{ $course->prix_reservation }} €</li>
-                <li class="date_prise_en_charge">Date de la course : {{ $course->date_prise_en_charge }}</li>
+                <li class="date_prise_en_charge">Date de la course :  {{ \Carbon\Carbon::parse($course->date_prise_en_charge)->locale('fr')->isoFormat('LL') }}</li>
                 <li class="duree">Durée : {{ $course->duree_course }}</li>
                 <li class="temps_arrivee">
                     Heure d'arrivée :

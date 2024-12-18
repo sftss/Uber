@@ -67,8 +67,8 @@
                                         <option value="5" selected>5 - Excellent</option>
                                     </select>
                                     <label for="pourboire" id="txtPourboireCourse">Pourboire (€) :</label>
-                                    <input id="champPourboire" min="0" name="pourboire" step="1"
-                                        type="number" value="0">
+                                    <input id="champPourboire" max={{ $course->prix_reservation }} min="0"
+                                        name="pourboire" step="1" type="number" value="0">
                                     <button class="submitReview" type="submit">Soumettre</button>
                                 </form>
                             </div>

@@ -189,17 +189,18 @@
                 @foreach ($items as $item)
                     <tr>
                         <td>{{ $item['name'] }}</td>
-                        <td>{{ $item['price'] }} €</td>
-                        <td>20%</td> 
+                        <td>{{ number_format($item['price'], 2) }} €</td>
+                        <td>{{ $item['tva'] == '0%' ? '' : $item['tva'] }}</td> <!-- TVA vide si 0% -->
                     </tr>
                 @endforeach
             </tbody>
         </table>
         <div class="footer">
-    <p id="totalTxt">Total HT : <strong>{{ number_format($totalHT, 2) }} €</strong></p>
-    <p id="totalTxt">Total TTC : <strong>{{ number_format($totalTTC, 2) }} €</strong></p>
-    <p>Merci pour votre confiance - © {{ $company_name }}</p>
-</div>    </div>
+            <p id="totalTxt">Total HT : <strong>{{ number_format($totalHT, 2) }} €</strong></p>
+            <p id="totalTxt">Total TTC : <strong>{{ number_format($totalTTC, 2) }} €</strong></p>
+            <p>Merci pour votre confiance - © {{ $company_name }}</p>
+        </div>
+    </div>
 </body>
 
 </html>
