@@ -1,0 +1,30 @@
+<?php
+return [
+    'invoice_title' => 'RECHNUNG',
+    'id_title' => "FAHRT-ID",
+    'client_info' => 'Kundeninformationen',
+    'driver_info' => 'Fahrerinformationen',
+    'course_info' => 'Fahrtdetails',
+    'nameEnt' => 'Firmenname',
+    'driverTel' => 'Fahrernummer',
+    'clientTel' => 'Kundennummer',
+    'product' => 'Produkt',
+    'unit_price' => 'Einheitspreis',
+    'vat' => 'MwSt.',
+    'total_ht' => 'Gesamt ohne MwSt.',
+    'total_ttc' => 'Gesamt mit MwSt.',
+    'thank_you' => 'Vielen Dank für Ihr Vertrauen',
+    'client_name' => 'Kundenname',
+    'driver_name' => 'Fahrername',
+    'departure_address' => 'Abfahrtsadresse',
+    'arrival_address' => 'Ankunftsadresse',
+    'pickup_date' => 'Abholdatum',
+    'duration' => 'Fahrtdauer',
+    'course' => 'Fahrt',
+    'tip' => 'Trinkgeld',
+    'date_format' => 'd.m.Y H:i', // 18.12.2024 14:35
+    'duration_format' => '%H:%I', // 02:15
+    'Ride' => 'Fahrt',
+    'Tip' => 'Trinkgeld',
+    'Facture pour la course ID' => 'Rechnung für die Fahrt ID',
+];

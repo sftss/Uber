@@ -63,19 +63,19 @@
                             <div>
                                 <div class="form-group">
                                     <label for="rue">Rue</label>
-                                    <input type="text" name="rue" required>
+                                    <input type="text" name="rue" required value="{{ old('rue') }}">
                                 </div>
                             </div>
                             <div>
                                 <div class="form-group">
                                     <label for="cp">Code Postal</label>
-                                    <input type="text" name="cp" >
+                                    <input type="text" name="cp" value="{{ old('cp') }}">
                                 </div>
                             </div>
                             <div>
                                 <div class="form-group">
                                     <label for="ville">Ville</label>
-                                    <input type="text" name="ville">
+                                    <input type="text" name="ville" value="{{ old('ville') }}">
                                 </div>
                             </div>
                         </div>
@@ -105,20 +105,44 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                            <div>
+                                <div class="form-group">
+                                    <label for="rib">Relevé d'Identité Bancaire (RIB)</label>
+                                    <input type="text" name="rib" id="rib" value="{{ old('rib') }}" required>
+                                </div>
+                            </div>
+                        </div>
                         </div>
 
+                        <!-- Type de service -->
+                        <div class="row">
+                            <div>
+                                <div class="form-group">
+                                    <label for="type_service">Type de service</label>
+                                    <select name="type_service" id="type_service" required>
+                                        <option value="" disabled selected>Choisir...</option>
+                                        <option value="VTC" {{ old('type_service') == 'VTC' ? 'selected' : '' }}>VTC</option>
+                                        <option value="Livraison" {{ old('type_service') == 'Livraison' ? 'selected' : '' }}>Livraison</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        
                         <!-- Sexe et date de naissance -->
                         <div class="row">
                             <div>
                                 <div class="form-group">
                                     <label for="sexe_chauffeur">Sexe</label>
-                                    <select name="sexe_chauffeur" id="sexe_cp" required>
+                                    <select name="sexe_chauffeur" id="sexe_chauffeur" required>
                                         <option value="" disabled selected>Choisir...</option>
-                                        <option value="H" {{ old('sexe_cp') == 'H' ? 'selected' : '' }}>Homme
+                                        <option value="H" {{ old('sexe_chauffeur') == 'H' ? 'selected' : '' }}>Homme
                                         </option>
-                                        <option value="F" {{ old('sexe_cp') == 'F' ? 'selected' : '' }}>Femme
+                                        <option value="F" {{ old('sexe_chauffeur') == 'F' ? 'selected' : '' }}>Femme
                                         </option>
-                                        <option value="A" {{ old('sexe_cp') == 'A' ? 'selected' : '' }}>Autre
+                                        <option value="A" {{ old('sexe_chauffeur') == 'A' ? 'selected' : '' }}>Autre
                                         </option>
                                     </select>
                                 </div>

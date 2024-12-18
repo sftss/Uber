@@ -46,9 +46,10 @@ Route::post('/courses/{courseId}/review', [CourseController::class, 'submitRevie
 
 Route::post('/courses/{id_course}/review', [CourseController::class, 'submitReview'])->name('courses.submitReview');
 
-Route::get('/facture', [FactureController::class, 'genererFacture']);
+// Route::get('/facture', [FactureController::class, 'genererFacture']);
 Route::post('/courses/{id_course}/Facture', [FactureController::class, 'genererFacture'])
     ->name('courses.Facture');
+Route::post('/courses/{id_course}/facture', [FactureController::class, 'genererFacture'])->name('courses.Facture'); //lang facture
 
 Route::get('/restaurants/filter', [RestaurantController::class, 'filter'])->name('restaurants.filter');
 

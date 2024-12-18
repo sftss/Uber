@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="{{ csrf_token() }}" name="csrf-token">
-    <title>Facture</title>
+    <title>{{ __('facture.invoice_title') }}</title>
 </head>
 <style>
     /* Global */
@@ -135,72 +135,61 @@
     <div class="container">
         <div class="header">
             <div class="container-img-logo">
-                <img src="{{ public_path('assets/img/Uber-Logo.png') }}" width="200" alt="Logo Uber">
+                <img alt="Logo Uber" src="{{ public_path('assets/img/Uber-Logo.png') }}" width="200">
             </div>
             <div id="heading">
-                <h1 id="ADroite">FACTURE</h1>
-                <H1 id="AGauche">ID COURSE : {{ $id_course }}</H1>
+                <h1 id="ADroite">{{ __('facture.invoice_title') }}</h1>
+                <h1 id="AGauche">{{ __('facture.id_title') }} : {{ $id_course }}</h1>
             </div>
         </div>
-
         <div class="client-info">
             <div class="section">
-                <h3>Informations du Client</h3>
-                <p><strong>Prénom et nom :</strong> {{ $client->prenom_cp }} {{ $client->nom_cp }}</p>
-                <p><strong>Email :</strong> {{ $client->mail_client }}</p>
-                <p><strong>Téléphone :</strong> 0{{ $client->tel_client }}</p>
+                <h3>{{ __('facture.client_info') }}</h3>
+                <p><strong>{{ __('facture.client_name') }}:</strong> {{ $client->prenom_cp }} {{ $client->nom_cp }}</p>
+                <p><strong>Email:</strong> {{ $client->mail_client }}</p>
+                <p><strong>{{ __('facture.clientTel') }}:</strong> +33 {{ $client->tel_client }}</p>
             </div>
             <div class="section">
-                <h3>Informations du Chauffeur</h3>
-                <p><strong>Prénom et nom :</strong> {{ $chauffeur->nom_chauffeur }}
-                    {{ $chauffeur->prenom_chauffeur }}
-                </p>
-                <p><strong>Email :</strong> {{ $chauffeur->mail_chauffeur }}</p>
-                <p><strong>Téléphone :</strong> 0{{ $chauffeur->tel_chauffeur }}</p>
-                <p><strong>Nom entreprise :</strong> {{ $chauffeur->nom_entreprise }}</p>
-                <!-- <p><strong>Numéro SIRET :</strong> {{ $chauffeur->num_siret }}</p> -->
-                <!-- <p><strong>Type de chauffeur :</strong> {{ $chauffeur->type_chauffeur }}</p> -->
+                <h3>{{ __('facture.driver_info') }}</h3>
+                <p><strong>{{ __('facture.client_name') }}:</strong> {{ $chauffeur->nom_chauffeur }} {{ $chauffeur->prenom_chauffeur }}</p>
+                <p><strong>Email:</strong> {{ $chauffeur->mail_chauffeur }}</p>
+                <p><strong>{{ __('facture.driverTel') }}:</strong> +33 {{ $chauffeur->tel_chauffeur }}</p>
+                <p><strong>{{ __('facture.nameEnt') }} :</strong> {{ $chauffeur->nom_entreprise }}</p>
             </div>
         </div>
-
-        <!-- Informations de la Course -->
         <div class="course-info">
             <div class="section">
-                <h3>Informations de la Course</h3>
-                <p><strong>Adresse de départ :</strong> {{ $lieu_depart->rue }} {{ $lieu_depart->cp }}
-                    {{ $lieu_depart->ville }}</p>
-                <p><strong>Adresse d'arrivée :</strong> {{ $lieu_arrivee->rue }} {{ $lieu_arrivee->cp }}
-                    {{ $lieu_arrivee->ville }}</p>
-                <p><strong>Date de prise en charge :</strong> {{ $date_prise_en_charge }}</p>
-                <p><strong>Durée de la course :</strong> {{ $duree_course }}</p>
+                <h3>{{ __('facture.course_info') }}</h3>
+                <p><strong>{{ __('facture.departure_address') }}:</strong> {{ $lieu_depart->rue }} {{ $lieu_depart->cp }} {{ $lieu_depart->ville }}</p>
+                <p><strong>{{ __('facture.arrival_address') }}:</strong> {{ $lieu_arrivee->rue }} {{ $lieu_arrivee->cp }} {{ $lieu_arrivee->ville }}</p>
+                <p><strong>{{ __('facture.pickup_date') }}:</strong> {{ $date_prise_en_charge }}</p>
+                <p><strong>{{ __('facture.duration') }}:</strong> {{ $duree_course }}</p>
+
             </div>
         </div>
-
-        <!-- Tableau des Produits -->
         <table class="products">
             <thead>
                 <tr>
-                    <th>Produit</th>
-                    <th>Prix Unitaire</th>
-                    <th>TVA</th>
+                    <th>{{ __('facture.product') }}</th>
+                    <th>{{ __('facture.unit_price') }}</th>
+                    <th>{{ __('facture.vat') }}</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($items as $item)
-                    <tr>
-                        <td>{{ $item['name'] }}</td>
-                        <td>{{ number_format($item['price'], 2) }} €</td>
-                        <td>{{ $item['tva'] == '0%' ? '' : $item['tva'] }}</td> <!-- TVA vide si 0% -->
-                    </tr>
+                <tr class="items">
+                    <td>{{ $item['name'] }}</td>
+                    <td>{{ number_format($item['price'], 2) }} €</td>
+                    <td>{{ $item['tva'] == '0%' ? '' : $item['tva'] }}</td>
+                </tr>
                 @endforeach
             </tbody>
         </table>
         <div class="footer">
-            <p id="totalTxt">Total HT : <strong>{{ number_format($totalHT, 2) }} €</strong></p>
-            <p id="totalTxt">Total TTC : <strong>{{ number_format($totalTTC, 2) }} €</strong></p>
-            <p>Merci pour votre confiance - © {{ $company_name }}</p>
+            <p id="totalTxt">{{ __('facture.total_ht') }} : <strong>{{ number_format($totalHT, 2) }} €</strong></p>
+            <p id="totalTxt">{{ __('facture.total_ttc') }} : <strong>{{ number_format($totalTTC, 2) }} €</strong></p>
+            <p>{{ __('facture.thank_you') }} - © Uber</p>
         </div>
     </div>
 </body>
-
 </html>

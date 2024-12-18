@@ -14,6 +14,8 @@ use App\Mail\VerificationEmail;
 use Illuminate\Support\Facades\Log;
 use App\Models\User; // Pas besoin de require 'vendor/autoload.php' !
 use SendGrid\Mail\Mail;
+use App\Models\Adresse;
+
 
 class RegisterController extends Controller
 {
@@ -99,7 +101,7 @@ public function registerch(Request $request)
     $validatedData = $request->validate([
         'prenom_chauffeur' => 'required|string|max:20',
         'nom_chauffeur' => 'required|string|max:30',
-        'mail_chauffeur' => 'required|email|max:70', // Vérifiez le nom de votre table et ajustez si nécessaire
+        'mail_chauffeur' => 'required|email|max:70|unique:chauffeur,mail_chauffeur', // Vérifiez le nom de votre table et ajustez si nécessaire
         'sexe_chauffeur' => 'required|in:H,F,A',
         'mdp_chauffeur' => 'required|string|min:8|confirmed',
         'tel_chauffeur' => 'nullable|regex:/^0[67]\d{8}$/|max:10', // Numéro de téléphone français
@@ -107,6 +109,10 @@ public function registerch(Request $request)
         'secteur_activite' => 'required|exists:secteur_d_activite,id_sd',
         'date_naissance_chauffeur' => 'required|date|before_or_equal:' . now()->subYears(18)->toDateString(), // Doit avoir au moins 18 ans
         'newsletter' => 'nullable|boolean',
+        'type_service' => 'required|in:VTC,Livraison',
+        'rue' => 'required|string|max:255', // Rue obligatoire, longueur max : 255 caractères
+        'cp' => 'required|regex:/^\d{5}$/', 
+        'ville' => 'required|string|max:100',
     ], [
         'prenom_chauffeur.required' => 'Le prénom est requis.',
         'nom_chauffeur.required' => 'Le nom est requis.',
@@ -123,7 +129,36 @@ public function registerch(Request $request)
         'secteur_activite.exists' => 'Le secteur d\'activité sélectionné est invalide.',
         'date_naissance_chauffeur.required' => 'La date de naissance est requise.',
         'date_naissance_chauffeur.before_or_equal' => 'Vous devez avoir au moins 18 ans.',
+        'rue.required' => 'La rue est obligatoire.',
+        'rue.max' => 'La rue ne doit pas dépasser 255 caractères.',
+        'cp.required' => 'Le code postal est obligatoire.',
+        'cp.regex' => 'Le code postal doit être composé de 5 chiffres.',
+        'ville.required' => 'La ville est obligatoire.',
+        'ville.max' => 'Le nom de la ville ne doit pas dépasser 100 caractères.',
+        'rib.required' => 'Le RIB est obligatoire.',
     ]);
+
+    $rib = $request->input('rib');
+
+    // Vérifiez manuellement le format du RIB et renvoyez un message dynamique
+    if ($rib) {
+        $ribLength = strlen($rib);
+        $letterCount = preg_match_all('/[A-Z]/', $rib);
+        $digitCount = preg_match_all('/\d/', $rib);
+
+        if ($ribLength != 23) {
+            $missingChars = 23 - $ribLength;
+            return back()->withErrors(['rib' => "Le RIB doit contenir 23 caractères. Il manque $missingChars caractère(s)."])->withInput();
+        } elseif ($letterCount < 2) {
+            $missingLetters = 2 - $letterCount;
+            return back()->withErrors(['rib' => "Le RIB doit contenir 2 lettres. Il manque $missingLetters lettre(s)."])->withInput();
+        } elseif ($digitCount < 21) {
+            $missingDigits = 21 - $digitCount;
+            return back()->withErrors(['rib' => "Le RIB doit contenir 21 chiffres. Il manque $missingDigits chiffre(s)."])->withInput();
+        } elseif (!preg_match('/^[A-Z]{2}\d{21}$/', $rib)) {
+            return back()->withErrors(['rib' => "Le format du RIB est incorrect."])->withInput();
+        }
+    }
     
     // Nettoyage du numéro de téléphone
     $tel_chauffeur = $validatedData['tel_chauffeur'] ?? null;
@@ -133,6 +168,24 @@ public function registerch(Request $request)
             $tel_chauffeur = substr($tel_chauffeur, 1);
         }
     }
+
+
+
+    $departement = substr($validatedData['cp'], 0, 2);
+    if($departement > 19){
+        $departement = $departement + 1;
+    }
+
+
+    $adresse = new Adresse();
+    $adresse->id_departement = $departement;
+    $adresse->rue = $validatedData['rue'];
+    $adresse->ville = $validatedData['ville'];
+    $adresse->cp = $validatedData['cp'];
+    $adresse->save();
+
+
+
 
     // Création du client dans la base de données
     $chauffeur = new Chauffeur();
@@ -145,7 +198,9 @@ public function registerch(Request $request)
     $chauffeur->sexe_chauffeur = $validatedData['sexe_chauffeur'];
     $chauffeur->num_siret = $validatedData['num_siret'];
     $chauffeur->id_sd = $validatedData['secteur_activite'];
-    $chauffeur->photo = null;
+    $chauffeur->rib_chauffeur = $rib;
+    //$chauffeur->photo = null;
+    $chauffeur->id_adresse_actuelle = $adresse->id_adresse;
     $chauffeur->newsletter = $request->has('newsletter') ? true : false;
     
     $chauffeur->save();

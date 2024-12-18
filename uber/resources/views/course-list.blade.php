@@ -73,10 +73,18 @@
                                 </form>
                             </div>
                         @else
-                            {{-- Bouton générer facture --}}
                             <form action="{{ route('courses.Facture', $course->id_course) }}" method="POST"
                                 style="display:inline" class="formGenereInvoice">
                                 @csrf
+                                <label for="langue" id="labelLangue">Langue :</label>
+                                    <select name="langue" id="langue">
+                                        <option value="fr" selected>Français</option>
+                                        <option value="en">English</option>
+                                        <option value="es">Español</option>
+                                        <option value="de">Deutschland</option>
+                                        <option value="it">Italiano</option>
+                                    </select>
+                                    
                                 <button class="generateInvoiceButton" type="submit" target="_blank">Générer ma
                                     facture</button>
                             </form>
