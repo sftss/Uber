@@ -160,21 +160,40 @@
 @endif
 
 @if (count($menus) > 0 || count($plats) > 0 || count($produits) > 0)
-    <div class="panier-footer">
-        @if ($adresses->isEmpty())
-            <p>Vous n'avez pas d'adresse enregistrée. Veuillez <a href="{{ route('ajtadresse', ['from' => 'cart']) }}">ajouter une adresse</a> pour valider votre panier.</p>
-        @elseif ($adresses->count() == 1)
-            <p>Votre panier sera validé avec l'adresse suivante : {{ $adresses->first()->rue }}, {{ $adresses->first()->cp }}, {{ $adresses->first()->ville }}.</p>
-            <form action="{{ route('valider.panier', ['adresse' => $adresses->first()->id_adresse]) }}" method="POST">
-                @csrf
-                <button type="submit">Valider avec l'adresse</button>
-            </form>
+<div class="panier-footer">
+    <!-- Vérifier s'il y a des adresses enregistrées -->
+    @if ($adresses->isEmpty())
+        <p>Vous n'avez pas d'adresse enregistrée. Veuillez <a href="{{ route('ajtadresse', ['from' => 'cart']) }}">ajouter une adresse</a> pour valider votre panier.</p>
+    @else
+    <form action="{{ route('valider.panier') }}" method="POST">
+        @csrf
+        <!-- Sélection de l'adresse -->
+        <p>Choisissez une adresse pour la livraison :</p>
+        <select name="adresse" required>
+            @foreach ($adresses as $adresse)
+                <option value="{{ $adresse->id_adresse }}">
+                    {{ $adresse->rue }}, {{ $adresse->cp }}, {{ $adresse->ville }}
+                </option>
+            @endforeach
+        </select>
 
+        <!-- Sélection de la carte bancaire -->
+        <p>Choisissez une carte bancaire pour le paiement :</p>
+        <select name="carte" required>
+            @foreach ($cartes as $carte)
+                <option value="{{ $carte->id_cb }}">
+                    {{ substr($carte->num_cb, 0, 4) }} **** **** {{ substr($carte->num_cb, -4) }}
+                </option>
+            @endforeach
+        </select>
 
-        @else
-            <p>Choisissez une adresse pour valider votre panier.</p>
-        @endif
-    </div>
+        <!-- Bouton de validation -->
+        <button type="submit" class="btn btn-success">Valider ma commande</button>
+    </form>
+
+    @endif
+</div>
+
 @else
     <p id="panier-vide">Votre panier est vide 😭</p>
 @endif

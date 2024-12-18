@@ -55,7 +55,7 @@ class RestaurantController extends Controller
             return view('restaurants.filter', compact('restaurants', 'recherche', 'categories', 'horaireOuverture', 'horaireFermeture'));
     }
 
-    public function show($id, Request $request)
+    public function show($id, Request $request) 
     {
         $restaurant = DB::table('restaurant')
             ->join('adresse', 'restaurant.id_adresse', '=', 'adresse.id_adresse')
@@ -73,8 +73,8 @@ class RestaurantController extends Controller
         $categorie = $request->input('categorie');
 
         $menus = DB::table('menu')
-            ->join('compose_de', 'menu.id_menu', '=', 'compose_de.id_menu')
-            ->join('plat', 'compose_de.id_plat', '=', 'plat.id_plat')
+            ->leftjoin('compose_de', 'menu.id_menu', '=', 'compose_de.id_menu')
+            ->leftjoin('plat', 'compose_de.id_plat', '=', 'plat.id_plat')
             ->leftJoin('categorie_produit', 'plat.id_categorie_produit', '=', 'categorie_produit.id_categorie_produit')
             ->where('menu.id_restaurant', $id)
             ->when($recherche, function ($query, $recherche) {
@@ -117,7 +117,6 @@ class RestaurantController extends Controller
                 return $query->where('produit.id_categorie_produit', $categorie);
             })
             ->get();
-dd($restaurant);
         $categories = DB::table('categorie_produit')->get(); // Pour autre filtre
         $categorieId = $request->input('categorie', ''); // Catégorie sélectionnée
         $categoriesProduits = DB::table('categorie_produit')->get();
@@ -172,6 +171,8 @@ dd($restaurant);
                 'photo_restaurant' => $validatedData['photo_restaurant'],
                 'id_proprietaire' => Auth::user()->id_client,
             ]);
+
+
             // Association du restaurant à la catégorie
             DB::table('a_pour_categorie')->insert([
                 'id_restaurant' => $restaurant->id_restaurant,
@@ -179,16 +180,7 @@ dd($restaurant);
             ]);
         });
 
-        return redirect()->route('affichercreation')->with('success', 'Restaurant et adresse créés avec succès !');
-    }
-    public function ajouterproduit(){
-
-    }
-    public function ajouterplat(){
-        
-    }
-    public function ajoutermenu(){
-        
+        return redirect()->route('restaurants.search')->with('success', 'Restaurant et adresse créés avec succès !');
     }
 
 }

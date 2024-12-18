@@ -16,4 +16,14 @@ class Produit extends Model
 
     // Indique si les colonnes `created_at` et `updated_at` doivent être gérées automatiquement
     public $timestamps = false;
+
+
+    protected $fillable = [
+        'id_categorie_produit',
+        'nom_produit',
+        'note_produit',
+        'nb_avis',        
+        'prix_produit',        
+        'photo_produit',        
+    ];
 }

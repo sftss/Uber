@@ -37,20 +37,26 @@ class FactureController extends Controller
         $duree = \Carbon\Carbon::parse($course->duree_course);
         $duree_course = $duree->format('H') . ' heure(s) et ' . $duree->format('i') . ' minute(s)';
 
+
+        $totalHT = collect($items)->sum(fn($item) => $item['quantity'] * $item['price']); // Total hors taxes
+        $tva = $totalHT * 0.20; 
+        $totalTTC = $totalHT + $tva; 
+        
         $data = [
-                'company_name' => $company_name,
-                'id_course' => $id_course,
-                'id_chauffeur' => $course->id_chauffeur,
-                'items' => $items,
-                'total' => $total,
-                'client' => $course->client, 
-                'chauffeur' => $course->chauffeur,
-                'lieu_depart' => $course->lieuDepart,
-                'lieu_arrivee' => $course->lieuArrivee,
-                'pourboire' => $course->pourboire,
-                'date_prise_en_charge' => $date_prise_en_charge,
-                'duree_course' => $duree_course,
-            ];
+            'company_name' => $company_name,
+            'id_course' => $id_course,
+            'items' => $items,
+            'totalHT' => $totalHT,  
+            'tva' => $tva,
+            'totalTTC' => $totalTTC,
+            'client' => $course->client,
+            'chauffeur' => $course->chauffeur,
+            'lieu_depart' => $course->lieuDepart,
+            'lieu_arrivee' => $course->lieuArrivee,
+            'pourboire' => $course->pourboire,
+            'date_prise_en_charge' => $date_prise_en_charge,
+            'duree_course' => $duree_course,
+        ];
 
         $pdf = PDF::loadView('facture', $data);
         $file = 'Facture_id_course_' . $id_course . '.pdf';

@@ -11,4 +11,13 @@ class Plat extends Model
     protected $table = "plat";
     protected $primaryKey = "id_plat";
     public $timestamps = false;
+
+    protected $fillable = [
+        'id_categorie_produit',
+        'libelle_plat',
+        'prix_plat',
+        'note_plat',        
+        'nb_avis',        
+        'photo_plat',        
+    ];
 }

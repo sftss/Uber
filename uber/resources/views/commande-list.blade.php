@@ -20,24 +20,32 @@
             @php
                 $grandTotal = 0;
             @endphp
-            @foreach ($client as $result)
+            @foreach ($commandes as $idCommande => $commande)
                 @php
-                    $prixPlat = ($result->quantite_plat ?? 0) * ($result->prix_plat ?? 0);
-                    $prixProduit = ($result->quantite_produit ?? 0) * ($result->prix_produit ?? 0);
-                    $prixMenu = ($result->quantite_menu ?? 0) * ($result->prix_menu ?? 0);
-                    $totalCommande = $prixPlat + $prixProduit + $prixMenu;
+                    // Calcul du total de la commande (plat, produit, menu)
+                    $totalCommande = 0;
+                @endphp
+                @foreach ($commande as $result)
+                    @php
+                        $prixPlat = ($result->quantite_plat ?? 0) * ($result->prix_plat ?? 0);
+                        $prixProduit = ($result->quantite_produit ?? 0) * ($result->prix_produit ?? 0);
+                        $prixMenu = ($result->quantite_menu ?? 0) * ($result->prix_menu ?? 0);
+                        $totalCommande += $prixPlat + $prixProduit + $prixMenu;
+                    @endphp
+                    <tr>
+                        <td>{{ $result->id_commande_repas ?? '-' }}</td>
+                        <td>{{ $result->libelle_plat ?? '-' }}</td>
+                        <td>{{ $result->quantite_plat ?? '-' }}</td>
+                        <td>{{ $result->nom_produit ?? '-' }}</td>
+                        <td>{{ $result->quantite_produit ?? '-' }}</td>
+                        <td>{{ $result->libelle_menu ?? '-' }}</td>
+                        <td>{{ $result->quantite_menu ?? '-' }}</td>
+                        <td>{{ number_format($totalCommande, 2) }} €</td>
+                    </tr>
+                @endforeach
+                @php
                     $grandTotal += $totalCommande;
                 @endphp
-                <tr>
-                    <td>{{ $result->id_commande_repas ?? '-' }}</td>
-                    <td>{{ $result->libelle_plat ?? '-' }}</td>
-                    <td>{{ $result->quantite_plat ?? '-' }}</td>
-                    <td>{{ $result->nom_produit ?? '-' }}</td>
-                    <td>{{ $result->quantite_produit ?? '-' }}</td>
-                    <td>{{ $result->libelle_menu ?? '-' }}</td>
-                    <td>{{ $result->quantite_menu ?? '-' }}</td>
-                    <td>{{ number_format($totalCommande, 2) }} €</td>
-                </tr>
             @endforeach
         </tbody>
         <tfoot>

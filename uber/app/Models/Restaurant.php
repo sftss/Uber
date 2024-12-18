@@ -19,7 +19,7 @@ class Restaurant extends Model
         'propose_livraison',
         'propose_retrait',
         'photo_restaurant',
-        'id_propriétaire',
+        'id_proprietaire',
         'id_adresse',
         
     ];

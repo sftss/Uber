@@ -15,19 +15,13 @@
             <div class="navbar-links">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/map') }}">Déplacez-vous avec Uber</a>
+                        <a class="nav-link" href="{{ url('/chauffeur-propositions/7') }}">Mes restaurants</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url('/restaurants/search') }}" class="nav-link">Uber Eats</a>
+                        <a class="nav-link" href="{{ url('/professionnel-creation/restaurant/12') }}">Créer un restaurant</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url('/courses') }}" class="nav-link">Mes Courses</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ url('/chauffeur-main') }}" class="nav-link">Affichage Chauffeur</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ url('/professionnel-main') }}" class="nav-link">Affichage Professionnel</a>
+                        <a href="{{ url('/') }}" class="nav-link">Affichage Client</a>
                     </li>
                 </ul>
             </div>
@@ -39,12 +33,10 @@
                             href="{{ url('/profil/' . auth()->user()->id_client) }}">{{ auth()->user()->prenom_cp }}</a>
                         !</span>
 
-                    <a href="{{ url('/profil/' . auth()->user()->id_client) }}" class="btn btn-outline-light">Informations
-                        du compte</a>
+                    <a href="{{ url('/info-compte') }}" class="btn btn-outline-light">Informations du compte</a>
 
                     <!-- Lien de déconnexion avec JavaScript -->
-                    <a href="{{ url('/') }}"
-                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                         class="btn btn-outline-light">Déconnexion</a>
 
                     <!-- Formulaire de déconnexion -->

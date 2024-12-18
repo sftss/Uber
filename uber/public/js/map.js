@@ -153,12 +153,14 @@ function geocodeAddressModif(inputElement, suggestionsBox, marker, isdepart) {
             getRoute(markerDepart, markerArrivee);
           }
         } else {
+          console.log("Pas d'adresse trouvée.");
         }
       })
       .catch((error) => {
         console.error("Erreur lors de la récupération des données :", error);
       });
   } else {
+    console.log("Saisie insuffisante pour effectuer une recherche.");
     suggestionsBox.innerHTML = ""; // Vider les suggestions si la saisie est insuffisante
   }
 }
@@ -310,6 +312,7 @@ function updateMarker(marker, result, suggestionText) {
 
 // Fonction pour géocoder l'adresse, afficher les suggestions dans une liste déroulante et placer un marqueur
 function geocodeAddress(inputElement, suggestionsBox, marker, isdepart) {
+  console.log("ta mere celui qui a modif")
   inputElement.addEventListener(
     "input",
     debounce(function () {
@@ -829,9 +832,9 @@ function creerCourse(chauffeur) {
       prix_reservation: prixcourse,
       tempscourse: durationInSeconds,
       date_trajet: dateDepart,
-      id_course: coursePourModification
-      ? coursePourModification.id_course
-      : null,
+            id_course: coursePourModification
+        ? coursePourModification.id_course
+        : null,
     };
 
     if (coursePourModification) {

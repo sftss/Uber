@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produit;
+use App\Models\Vends;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\RestaurantController;
 
 class ProduitController extends Controller
 {
@@ -33,9 +35,14 @@ class ProduitController extends Controller
     }
 
     // Affiche le formulaire pour créer un nouveau produit
-    public function create()
+    public function create($restaurant_id)
     {
-        return view('produits.create');
+        $categories = DB::table('categorie_produit')->get(); 
+
+        return view('produit.create', [
+            'restaurant_id' => $restaurant_id,
+            'categories' => $categories 
+        ]);
     }
 
     // Stocke un nouveau produit
@@ -43,20 +50,37 @@ class ProduitController extends Controller
     {
         // Valider les données de la requête
         $validated = $request->validate([
-            'nom_produit' => 'required|string|max:30',
-            'id_categorie_produit' => 'required|integer',
-            'note_produit' => 'nullable|numeric|between:0,10',
-            'nb_avis' => 'nullable|integer',
+            'id_restaurant' => 'required|integer|exists:restaurant,id_restaurant',
+            'libelle_produit' => 'required|string|max:30', // Mise à jour du nom du champ
+            'categorie_id' => 'required|integer|exists:categorie_produit,id_categorie_produit', // Mise à jour du nom du champ
             'prix_produit' => 'required|numeric|between:0,999.99',
             'photo_produit' => 'nullable|string|max:255',
         ]);
 
-        // Créer un nouveau produit
-        Produit::create($validated);
+        // Création du produit
+        $Produit = new Produit();
+        $Produit->id_categorie_produit = $request->categorie_id; // Utilisation de 'categorie_id'
+        $Produit->nom_produit = $request->libelle_produit; // Utilisation de 'libelle_produit'
+        $Produit->prix_produit = $request->prix_produit;
+        $Produit->photo_produit = $request->photo_produit;
+        $Produit->save();
 
-        // Rediriger vers la liste des produits avec un message de succès
-        return redirect()->route('produits.index')->with('success', 'Produit ajouté avec succès');
+        // Associer le produit au restaurant
+        $vends = new Vends();
+        $vends->id_restaurant = $request->id_restaurant;
+        $vends->id_produit = $Produit->id_produit;
+        $vends->save();
+
+        // Redirection après l'ajout
+        return redirect()->action(
+            [RestaurantController::class, 'show'],
+            ['id' => $request->id_restaurant]
+        )->with('successs', 'Produit ajouté avec succès');
+
+
+
     }
+
 
     // Affiche le formulaire pour éditer un produit existant
     public function edit($id)

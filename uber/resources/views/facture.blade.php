@@ -182,6 +182,7 @@
                 <tr>
                     <th>Produit</th>
                     <th>Prix Unitaire</th>
+                    <th>TVA</th>
                 </tr>
             </thead>
             <tbody>
@@ -189,15 +190,16 @@
                     <tr>
                         <td>{{ $item['name'] }}</td>
                         <td>{{ $item['price'] }} €</td>
+                        <td>20%</td> 
                     </tr>
                 @endforeach
             </tbody>
         </table>
         <div class="footer">
-            <p id="totalTxt"></strong>Total : <strong>{{ $total }} €</p>
-            <p>Merci pour votre confiance - &copy; {{ $company_name }}</p>
-        </div>
-    </div>
+    <p id="totalTxt">Total HT : <strong>{{ number_format($totalHT, 2) }} €</strong></p>
+    <p id="totalTxt">Total TTC : <strong>{{ number_format($totalTTC, 2) }} €</strong></p>
+    <p>Merci pour votre confiance - © {{ $company_name }}</p>
+</div>    </div>
 </body>
 
 </html>

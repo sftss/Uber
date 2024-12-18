@@ -21,18 +21,32 @@
     </div>
 </div>
 
-@if($restaurant->id_proprietaire == auth()->user()->id_client)
+<div class="createProprio">
+    @if(auth()->check() && $restaurant->id_proprietaire == auth()->user()->id_client)
+        <p>Vous êtes le propriétaire</p>
+        
+        <div class="createProprioBut">
 
+            <a href="{{ route('produit.create', ['restaurant_id' => $restaurant->id_restaurant]) }}" class="btn btn-primary">Ajouter un produit</a>
 
-     <p>Vous êtes le propriétaire</p>
-@endif
-<p>{{ auth()->user()->id_client}}1</p>
-<p>{{ $restaurant->id_proprietaire}}2</p>
+            <a href="{{ route('plat.create', ['restaurant_id' => $restaurant->id_restaurant]) }}" class="btn btn-primary">Ajouter un plat</a>
+
+            <a href="{{ route('menu.create', ['restaurant_id' => $restaurant->id_restaurant]) }}" class="btn btn-primary">Ajouter un menu</a>
+    </div>
+    @endif
+</div>
+
 
 @if (session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
         <a href="{{ route('cart.index') }}" class="btn btn-outline-light">Voir mon panier</a>
+    </div>
+@endif
+
+@if (session('successs'))
+    <div class="alert alert-success">
+        {{ session('success') }}
     </div>
 @endif
 

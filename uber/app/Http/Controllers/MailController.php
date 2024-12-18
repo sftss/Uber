@@ -18,8 +18,7 @@ class MailController extends Controller
         
         $mail = Auth::user()->mail_client;
         $codeverif=Auth::user()->code_verif;
-        Mail::to("tanguyabdoulvaid@gmail.com")->send(new SignUp($codeverif));
-        echo("<script>console.log('Code de vérification : " . $mail . "');</script>");
+        Mail::to("$mail")->send(new SignUp($codeverif));
 
         return view('auth.verification');
         }
@@ -30,12 +29,14 @@ class MailController extends Controller
     $request->validate([
         'code' => 'required|string|max:255',
     ]);
-
-
+    
     $userInputCode = $request->input('code');
+    
+    
 
 
     $correctCode = auth()->user()->code_verif;
+
 
     if ($userInputCode === $correctCode) {
         $user = auth()->user();

@@ -297,6 +297,7 @@ public function passercomande(){
         $idClient = Auth::user()->id_client;
         $idPanier = $this->getPanierId($idClient);
         
+        
         $client = DB::table('client as c')
             ->leftJoin('possede as p', 'p.id_client', '=', 'c.id_client')
             ->leftJoin('cb as cb', 'cb.id_cb', '=', 'p.id_cb')
@@ -332,7 +333,14 @@ public function passercomande(){
             ->select('a.ville', 'a.cp', 'a.rue','a.id_adresse')
             ->get(); // Utilisation de `get()` pour récupérer toutes les adresses
 
-        return view('cart.confirm', compact('client', 'menus', 'produits', 'plats', 'adresses', 'total'));
+        $cartes= DB::table('cb as cb')
+        ->leftJoin('possede as p','p.id_cb','=','cb.id_cb')
+        ->leftJoin('client as c','p.id_client','=','c.id_client')
+        ->where('c.id_client', $idClient)
+        ->get();
+
+
+        return view('cart.confirm', compact('client', 'menus', 'produits','cartes', 'plats', 'adresses', 'total'));
     }
 
     return redirect()->route('login');

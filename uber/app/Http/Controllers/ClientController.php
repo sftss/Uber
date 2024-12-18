@@ -49,6 +49,7 @@ class ClientController extends Controller
 
             // Retourner la vue avec les paniers
             return view('panier', ['paniers' => $paniers]);
+
         } else {
             // Si l'utilisateur n'est pas connecté, rediriger vers la page de login
             return redirect()->route('login')->with('error', 'Vous devez être connecté pour accéder à cette page.');
@@ -74,7 +75,10 @@ class ClientController extends Controller
         ->where('c.id_client', $id)
         ->get();
 
-    // Vérification que le client existe
+    
+        
+
+
     if ($client->isEmpty()) {
         return redirect('/')->with('error', 'Utilisateur introuvable.');
     }
@@ -195,15 +199,34 @@ public function validerPanier(Request $request)
     }
 }
 
-
-public function validerAvecAdresse($adresse, Request $request)
+public function validerAvecAdresse(Request $request)
 {
+    $idAdresse = $request->input('adresse');
+    $idCarte = $request->input('carte');
 
- 
+    // Vérification de la carte bancaire
+    $carte = DB::table('cb')
+        ->where('id_cb', $idCarte)
+        ->first();
 
-    // Créer une commande
+    if (!$carte) {
+        return redirect()->route('cart.confirm')
+            ->with('error', 'La carte bancaire sélectionnée est invalide.');
+    }
+
+    // Vérification de l'adresse
+    $adresse = DB::table('adresse')
+        ->where('id_adresse', $idAdresse)
+        ->first();
+
+    if (!$adresse) {
+        return redirect()->route('cart.confirm')
+            ->with('error', 'L\'adresse sélectionnée est invalide.');
+    }
+
+    // Création de la commande
     $commande = new CommandeRepas();
-    $commande->id_adresse = $adresse;
+    $commande->id_adresse = $idAdresse;
     $commande->id_chauffeur = null;
     $commande->id_client = Auth::user()->id_client;
     $commande->type_livraison = 'commande';
@@ -212,73 +235,75 @@ public function validerAvecAdresse($adresse, Request $request)
     $commande->save();
 
     // ID de la commande
-    $idcommanderepas = $commande->id_commande_repas;
+    $idCommandeRepas = $commande->id_commande_repas;
 
-    // Récupérer le panier de l'utilisateur
-    $idpanier = DB::table('panier as p')
-        ->select('p.id_panier')
-        ->where('p.id_client', Auth::user()->id_client)
-        ->first();
+    // Récupération du panier et enregistrement des détails de commande
+    $idPanier = DB::table('panier')
+        ->where('id_client', Auth::user()->id_client)
+        ->value('id_panier');
 
-    if (!$idpanier) {
+    if (!$idPanier) {
         return redirect()->route('panier')->with('error', 'Aucun panier trouvé.');
     }
 
-    // Récupérer les produits, plats et menus du panier
+    $this->transfererContenuPanier($idPanier, $idCommandeRepas);
+
+    // Redirection avec succès
+    return view('cart.confirmed')->with('success', 'Votre commande a été validée avec succès.');
+}
+
+
+private function transfererContenuPanier($idPanier, $idCommandeRepas)
+{
+    // Récupération des produits
     $produits = DB::table('contient as c')
         ->join('produit as p', 'c.id_produit', '=', 'p.id_produit')
-        ->where('c.id_panier', $idpanier->id_panier)
+        ->where('c.id_panier', $idPanier)
         ->select('c.id_produit', 'c.quantite', 'p.nom_produit', 'p.prix_produit')
         ->get();
 
+    // Récupération des plats
     $plats = DB::table('contient_plat as c')
         ->join('plat as p', 'c.id_plat', '=', 'p.id_plat')
-        ->where('c.id_panier', $idpanier->id_panier)
+        ->where('c.id_panier', $idPanier)
         ->select('c.id_plat', 'c.quantite', 'p.libelle_plat', 'p.prix_plat')
         ->get();
 
+    // Récupération des menus
     $menus = DB::table('contient_menu as c')
         ->join('menu as m', 'c.id_menu', '=', 'm.id_menu')
-        ->where('c.id_panier', $idpanier->id_panier)
+        ->where('c.id_panier', $idPanier)
         ->select('c.id_menu', 'c.quantite', 'm.libelle_menu', 'm.prix_menu')
         ->get();
 
-        
     foreach ($produits as $produit) {
-        $estcontenudans = new EstContenuDans();
-        $estcontenudans->id_produit = $produit->id_produit;
-        $estcontenudans->id_commande_repas = $idcommanderepas;
-        $estcontenudans->quantite = $produit->quantite;
-        $estcontenudans->save();
+        $estContenuDans = new EstContenuDans();
+        $estContenuDans->id_produit = $produit->id_produit;
+        $estContenuDans->id_commande_repas = $idCommandeRepas;
+        $estContenuDans->quantite = $produit->quantite;
+        $estContenuDans->save();
     }
 
-    // Enregistrer les plats dans la table 'EstContenuDansPlat'
     foreach ($plats as $plat) {
-        $estcontenudansplat = new EstContenuPlat();
-        $estcontenudansplat->id_plat = $plat->id_plat;
-        $estcontenudansplat->id_commande_repas = $idcommanderepas;
-        $estcontenudansplat->quantite = $plat->quantite;
-        $estcontenudansplat->save();
+        $estContenuDansPlat = new EstContenuPlat();
+        $estContenuDansPlat->id_plat = $plat->id_plat;
+        $estContenuDansPlat->id_commande_repas = $idCommandeRepas;
+        $estContenuDansPlat->quantite = $plat->quantite;
+        $estContenuDansPlat->save();
     }
 
-    // Enregistrer les menus dans la table 'EstContenuDansMenu'
     foreach ($menus as $menu) {
-        $estcontenudansmenu = new EstContenuDansMenu();
-        $estcontenudansmenu->id_menu = $menu->id_menu;
-        $estcontenudansmenu->id_commande_repas = $idcommanderepas;
-        $estcontenudansmenu->quantite = $menu->quantite;
-        $estcontenudansmenu->save();
+        $estContenuDansMenu = new EstContenuDansMenu();
+        $estContenuDansMenu->id_menu = $menu->id_menu;
+        $estContenuDansMenu->id_commande_repas = $idCommandeRepas;
+        $estContenuDansMenu->quantite = $menu->quantite;
+        $estContenuDansMenu->save();
     }
-    // Rediriger vers la page de confirmation
-
-    
-    
-
-
-
-
-    return view('cart.confirmed');
 }
+
+
+
+
 
 public function terminer($id) {
     $course = Course::findOrFail($id);
@@ -318,48 +343,43 @@ public function terminer($id) {
 
 
 public function voircommandes(){
-    $currentUser = auth()->user();
-
     $clientId = Auth::user()->id_client;
 
-
-
-
     // Récupération des données du client et des cartes bancaires associées
-    $client = DB::table('client as c')
-    ->leftJoin('commande_repas as cr', 'cr.id_client', '=', 'c.id_client')
-    ->leftJoin('est_contenu_dans as ecd', 'ecd.id_commande_repas', '=', 'cr.id_commande_repas')
-    ->leftJoin('produit as p', 'ecd.id_produit', '=', 'p.id_produit')
-    ->leftJoin('est_contenu_dans_menu as ecdm', 'ecdm.id_commande_repas', '=', 'cr.id_commande_repas')
-    ->leftJoin('menu as m', 'ecdm.id_menu', '=', 'm.id_menu')
-    ->leftJoin('est_contenu_dans_plat as ecdp', 'ecdp.id_commande_repas', '=', 'cr.id_commande_repas')
-    ->leftJoin('plat as pl', 'ecdp.id_plat', '=', 'pl.id_plat')
-    ->select(
-        'cr.id_commande_repas',
-        'pl.libelle_plat',
-        'ecdp.quantite as quantite_plat',
-        'pl.prix_plat as prix_plat', // Correction : Utilisation de pl pour les plats
-        'p.nom_produit',
-        'ecd.quantite as quantite_produit',
-        'p.prix_produit as prix_produit', // Correction : Utilisation de p pour les produits
-        'm.libelle_menu',
-        'ecdm.quantite as quantite_menu',
-        'm.prix_menu as prix_menu' // Correction : Utilisation de m pour les menus
-    )
-    ->where('cr.id_client', '=', $clientId)
-    ->get();
+    $commandes = DB::table('commande_repas as cr')
+        ->leftJoin('est_contenu_dans as ecd', 'ecd.id_commande_repas', '=', 'cr.id_commande_repas')
+        ->leftJoin('produit as p', 'ecd.id_produit', '=', 'p.id_produit')
+        ->leftJoin('est_contenu_dans_menu as ecdm', 'ecdm.id_commande_repas', '=', 'cr.id_commande_repas')
+        ->leftJoin('menu as m', 'ecdm.id_menu', '=', 'm.id_menu')
+        ->leftJoin('est_contenu_dans_plat as ecdp', 'ecdp.id_commande_repas', '=', 'cr.id_commande_repas')
+        ->leftJoin('plat as pl', 'ecdp.id_plat', '=', 'pl.id_plat')
+        ->where('cr.id_client', '=', $clientId)
+        ->select(
+            'cr.id_commande_repas',
+            'pl.libelle_plat',
+            'ecdp.quantite as quantite_plat',
+            'pl.prix_plat',
+            'p.nom_produit',
+            'ecd.quantite as quantite_produit',
+            'p.prix_produit',
+            'm.libelle_menu',
+            'ecdm.quantite as quantite_menu',
+            'm.prix_menu'
+        )
+        ->get()
+        ->groupBy('id_commande_repas'); // Grouper par commande
 
-
-
-    if ($client->isEmpty()) {
-        return redirect('/')->with('error', 'Utilisateur introuvable.');
-    }
-
-
-    // Retourner la vue avec les informations du client et des cartes
-    return view('commande-list', ['client' => $client]);
+    // Retourner la vue avec les commandes regroupées
+    return view('commande-list', ['commandes' => $commandes]);
 }
 
 
+public function CreerRestaurant()
+{
+    // Récupérer toutes les catégories disponibles
+    $categories = DB::table('categorie_restaurant')->get();
+    
+    return view('professionnel-creation-restaurant', compact('categories'));
+}
 
 }

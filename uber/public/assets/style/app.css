@@ -158,6 +158,7 @@ button {
 
 .btn-primary:hover {
   background-color: #048f4c;
+  color: white;
 }
 
 .ajtpanier {
@@ -1367,7 +1368,6 @@ select:focus {
   box-shadow: 0 0 5px rgba(6, 193, 103, 0.3);
 }
 
-/* Boutons */
 button.btn-primary {
   background-color: #06c167;
   color: #fff;
@@ -1383,30 +1383,36 @@ button.btn-primary:hover {
   background-color: #048f4c;
 }
 
-textarea {
-  resize: none; /* Désactiver le redimensionnement */
-}
-
-/* Options (checkboxes) */
 .form-group input[type="checkbox"] {
   margin-right: 0.5rem;
-  transform: scale(1.2); /* Agrandir légèrement les cases */
+  transform: scale(1.2); 
 }
 
-/* Espacement des options */
 .form-group > div {
   display: flex;
   align-items: center;
   margin-bottom: 0.5rem;
 }
-
-/* Ajustement des catégories */
 select {
   cursor: pointer;
 }
 
-/* Centrer le bouton */
 .form-group button {
   align-self: center;
   width: 50%;
+}
+.createProprio{
+  margin: 2% 0 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.createProprio p {
+  font-size: 1.3rem; 
+  font-weight: bold;
+}
+
+.createProprioBut{
+  display: flex;
+  gap: 15px;
 }

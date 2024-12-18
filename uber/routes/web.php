@@ -18,6 +18,9 @@ use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers;
 use App\Http\Controllers\CBController;
 use App\Http\Controllers\FactureController;
+use App\Http\Controllers\ProduitController;
+use App\Http\Controllers\MenuController;
+use App\Http\Controllers\PlatController;
 
 Route::get('/', function () {
     return view('main');
@@ -55,7 +58,6 @@ Route::get('/lieux/search', [LieuVenteController::class, 'filter'])->name('lieux
 Route::get('/lieux/{id}', [LieuVenteController::class, 'show'])->name('lieux.show');
 
 
-Route::get('/panierclient', [ClientController::class, 'panierclient']);
 
 Route::get('/send-email', [MailController::class, 'sendVerificationEmail']);
 
@@ -88,6 +90,13 @@ Route::get('/chauffeur-main', function() {
 Route::get('/chauffeur-propositions/{id}', [ChauffeurController::class, 'AfficherPropositions'])->name('propositions');
 Route::get('/chauffeur-archives/{id}', [ChauffeurController::class, 'AfficherCoursesPassees'])->name('archives');
 
+Route::get('/professionnel-main', function() {
+    return view('professionnel-main');
+});
+
+Route::get('/professionnel-restaurants/{id}', [ClientController::class, 'AfficherRestaurants'])->name('restaurants');
+Route::get('/professionnel-creation/restaurant/{id}', [ClientController::class, 'CreerRestaurant'])->name('creation.restaurant');
+
 
 Route::post('/cart/add/{type}/{id}', [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/add/{productId}', [CartController::class, 'addToCart'])->name('cart.add');
@@ -96,13 +105,16 @@ Route::post('/panier/ajouter/{id}', [CartController::class, 'add'])->name('cart.
 Route::delete('/panier/supprimer/{id}', [CartController::class, 'remove'])->name('cart.remove');
 Route::patch('update/{id}', [CartController::class, 'update'])->name('update');
 
+Route::get('/panierclient', [ClientController::class, 'panierclient']);
 Route::get('/panier/confirm', [CartController::class, 'passercomande'])->name('cart.confirm');
+Route::post('/panier/valider', [ClientController::class, 'validerAvecAdresse'])->name('valider.panier');
+
+
 
 Route::get('/ajouteradresse',[ClientController::class ,'ajtadresse'])->name('ajtadresse');
 Route::post('/ajouter-adresse', [ClientController::class, 'valideadresse'])->name('ajouter.adresse');
 Route::delete('/supprimer-adresse/{id}', [ClientController::class, 'supprimerAdresse'])->name('supprimer.adresse');
 
-Route::post('/panier/selection-adresse/{adresse}', [ClientController::class, 'validerAvecAdresse'])->name('valider.panier');
 
 
 
@@ -113,6 +125,16 @@ Route::post('/restaurants', [RestaurantController::class, 'store'])->name('resta
 
 
 
+
+Route::get('/restaurant/{restaurant_id}/produit/create', [ProduitController::class, 'create'])->name('produit.create');
+Route::post('produit/store', [ProduitController::class, 'store'])->name('produit.store');
+
+
+Route::get('/restaurant/{restaurant_id}/plat/create', [PlatController::class, 'create'])->name('plat.create');
+Route::post('plat/store', [PlatController::class, 'store'])->name('plat.store');
+
+Route::get('restaurant/{restaurant_id}/menu/create', [MenuController::class, 'create'])->name('menu.create');
+Route::post('menu/store', [MenuController::class, 'store'])->name('menu.store');
 
 Route::post('add/{type}/{id}', [CartController::class, 'add'])->name('cart.add');
 

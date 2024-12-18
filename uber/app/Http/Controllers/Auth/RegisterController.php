@@ -33,7 +33,7 @@ class RegisterController extends Controller
         'mail_client' => 'required|email|max:70|unique:client,mail_client',
         'sexe_cp' => 'required|in:H,F',
         'mdp_client' => 'required|string|min:8|confirmed',
-        'tel_client' => 'nullable|string|max:15',
+        'tel_client' => 'nullable|regex:/^0[67]\d{8}$/|max:15', // Validation du numéro de téléphone
         'est_particulier' => 'required|boolean',
         'num_siret' => 'required_if:est_particulier,0|nullable|string|max:14',
         'secteur_activite' => 'required_if:est_particulier,0|exists:secteur_d_activite,id_sd',
@@ -46,7 +46,9 @@ class RegisterController extends Controller
         'num_siret.required_if' => 'Le numéro SIRET est requis pour un client professionnel.',
         'secteur_activite.required_if' => 'Veuillez sélectionner un secteur d\'activité pour un client professionnel.',
         'secteur_activite.exists' => 'Le secteur d\'activité sélectionné est invalide.',
+        'tel_client.regex' => 'Le numéro de téléphone doit commencer par 06 ou 07 et être composé de 10 chiffres.',
     ]);
+    
 
     // Nettoyage du numéro de téléphone
     $telClient = $validatedData['tel_client'] ?? null;
