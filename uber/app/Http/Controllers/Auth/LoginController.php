@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Client;
+use App\Models\Chauffeur;
 
 class LoginController extends Controller
 {
@@ -14,6 +15,11 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         return view('auth.login');
+    }
+
+    public function showLoginFormCh()
+    {
+        return view('auth.loginch');
     }
 
     // Gérer la soumission du formulaire de connexion
@@ -45,6 +51,32 @@ class LoginController extends Controller
     public function logout()
     {
         Auth::logout();
+        return redirect()->route('home')->with('success', 'Déconnexion réussie.');
+    }
+
+    public function loginch(Request $request)
+    {
+        // Validation des données
+        $request->validate([
+            'mail_chauffeur' => 'required|email',
+            'mdp_chauffeur' => 'required|string',
+        ]);
+
+
+        $Chauffeur = Chauffeur::where('mail_chauffeur', $request->mail_chauffeur)->first();
+
+        Auth::guard('chauffeurs')->login($Chauffeur);
+
+
+
+        if ($Chauffeur && Hash::check($request->mdp_chauffeur, $Chauffeur->mdp_chauffeur)) {
+            return redirect()->route('home')->with('success', 'Inscription réussie. Un email de confirmation vous a été envoyé.');
+        }
+        return redirect()->back()->withErrors(['mail_chauffeur' => 'Les informations de connexion sont incorrectes.']);
+    }
+    public function logoutch()
+    {
+        Auth::guard('chauffeurs')->logout();
         return redirect()->route('home')->with('success', 'Déconnexion réussie.');
     }
 }

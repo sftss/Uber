@@ -55,6 +55,8 @@ class CourseController extends Controller
             ->orderBy("course.id_course", "desc") // Ordre décroissant pour afficher les plus récentes en premier
             ->paginate(5);
         // ->get();
+        // dd($courses);
+
         return view("course-list", ["courses" => $courses]);
     }
 

@@ -23,7 +23,7 @@ return [
     'course' => 'Fahrt',
     'tip' => 'Trinkgeld',
     'date_format' => 'd.m.Y H:i', // 18.12.2024 14:35
-    'duration_format' => '%H:%I', // 02:15
+    'duration_format' => '%H Stunde(n) %I Minute(n)', // 02 Stunde(n) 15 Minute(n)
     'Ride' => 'Fahrt',
     'Tip' => 'Trinkgeld',
     'Facture pour la course ID' => 'Rechnung für die Fahrt ID',

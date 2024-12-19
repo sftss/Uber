@@ -15,27 +15,18 @@ class FactureController extends Controller
         $langue = $request->input('langue', 'fr');
         App::setLocale($langue);
 
-        $course = Course::with(['client', 'chauffeur', 'lieuDepart', 'lieuArrivee'])->find($id_course);
+        $course = Course::with(['client', 'chauffeur', 'lieuDepart', 'lieuArrivee'])->findOrFail($id_course);
+        $factureExistante = Facture::where('id_course', $id_course)->first();
 
-        $date_prise_en_charge = Carbon::parse($course->date_prise_en_charge)
-            ->locale($langue)
-            ->isoFormat('D MMMM YYYY');
-
-        $duree = Carbon::parse($course->duree_course);
-        $duree_course = match ($langue) {
-            'fr' => $duree->format('H') . ' heure(s) et ' . $duree->format('i') . ' minute(s)',
-            'en' => $duree->format('H') . ' hour(s) and ' . $duree->format('i') . ' minute(s)',
-            'de' => $duree->format('H') . ' Stunde(n) und ' . $duree->format('i') . ' Minute(n)',
-            'es' => $duree->format('H') . ' hora(s) y ' . $duree->format('i') . ' minuto(s)',
-            'it' => $duree->format('H') . ' ora(e) e ' . $duree->format('i') . ' minuto(i)',
-            default => $duree->format('H') . ' hour(s) and ' . $duree->format('i') . ' minute(s)',
-        };
+        if ($factureExistante) {
+            return $this->genererPDF($course, $factureExistante, $langue);
+        }
 
         $items = [
             ['name' => __('facture.Ride'), 'price' => $course->prix_reservation, 'tva' => '20%'],
             ['name' => __('facture.Tip'), 'price' => $course->pourboire, 'tva' => '-'],
         ];
-
+        
         $totalHT = collect($items)->where('tva', '20%')->sum(fn($item) => $item['price']);
         $tva = $totalHT * 0.20;
         $totalTTC = $totalHT + $tva + $course->pourboire;
@@ -51,24 +42,38 @@ class FactureController extends Controller
             'est_particulier' => true,
         ]);
 
+        // Marquer la course comme facturée
+        $course->update(['EST_FACTURE' => true]);
+
+        return $this->genererPDF($course, $facture, $langue);
+    }
+
+    private function genererPDF($course, $facture, $langue) {
+        $items = [
+            ['name' => __('facture.Ride'), 'price' => $course->prix_reservation, 'tva' => '20%'],
+            ['name' => __('facture.Tip'), 'price' => $course->pourboire, 'tva' => '-'],
+        ];
+        
+        $totalHT = collect($items)->where('tva', '20%')->sum(fn($item) => $item['price']);
+        $tva = $totalHT * 0.20;
+        $totalTTC = $totalHT + $tva + $course->pourboire;
+
         $data = [
-            'id_course' => $id_course,
-            'items' => $items,
-            'totalHT' => $totalHT,
-            'tva' => $tva,
-            'totalTTC' => $totalTTC,
+            'id_course' => $course->id_course,
             'client' => $course->client,
             'chauffeur' => $course->chauffeur,
             'lieu_depart' => $course->lieuDepart,
             'lieu_arrivee' => $course->lieuArrivee,
-            'pourboire' => $course->pourboire,
-            'date_prise_en_charge' => $date_prise_en_charge,
-            'duree_course' => $duree_course,
+            'items' => $items,
+            'totalHT' => $totalHT,
+            'tva' => $tva,
+            'totalTTC' => $totalTTC,
+            'pourboire' => $facture->pourboire,
+            'date_prise_en_charge' => Carbon::parse($course->date_prise_en_charge)->locale($langue)->isoFormat('D MMMM YYYY'),
+            'duree_course' => Carbon::parse($course->duree_course)->locale($langue)->isoFormat('HH MM'),
         ];
 
-        $pdf = Pdf::loadView('facture/facture', $data);
-        $file = 'uber_id_' . $id_course . '.pdf';
-
-        return $pdf->stream($file);
+        $pdf = Pdf::loadView('facture', $data);
+        return $pdf->stream("facture_course_{$course->id_course}.pdf");
     }
 }

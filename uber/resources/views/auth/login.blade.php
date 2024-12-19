@@ -43,6 +43,9 @@
                         <a class="CreerCompte" href="{{ route('register') }}">Pas encore inscrit ? Créez un compte dès
                             maintenant</a>
                     </div>
+                    <div class="mt-3">
+                        <a class="CreerCompte" href="{{ route('loginch') }}">Se connecter en tant que chauffeur ici</a>
+                    </div>
                 </div>
             </div>
         </div>

@@ -24,6 +24,6 @@ return [
     'Tip' => 'Propina',
     'Ride' => 'Carrera',
     'date_format' => 'd/m/Y H:i', // 18/12/2024 14:35
-    'duration_format' => '%H:%I', // 02:15
+    'duration_format' => '%H hora(s) %I minuto(s)', // 02 hora(s) 15 minuto(s)
 
 ];

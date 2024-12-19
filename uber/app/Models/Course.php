@@ -44,4 +44,9 @@ class Course extends Model
     {
         return $this->belongsTo(Client::class, 'id_client', 'id_client');
     }
+    public function facture() 
+    {
+        return $this->hasOne(Facture::class, 'id_course', 'id_course');
+    }
+
 }

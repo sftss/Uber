@@ -3,12 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-use App\Models\Adresse;
-
-class Chauffeur extends Model
+class Chauffeur extends Authenticatable
 {
     use HasFactory;
 
@@ -16,11 +14,13 @@ class Chauffeur extends Model
     protected $primaryKey = "id_chauffeur";
     public $timestamps = false;
 
-    public function adresse(): HasOne{
+    public function adresse(): HasOne
+    {
         return $this->hasOne(
             Adresse::class, 
             "id_adresse", 
-            "id_adresse_actuelle");
+            "id_adresse_actuelle"
+        );
     }
 
     public function vehicule(): HasOne
@@ -35,6 +35,10 @@ class Chauffeur extends Model
     protected $fillable = [
         'id_chauffeur', 'id_sd', 'photo', 'tel_chauffeur', 'mail_chauffeur', 
         'num_siret', 'sexe_chauffeur', 'prenom_chauffeur', 'nom_chauffeur', 'date_naissance_chauffeur', 
-         'mdp_chauffeur', 'newsletter'
+        'mdp_chauffeur', 'newsletter'
+    ];
+
+    protected $hidden = [
+        'mdp_chauffeur', // Pour cacher le mot de passe dans les réponses JSON
     ];
 }

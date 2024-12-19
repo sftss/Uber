@@ -23,7 +23,7 @@ return [
     'course' => 'Course',
     'tip' => 'Pourboire',
     'date_format' => 'd/m/Y H:i', // 18/12/2024 14:35
-    'duration_format' => '%H:%I', // 02:15
+    'duration_format' => '%H heure(s) %I minute(s)', // 02 heure(s) 15 minute(s)
     'Ride' => 'Course',
     'Tip' => 'Pourboire',
     'Facture pour la course ID' => 'Facture pour la course ID',

@@ -23,5 +23,5 @@ return [
     'Ride' => 'Corsa',
     'Tip' => 'Mancia',
     'date_format' => 'd/m/Y H:i', // 18/12/2024 14:35
-    'duration_format' => '%H:%I', // 02:15
+    'duration_format' => '%H ora(e) %I minuto(i)',
 ];
