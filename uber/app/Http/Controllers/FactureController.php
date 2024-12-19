@@ -11,42 +11,55 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class FactureController extends Controller
 {
-    public function genererFacture($id_course, Request $request) {
-        $langue = $request->input('langue', 'fr');
-        App::setLocale($langue);
+public function genererFacture($id_course, Request $request)
+{
+    $langue = $request->input('langue', 'fr');
+    App::setLocale($langue);
+    
+    $course = Course::with(['client', 'chauffeur', 'lieuDepart', 'lieuArrivee'])->findOrFail($id_course);
 
-        $course = Course::with(['client', 'chauffeur', 'lieuDepart', 'lieuArrivee'])->findOrFail($id_course);
+    // Vérification via la session
+    if ($request->session()->has("facture_generee_{$id_course}")) {
         $factureExistante = Facture::where('id_course', $id_course)->first();
-
-        if ($factureExistante) {
-            return $this->genererPDF($course, $factureExistante, $langue);
-        }
-
-        $items = [
-            ['name' => __('facture.Ride'), 'price' => $course->prix_reservation, 'tva' => '20%'],
-            ['name' => __('facture.Tip'), 'price' => $course->pourboire, 'tva' => '-'],
-        ];
-        
-        $totalHT = collect($items)->where('tva', '20%')->sum(fn($item) => $item['price']);
-        $tva = $totalHT * 0.20;
-        $totalTTC = $totalHT + $tva + $course->pourboire;
-
-        $facture = Facture::create([
-            'id_course' => $id_course,
-            'montant_facture' => $totalTTC,
-            'description_facture' => __('Facture pour la course ID') . ' ' . $id_course,
-            'pourboire' => $course->pourboire,
-            'date_course' => $course->date_prise_en_charge,
-            'taux_tva' => 0.20,
-            'numero_mois' => Carbon::parse($course->date_prise_en_charge)->month,
-            'est_particulier' => true,
-        ]);
-
-        // Marquer la course comme facturée
-        $course->update(['EST_FACTURE' => true]);
-
-        return $this->genererPDF($course, $facture, $langue);
+        return $this->genererPDF($course, $factureExistante, $langue);
     }
+
+    $factureExistante = Facture::where('id_course', $id_course)->first();
+
+    if ($factureExistante) {
+        // Marquer dans la session que la facture existe
+        $request->session()->put("facture_generee_{$id_course}", true);
+        return $this->genererPDF($course, $factureExistante, $langue);
+    }
+
+    $items = [
+        ['name' => __('facture.Ride'), 'price' => $course->prix_reservation, 'tva' => '20%'],
+        ['name' => __('facture.Tip'), 'price' => $course->pourboire, 'tva' => '-'],
+    ];
+
+    $totalHT = collect($items)->where('tva', '20%')->sum(fn($item) => $item['price']);
+    $tva = $totalHT * 0.20;
+    $totalTTC = $totalHT + $tva + $course->pourboire;
+
+    $facture = Facture::create([
+        'id_course' => $id_course,
+        'montant_facture' => $totalTTC,
+        'description_facture' => __('Facture pour la course ID') . ' ' . $id_course,
+        'pourboire' => $course->pourboire,
+        'date_course' => $course->date_prise_en_charge,
+        'taux_tva' => 0.20,
+        'numero_mois' => Carbon::parse($course->date_prise_en_charge)->month,
+        'est_particulier' => true,
+        'est_facture' => true,
+    ]);
+
+    $course->update(['est_facture' => true]);
+
+    // Marquer dans la session que la facture a été générée
+    $request->session()->put("facture_generee_{$id_course}", true);
+    
+    return $this->genererPDF($course, $facture, $langue);
+}
 
     private function genererPDF($course, $facture, $langue) {
         $items = [
@@ -70,7 +83,7 @@ class FactureController extends Controller
             'totalTTC' => $totalTTC,
             'pourboire' => $facture->pourboire,
             'date_prise_en_charge' => Carbon::parse($course->date_prise_en_charge)->locale($langue)->isoFormat('D MMMM YYYY'),
-            'duree_course' => Carbon::parse($course->duree_course)->locale($langue)->isoFormat('HH MM'),
+            'duree_course' => $course->duree_course,
         ];
 
         $pdf = Pdf::loadView('facture', $data);

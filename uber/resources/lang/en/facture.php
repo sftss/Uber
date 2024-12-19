@@ -23,7 +23,7 @@ return [
     'course' => 'Ride',
     'tip' => 'Tip',
     'date_format' => 'm/d/Y H:i', // 12/18/2024 14:35
-    'duration_format' => '%H hour(s) %I minute(s)', // 02 hour(s) 15 minute(s)
+    'duration_format' => '%H:%I', // 02:15
     'Ride' => 'Ride',
     'Tip' => 'Tip',
     'Facture pour la course ID' => 'Facture pour la course ID',

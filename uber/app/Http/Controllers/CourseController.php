@@ -18,42 +18,46 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 class CourseController extends Controller
 {
     public function index() {
-        $courses = DB::table("course")
-            ->join(
-                "adresse as depart",
-                "course.id_lieu_depart",
-                "=",
-                "depart.id_adresse"
-            )
-            ->join(
-                "adresse as arrivee",
-                "course.id_lieu_arrivee",
-                "=",
-                "arrivee.id_adresse"
-            )
-            ->join(
-                "chauffeur as ch",
-                "course.id_chauffeur",
-                "=",
-                "ch.id_chauffeur"
-            )
-            ->select(
-                "course.id_course",
-                "course.id_chauffeur",
-                "course.prix_reservation",
-                "course.date_prise_en_charge",
-                "course.duree_course",
-                "course.heure_arrivee",
-                "course.terminee",
-                "course.id_velo",
-                "depart.ville as ville_depart",
-                "ch.prenom_chauffeur",
-                "ch.nom_chauffeur",
-                "arrivee.ville as ville_arrivee",
-                "course.acceptee"
-            )
-            ->orderBy("course.id_course", "desc") // Ordre décroissant pour afficher les plus récentes en premier
-            ->paginate(5);
+            //     $courses = DB::table("course")
+            // ->join(
+            //     "adresse as depart",
+            //     "course.id_lieu_depart",
+            //     "=",
+            //     "depart.id_adresse"
+            // )
+            // ->join(
+            //     "adresse as arrivee",
+            //     "course.id_lieu_arrivee",
+            //     "=",
+            //     "arrivee.id_adresse"
+            // )
+            // ->join(
+            //     "chauffeur as ch",
+            //     "course.id_chauffeur",
+            //     "=",
+            //     "ch.id_chauffeur"
+            // )
+            // ->select(
+            //     "course.id_course",
+            //     "course.id_chauffeur",
+            //     "course.prix_reservation",
+            //     "course.date_prise_en_charge",
+            //     "course.duree_course",
+            //     "course.heure_arrivee",
+            //     "course.terminee",
+            //     "course.id_velo",
+            //     "depart.ville as ville_depart",
+            //     "ch.prenom_chauffeur",
+            //     "ch.nom_chauffeur",
+            //     "arrivee.ville as ville_arrivee",
+            //     "course.acceptee"
+            // )
+            // ->orderBy("course.id_course", "desc") // Ordre décroissant pour afficher les plus récentes en premier
+            // ->paginate(5);
+
+        $courses = Course::orderBy('id_course', "desc")->paginate(5);
+        // ->orderBy("id_course", "desc") // Ordre décroissant pour afficher les plus récentes en premier
+            // ->paginate(5);
         // ->get();
         // dd($courses);
 
@@ -185,6 +189,7 @@ class CourseController extends Controller
         $pourboire = $validated['pourboire'];
 
         $course = Course::findOrFail($courseId);
+
         $course->pourboire = $pourboire;
         $course->save(); 
 
@@ -193,15 +198,18 @@ class CourseController extends Controller
         $estnote->id_chauffeur = $course->id_chauffeur;
         $estnote->save();
 
-        session()->flash('review_submitted_' . $courseId, true);
+        $course->est_facture = true; // Marquer la course comme facturée
+        $course->save();
 
+
+        $test = session()->flash('review_submitted_' . $courseId, true);
+        
+        // dd($test);
         return redirect()->back()->with('success', 'Votre avis a été enregistré.');
     }
 
     public function generateInvoice($courseId) {
         $course = Course::findOrFail($courseId);
-
-        // Exemple : Informations pour tester la page de facture
         return view('Facture', ['course' => $course]);
     }
 }

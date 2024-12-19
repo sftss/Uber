@@ -10,18 +10,19 @@ class SmsController extends Controller
 {
     public function sendSms()
     {
-        $sid    = "AC11bcb595e9cae985f970d5330cd0379e";
-        $token  = "3e6afece6b01c11fd2c350dbb92e460c";
-        $twilio = new Client($sid, $token);
-        $message = $twilio->messages
-        ->create("+33768489374", // to
-            array(
-            "messagingServiceSid" => "MG2d2bf1ec4afb557eec718e40ab276780",
-            "body" => "Ahoy 👋",
-                "from" => "+12186558491"
-            )
-      );
+        $basic  = new \Vonage\Client\Credentials\Basic("35bef7e7", "W0CmeO6pTSFFw66M");
+        $client = new \Vonage\Client($basic);
 
-        dd("le message a bien été envoyé");
+        $response = $client->sms()->send(
+            new \Vonage\SMS\Message\SMS("33652656065", "Uber_s231", 'A text message sent using the Nexmo SMS API') //contenu du message
+        );
+        
+        $message = $response->current();
+        
+        if ($message->getStatus() == 0) {
+            dd("The message was sent successfully\n");
+        } else {
+            dd("The message failed with status: " . $message->getStatus() . "\n");
+        }
     }
 }

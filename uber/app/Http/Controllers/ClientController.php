@@ -141,29 +141,22 @@ class ClientController extends Controller
 
 public function supprimerAdresse($id, Request $request)
 {
-    // Trouver l'adresse avec l'ID
     $adresse = Adresse::find($id);
 
-    // Vérifier si l'adresse existe et la supprimer
     if ($adresse) {
         // Supprimer la relation avec SeFaitLivrerA
         SeFaitLivrerA::where('id_adresse', $id)->delete();
 
-        // Supprimer l'adresse
         $adresse->delete();
 
-        // Vérifier d'où provient la requête (le paramètre 'from')
         $from = $request->input('from');
 
-        // Si 'from' est 'cart', rediriger vers la confirmation du panier
         if ($from === 'cart') {
             return redirect()->route('cart.confirm')->with('success', 'L\'adresse a été supprimée avec succès.');
         } else {
-            // Sinon, rediriger vers la page du profil
             return redirect()->route('profil', ['id_client' => auth()->user()->id_client])->with('success', 'L\'adresse a été supprimée avec succès.');
         }
     } else {
-        // Si l'adresse n'existe pas, rediriger avec un message d'erreur
         return redirect()->route('cart.confirm')->with('error', 'Adresse non trouvée.');
     }
 }

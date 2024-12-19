@@ -1,10 +1,8 @@
 @extends('layouts.header')
 
-{{-- Meta et styles --}}
 <meta content="{{ csrf_token() }}" name="csrf-token">
 <link href="{{ URL::asset('assets/style/course.css') }}" rel="stylesheet">
 
-{{-- Bouton Retour et Titre --}}
 <div id="butRetourListCourse">
     <a class="back_button" href="{{ url('/') }}">
         <span class="back_icon">←</span>
@@ -13,13 +11,11 @@
     <h2>Les courses</h2>
 </div>
 
-{{-- Liste des courses --}}
 <ul>
     @foreach ($courses as $course)
         <div class="course_container pageClient">
             <h3 class="course_title">Course numéro : {{ $course->id_course }}</h3>
             <ul class="course_details">
-                {{-- Chauffeur ou Vélo --}}
                 <li class="chauffeur">
                     @if (is_null($course->prenom_chauffeur))
                         Vélo : {{ $course->id_velo }}
@@ -27,9 +23,8 @@
                         Chauffeur : {{ $course->prenom_chauffeur }} {{ $course->nom_chauffeur }}
                     @endif
                 </li>
-                {{-- Informations sur la course --}}
-                <li class="depart">Lieu de départ : {{ $course->ville_depart }}</li>
-                <li class="arrivee">Lieu d'arrivée : {{ $course->ville_arrivee }}</li>
+                <li class="depart">Lieu de départ : {{ $course->lieuDepart->rue }} {{ $course->lieuDepart->cp }} {{ $course->lieuDepart->ville }}</li>
+                <li class="arrivee">Lieu d'arrivée : {{ $course->lieuArrivee->rue }} {{ $course->lieuArrivee->cp }} {{ $course->lieuArrivee->ville }}</li>
                 <li class="prix">Prix : {{ $course->prix_reservation }} €</li>
                 <li class="date_prise_en_charge">Date de la course : {{ \Carbon\Carbon::parse($course->date_prise_en_charge)->locale('fr')->isoFormat('LL') }}</li>
                 <li class="duree">Durée : {{ \Carbon\Carbon::parse($course->duree_course)->format('H') }}h {{ \Carbon\Carbon::parse($course->duree_course)->format('i') }}min</li>
@@ -41,7 +36,6 @@
                         Non spécifiée
                     @endif
                 </li>
-                {{-- État de la course --}}
                 <li class="acceptee">
                     @if ($course->acceptee === true)
                         Acceptée
@@ -51,11 +45,9 @@
                         En attente de réponse chauffeur
                     @endif
                 </li>
-                {{-- Si la course est terminée --}}
                 <li class="terminee">
                     @if ($course->terminee)
-                        @if (!session('review_submitted_' . $course->id_course))
-                            {{-- Formulaire de note et pourboire --}}
+                    @if (!isset($course->est_facture))
                             <div class="review-form">
                                 <form action="{{ route('courses.submitReview', $course->id_course) }}" method="POST" class="reviewForm">
                                     @csrf
@@ -73,7 +65,6 @@
                                 </form>
                             </div>
                         @else
-                            {{-- Formulaire pour générer une facture --}}
                             <form action="{{ route('courses.Facture', $course->id_course) }}" method="POST" style="display:inline" class="formGenereInvoice">
                                 @csrf
                                 <label for="langue" id="labelLangue">Langue :</label>
@@ -88,9 +79,7 @@
                             </form>
                         @endif
                     @else
-                        {{-- Actions pour une course non terminée --}}
                         @if (is_null($course->acceptee))
-                            {{-- Boutons Modifier et Annuler --}}
                             <form action="{{ route('courses.update', ['id' => $course->id_course]) }}" method="POST" id="formCourseListe">
                                 @csrf
                                 @method('PUT')
@@ -102,7 +91,6 @@
                                 <button class="butDpageClient delete_button" type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette course ?')">Annuler</button>
                             </form>
                         @elseif ($course->acceptee === true)
-                            {{-- Boutons Terminer, Modifier et Annuler --}}
                             <form action="{{ route('client.terminer', $course->id_course) }}" method="POST" style="display:inline">
                                 @csrf
                                 @method('PUT')
@@ -126,7 +114,6 @@
     @endforeach
 </ul>
 
-{{-- Pagination --}}
 <div id="butPagination">
     {{ $courses->links('pagination::default') }}
 </div>

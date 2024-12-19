@@ -149,6 +149,7 @@
                 <p><strong>Email:</strong> {{ $client->mail_client }}</p>
                 <p><strong>{{ __('facture.clientTel') }}:</strong> +33 {{ $client->tel_client }}</p>
             </div>
+            @if (isset($chauffeur))
             <div class="section">
                 <h3>{{ __('facture.driver_info') }}</h3>
                 <p><strong>{{ __('facture.client_name') }}:</strong> {{ $chauffeur->nom_chauffeur }} {{ $chauffeur->prenom_chauffeur }}</p>
@@ -156,6 +157,7 @@
                 <p><strong>{{ __('facture.driverTel') }}:</strong> +33 {{ $chauffeur->tel_chauffeur }}</p>
                 <p><strong>{{ __('facture.nameEnt') }} :</strong> {{ $chauffeur->nom_entreprise }}</p>
             </div>
+            @endif
         </div>
         <div class="course-info">
             <div class="section">

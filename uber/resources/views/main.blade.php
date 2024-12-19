@@ -2,6 +2,7 @@
 
 <link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
 
+<body style="background-color: white;">
 <section class="suggestions">
     <h1>Allez où vous voulez avec Uber</h1>
     <p class="subtitle">Suggestions</p>
