@@ -2,7 +2,7 @@
 
 <link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
 
-<body>
+<body style="background-color: white;">
     <section class="suggestions">
 
         <h1>Prêt à partir ? 🚓</h1>

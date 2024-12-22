@@ -68,10 +68,10 @@
                     <p><strong>Livraison :</strong> {{ $restaurant->propose_livraison ? 'Oui' : 'Non' }}</p>
                     <p><strong>À emporter :</strong> {{ $restaurant->propose_retrait ? 'Oui' : 'Non' }}</p>
                     <p><strong>Catégorie :</strong> {{ $restaurant->lib_categorie ?? 'Non spécifiée' }}</p>
-                    <p><strong>Horaires :</strong>
+                <!-- {{--<p><strong>Horaires :</strong>
                         {{ date('H:i', strtotime($restaurant->horaires_ouverture)) }} -
                         {{ date('H:i', strtotime($restaurant->horaires_fermeture)) }}
-                    </p>
+                    </p>--}} -->
                 </div>
 
             </a>
@@ -83,6 +83,5 @@
 <div id="butPagination" class="pagination-container">
     {{ $restaurants->appends(request()->query())->links('pagination::default') }}
     <a href="{{ url('/panier') }}" id="panier">🛒</a>
-    <a id="CreerRestauTxt" href="{{ url('/creer-restaurant') }}">Créer mon restaurant 🍴</a>
 </div>
 <script src="{{ asset('js/main.js') }}"></script>

@@ -42,11 +42,9 @@
                 <a href="{{ url('/profil/' . auth('web')->user()->id_client) }}" class="btn btn-outline-light">Informations
                     du compte</a>
 
-                <!-- Lien de déconnexion pour les clients -->
                 <a href="{{ url('/') }}" onclick="event.preventDefault(); document.getElementById('logout-form-web').submit();"
                     class="btn btn-outline-light">Déconnexion</a>
 
-                <!-- Formulaire de déconnexion pour les clients -->
                 <form id="logout-form-web" action="{{ route('logout') }}" method="POST" style="display: none;">
                     @csrf
                 </form>
@@ -61,12 +59,10 @@
                 <a href="{{ url('/profil-chauffeur/' . auth('chauffeurs')->user()->id_chauffeur) }}"
                     class="btn btn-outline-light">Informations du compte</a>
 
-                <!-- Lien de déconnexion pour les chauffeurs -->
                 <a href="{{ url('/') }}"
                     onclick="event.preventDefault(); document.getElementById('logout-form-chauffeurs').submit();"
                     class="btn btn-outline-light">Déconnexion</a>
 
-                <!-- Formulaire de déconnexion pour les chauffeurs -->
                 <form id="logout-form-chauffeurs" action="{{ route('logoutch') }}" method="POST" style="display: none;">
                     @csrf
                 </form>
@@ -74,7 +70,6 @@
 
             @guest('web')
                 @guest('chauffeurs')
-                    <!-- Si aucun utilisateur n'est connecté -->
                     <a href="{{ route('login') }}" class="btn btn-outline-light">Connexion</a>
                     <a href="{{ route('register.form') }}" class="btn btn-light">S'inscrire</a>
                 @endguest

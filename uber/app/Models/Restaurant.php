@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Restaurant extends Model
 {
+    use HasFactory;
+
     protected $table = "restaurant";
     protected $primaryKey = "id_restaurant";
     public $timestamps = false;
@@ -20,7 +22,6 @@ class Restaurant extends Model
         'propose_retrait',
         'photo_restaurant',
         'id_proprietaire',
-        'id_adresse',
-        
+        'id_adresse',     
     ];
 }

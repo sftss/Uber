@@ -371,11 +371,13 @@ button:hover {
 }
 
 .boutonTerminer {
-    background-color: #3498db;
+  background-color: #a2a2a2;
 }
 
 .boutonTerminer:hover {
-    background-color: #2980b9;
+  background-color: #28a76a;
+  border-color: #b3b3b3;
+  color: white;
 }
 
 /* Responsive Design */

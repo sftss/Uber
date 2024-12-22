@@ -2,7 +2,7 @@
 
 <link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
 
-<body>
+<body style="background-color: white;">
     <section class="suggestions">
 
         <h1>Prêt à partir ? 🚓</h1>
@@ -24,7 +24,7 @@
                 <p>
                     Etendez la portée de vos restaurants
                 </p>
-                <a href="#" class="details">Détails</a>
+                <a href="{{ url('/creer-restaurant') }}" class="details">Détails</a>
             </div>
         </div>
     </section>

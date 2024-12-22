@@ -15,10 +15,11 @@
             <div class="navbar-links">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/chauffeur-propositions/7') }}">Mes restaurants</a>
+                        <a class="nav-link" href="{{ url('/restaurants/search') }}">Mes restaurants</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/professionnel-creation/restaurant/12') }}">Créer un restaurant</a>
+                        <!-- {{--<a class="nav-link" href="{{ url('/professionnel-creation/restaurant/12') }}">Créer un restaurant</a>--}}     -->
+                    <a class="nav-link" href="{{ url('/creer-restaurant') }}">Créer un restaurant</a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ url('/') }}" class="nav-link">Affichage Client</a>
