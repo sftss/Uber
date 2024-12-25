@@ -7,7 +7,7 @@
 body {
   font-family: "Arial", sans-serif;
   color: #333;
-  background-color: #f3f3f3;;
+  background-color: #f3f3f3;
   line-height: 1.6;
   padding-top: 80px;
 }
@@ -943,7 +943,7 @@ h2 {
 .panierTotal {
   font-weight: bold;
   color: #555;
-  margin: 3% 3% 1% 3%;
+  margin: 0% 3% 1% 3%;
   font-size: 1.4em;
 }
 
@@ -1271,14 +1271,6 @@ input[type="number"] {
 }
 
 #CreerRestauTxt:hover {
-  color: #06c167;
-}
-
-#panier {
-  margin-left: 20px;
-}
-
-#CreerRestauTxt:hover {
   background-color: rgba(59, 246, 103, 0.1);
   color: #048f4c;
   transform: translateY(-80%);
@@ -1292,6 +1284,9 @@ input[type="number"] {
 
 #CreerRestauTxt:hover::after {
   opacity: 1;
+}
+#panier {
+  margin-left: 20px;
 }
 #AncienneCommandeTxt {
   display: flex;
@@ -1425,9 +1420,63 @@ select {
 }
 #formInscription {
   width: 125%;
+  transform: translateX(-5%);
 }
 .ButFormInsciption {
   flex-direction: row;
   gap: 5px;
   align-items: baseline;
+}
+#creerCptChauffeur {
+  font-size: 1.2rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  transform: translate(0, -70%);
+  padding: 8px 12px;
+  border-radius: 5px;
+}
+#creerCptChauffeur:hover {
+  background-color: rgba(59, 246, 103, 0.1);
+  color: #048f4c;
+  transform: translateY(-80%);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+#creerCptChauffeur::after {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#creerCptChauffeur:hover::after {
+  opacity: 1;
+}
+#formValiderPanier {
+  width: 45%;
+}
+#formValiderPanier p {
+  width: 100%;
+}
+#formValiderPanier button {
+  margin: 2% 0;
+  padding: 12px;
+  background-color: #b5b5b5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  transition:
+    background-color 0.3s,
+    transform 0.3s,
+    box-shadow 0.3s;
+  align-self: flex-end;
+  min-width: 50%;
+}
+
+#formValiderPanier button:hover {
+  background-color: #434343;
+  transform: scale(1.05);
+}
+#formValiderPanier select {
+  width: 70%;
 }

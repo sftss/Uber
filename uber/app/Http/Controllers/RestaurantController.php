@@ -35,6 +35,11 @@ class RestaurantController extends Controller
             ->join('adresse', 'restaurant.id_adresse', '=', 'adresse.id_adresse')
             ->leftJoin('a_pour_categorie', 'restaurant.id_restaurant', '=', 'a_pour_categorie.id_restaurant')
             ->leftJoin('categorie_restaurant', 'a_pour_categorie.id_categorie', '=', 'categorie_restaurant.id_categorie')
+            ->leftJoin('horaires_restaurant', function ($join) {
+                $join->on('restaurant.id_restaurant', '=', 'horaires_restaurant.id_restaurant')
+                    ->where('horaires_restaurant.id_jour', '=', DB::raw('EXTRACT(DOW FROM CURRENT_DATE)')); // Récupérer les horaires du jour actuel
+            })
+
             ->when($recherche, function ($query, $recherche) {
                 return $query->where(function ($q) use ($recherche) {
                     $q->whereRaw('LOWER(adresse.ville) LIKE LOWER(?)', ['%' . $recherche . '%'])
@@ -56,18 +61,26 @@ class RestaurantController extends Controller
     }
 
     public function show($id, Request $request) 
-    {
+{
         $restaurant = DB::table('restaurant')
             ->join('adresse', 'restaurant.id_adresse', '=', 'adresse.id_adresse')
             ->leftJoin('a_pour_categorie', 'restaurant.id_restaurant', '=', 'a_pour_categorie.id_restaurant')
             ->leftJoin('categorie_restaurant', 'a_pour_categorie.id_categorie', '=', 'categorie_restaurant.id_categorie')
-            ->select('restaurant.*', 'adresse.ville', 'adresse.rue', 'adresse.cp', 'categorie_restaurant.lib_categorie','id_proprietaire')
+            ->leftJoin('horaires_restaurant', function ($join) {
+                $join->on('restaurant.id_restaurant', '=', 'horaires_restaurant.id_restaurant')
+                    ->where('horaires_restaurant.id_jour', '=', DB::raw('EXTRACT(DOW FROM CURRENT_DATE)')); // Récupérer les horaires du jour actuel
+            })
+            ->select(
+                'restaurant.*',
+                'adresse.ville',
+                'adresse.rue',
+                'adresse.cp',
+                'categorie_restaurant.lib_categorie',
+                'horaires_restaurant.horaires_ouverture',
+                'horaires_restaurant.horaires_fermeture'
+            )
             ->where('restaurant.id_restaurant', $id)
             ->first();
-
-        if (!$restaurant) {
-            abort(404, 'Restaurant non trouvé');
-        }
 
         $recherche = $request->input('recherche');
         $categorie = $request->input('categorie');
@@ -76,7 +89,9 @@ class RestaurantController extends Controller
             ->leftjoin('compose_de', 'menu.id_menu', '=', 'compose_de.id_menu')
             ->leftjoin('plat', 'compose_de.id_plat', '=', 'plat.id_plat')
             ->leftJoin('categorie_produit', 'plat.id_categorie_produit', '=', 'categorie_produit.id_categorie_produit')
-            ->where('menu.id_restaurant', $id)
+            ->leftJoin('propose_menu', 'menu.id_menu', '=', 'propose_menu.id_menu')
+            ->leftJoin('restaurant', 'propose_menu.id_restaurant', '=', 'restaurant.id_restaurant')            
+            ->where('propose_menu.id_restaurant', $id)
             ->when($recherche, function ($query, $recherche) {
                 return $query->where(function ($q) use ($recherche) {
                     $q->whereRaw('LOWER(menu.libelle_menu) LIKE LOWER(?)', ['%' . $recherche . '%'])
@@ -88,6 +103,7 @@ class RestaurantController extends Controller
             })
             ->select('menu.*', 'plat.libelle_plat', 'categorie_produit.libelle_categorie as categorie_produit')
             ->get();
+        // $menus = DB::table('menu');
 
         $plats = DB::table('plat')
             ->leftJoin('propose', 'plat.id_plat', '=', 'propose.id_plat')
@@ -103,7 +119,7 @@ class RestaurantController extends Controller
             ->select('plat.*', 'categorie_produit.libelle_categorie as categorie_plat')
             ->get();
 
-            $produits = DB::table('vends')
+        $produits = DB::table('vends')
             ->join('produit', 'vends.id_produit', '=', 'produit.id_produit')
             ->leftJoin('categorie_produit', 'produit.id_categorie_produit', '=', 'categorie_produit.id_categorie_produit') // Ajout pour les catégories
             ->select('produit.*', 'categorie_produit.libelle_categorie as categorie_produit')

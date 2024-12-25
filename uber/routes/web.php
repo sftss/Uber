@@ -111,7 +111,7 @@ Route::get('/panierclient', [ClientController::class, 'panierclient']);
 Route::get('/panier/confirm', [CartController::class, 'passercomande'])->name('cart.confirm');
 Route::post('/panier/valider', [ClientController::class, 'validerAvecAdresse'])->name('valider.panier');
 
-
+Route::get('/ajoutercarte',[ClientController::class ,'ajtcarte'])->name('ajtcarte');
 
 Route::get('/ajouteradresse',[ClientController::class ,'ajtadresse'])->name('ajtadresse');
 Route::post('/ajouter-adresse', [ClientController::class, 'valideadresse'])->name('ajouter.adresse');
@@ -140,8 +140,6 @@ Route::post('menu/store', [MenuController::class, 'store'])->name('menu.store');
 
 Route::post('add/{type}/{id}', [CartController::class, 'add'])->name('cart.add');
 
-
-
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register.form');
 Route::post('register', [RegisterController::class, 'register'])->name('register');
 
@@ -155,27 +153,15 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 
 
-
-
-
-
 Route::get('loginch', [LoginController::class, 'showLoginFormch'])->name('loginch');
 Route::post('loginch', [LoginController::class, 'loginch'])->name('login.postch');
 Route::post('logoutch', [LoginController::class, 'logoutch'])->name('logoutch');
 
 
 
-
-
-
-
-
-
-
 Route::get('/politique', function () {
     return view('politique');
 })->name('politique');
-
 
 Route::get('confirm-email/{code}', [RegistrationController::class, 'confirmEmail'])->name('confirm.email');
 

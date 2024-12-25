@@ -68,10 +68,14 @@
                     <p><strong>Livraison :</strong> {{ $restaurant->propose_livraison ? 'Oui' : 'Non' }}</p>
                     <p><strong>À emporter :</strong> {{ $restaurant->propose_retrait ? 'Oui' : 'Non' }}</p>
                     <p><strong>Catégorie :</strong> {{ $restaurant->lib_categorie ?? 'Non spécifiée' }}</p>
-                <!-- {{--<p><strong>Horaires :</strong>
-                        {{ date('H:i', strtotime($restaurant->horaires_ouverture)) }} -
-                        {{ date('H:i', strtotime($restaurant->horaires_fermeture)) }}
-                    </p>--}} -->
+                    <p><strong>Horaires:</strong>
+                        @if ($restaurant->horaires_ouverture && $restaurant->horaires_fermeture)
+                            {{ date('H:i', strtotime($restaurant->horaires_ouverture)) }} -
+                            {{ date('H:i', strtotime($restaurant->horaires_fermeture)) }}
+                        @else
+                            Non spécifiés
+                        @endif
+                    </p>
                 </div>
 
             </a>

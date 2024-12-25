@@ -14,28 +14,34 @@
         <p><strong>Livraison :</strong> {{ $restaurant->propose_livraison ? 'Oui' : 'Non' }}</p>
         <p><strong>À emporter :</strong> {{ $restaurant->propose_retrait ? 'Oui' : 'Non' }}</p>
         <p><strong>Catégorie :</strong> {{ $restaurant->lib_categorie ?? 'Non spécifiée' }}</p>
-        <p><strong>Horaires :</strong>
-            {{ date('H:i', strtotime($restaurant->horaires_ouverture)) }} -
-            {{ date('H:i', strtotime($restaurant->horaires_fermeture)) }}
+        <p><strong>Horaires:</strong>
+            @if ($restaurant->horaires_ouverture && $restaurant->horaires_fermeture)
+                {{ date('H:i', strtotime($restaurant->horaires_ouverture)) }} -
+                {{ date('H:i', strtotime($restaurant->horaires_fermeture)) }}
+            @else
+                Non spécifiés
+            @endif
         </p>
     </div>
 </div>
 
 <div class="createProprio">
-    @if(auth()->check() && $restaurant->id_proprietaire == auth()->user()->id_client)
+    @if (auth()->check() && $restaurant->id_proprietaire == auth()->user()->id_client)
         <p>Vous êtes le propriétaire</p>
-        
+
         <div class="createProprioBut">
 
-            <a href="{{ route('produit.create', ['restaurant_id' => $restaurant->id_restaurant]) }}" class="btn btn-primary">Ajouter un produit</a>
+            <a href="{{ route('produit.create', ['restaurant_id' => $restaurant->id_restaurant]) }}"
+                class="btn btn-primary">Ajouter un produit</a>
 
-            <a href="{{ route('plat.create', ['restaurant_id' => $restaurant->id_restaurant]) }}" class="btn btn-primary">Ajouter un plat</a>
+            <a href="{{ route('plat.create', ['restaurant_id' => $restaurant->id_restaurant]) }}"
+                class="btn btn-primary">Ajouter un plat</a>
 
-            <a href="{{ route('menu.create', ['restaurant_id' => $restaurant->id_restaurant]) }}" class="btn btn-primary">Ajouter un menu</a>
-    </div>
+            <a href="{{ route('menu.create', ['restaurant_id' => $restaurant->id_restaurant]) }}"
+                class="btn btn-primary">Ajouter un menu</a>
+        </div>
     @endif
 </div>
-
 
 @if (session('success'))
     <div class="alert alert-success">
@@ -76,7 +82,6 @@
     </div>
     <button class="filter-but-eat" type="submit">Filtrer</button>
 </form>
-
 
 <a href="{{ url('/panier') }}" id="panier">🛒</a>
 

@@ -7,10 +7,14 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
+
+                    <div style="background-color: #f3f3f3; margin: 0 0;">
+                        <a style="display:flex;transform: translate(140%, -100%)" id="creerCptChauffeur"
+                            href="{{ route('register.formch') }}" class="btn btn-outline-light">S'inscrire en tant que
+                            chauffeur 🚗</a>
+                    </div>
                     <form id="formInscription" method="POST" action="{{ route('register') }}">
                         @csrf
-
-                        <!-- Première ligne avec deux champs côte à côte -->
                         <div class="row">
                             <div>
                                 <div class="form-group">
@@ -26,7 +30,6 @@
                             </div>
                         </div>
 
-                        <!-- Deuxième ligne avec deux champs côte à côte -->
                         <div class="row">
                             <div>
                                 <div class="form-group">
@@ -42,7 +45,6 @@
                             </div>
                         </div>
 
-                        <!-- Troisième ligne avec deux champs côte à côte -->
                         <div class="row">
                             <div>
                                 <div class="form-group">
@@ -58,7 +60,6 @@
                             </div>
                         </div>
 
-                        <!-- Sélection du type de client -->
                         <div class="row">
                             <div>
                                 <div class="form-group">
@@ -74,7 +75,6 @@
                             </div>
                         </div>
 
-                        <!-- Champs spécifiques pour les professionnels -->
                         <div id="professionnel_fields" style="display: none;">
                             <div class="row">
                                 <div id="num_siret_field">
@@ -101,7 +101,6 @@
                             </div>
                         </div>
 
-                        <!-- Sexe et date de naissance -->
                         <div class="row">
                             <div>
                                 <div class="form-group">
@@ -161,9 +160,6 @@
                     @endif
                 </div>
             </div>
-            <div style="background-color: #f3f3f3; margin: 0 0;" id="butPagination" class="pagination-container">
-            <a id="CreerRestauTxt" style="background-color: #f3f3f3;" href="{{ route('register.formch') }}" class="btn btn-outline-light">S'inscrire en tant que chauffeur 🚗</a>
-        </div>
         </div>
     </div>
 </div>
