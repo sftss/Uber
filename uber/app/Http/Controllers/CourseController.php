@@ -66,9 +66,7 @@ class CourseController extends Controller
 
     public function destroy($id) {
         $course = Course::findOrFail($id);
-        // Vérifier si la course est terminée
         if ($course->terminee) {
-            // La course est terminée, ne pas la supprimer et afficher un message d'erreur
             return redirect()
                 ->route("courses.index")
                 ->with(
@@ -76,9 +74,7 @@ class CourseController extends Controller
                     "Cette course est terminée et ne peut pas être supprimée."
                 );
         }
-        // Supprimer la course
         $course->delete();
-        // Rediriger avec un message de succès
         return redirect()
             ->route("courses.index")
             ->with("success", "Course supprimée avec succès");

@@ -11,10 +11,8 @@ class Possede extends Model
 
     protected $table = 'possede';
 
-    // Définir la clé primaire composite
     protected $primaryKey = ['id_client', 'id_cb'];
 
-    // Indiquer que la clé primaire composite n'est pas auto-incrémentée
     public $incrementing = false;
 
     protected $fillable = [

@@ -19,7 +19,7 @@ a {
 }
 
 a:hover {
-  color: #06c167;
+  color: #048f4c;
 }
 button {
   cursor: pointer;
@@ -308,7 +308,7 @@ select {
 
 .menus-container h2 {
   text-align: center;
-  color: #06c167;
+  color: black;
   margin-bottom: 30px;
   font-size: 2.5em;
 }
@@ -933,10 +933,10 @@ input:focus {
 
 h2 {
   font-size: 1.8rem;
-  color: #555;
+  color: #292929;
   margin: 3% 3% 2% 3%;
   text-transform: uppercase;
-  border-left: 4px solid #28a745;
+  border-left: 4px solid black;
   padding-left: 10px;
 }
 

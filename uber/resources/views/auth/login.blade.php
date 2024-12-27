@@ -1,5 +1,15 @@
-@extends('layouts.header')
 <link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
+@auth
+    @php
+        $role = auth()->user()->role->lib_role ?? 'guest';
+    @endphp
+@else
+    @php
+        $role = 'guest';
+    @endphp
+@endauth
+
+@extends('layouts.header')
 
 <div class="container">
     <div class="row justify-content-center">
@@ -43,9 +53,9 @@
                         <a class="CreerCompte" href="{{ route('register') }}">Pas encore inscrit ? Créez un compte dès
                             maintenant</a>
                     </div>
-                    <div class="mt-3">
+                    {{-- <!-- <div class="mt-3">
                         <a class="CreerCompte" href="{{ route('loginch') }}">Se connecter en tant que chauffeur ici</a>
-                    </div>
+                    </div> --> --}}
                 </div>
             </div>
         </div>

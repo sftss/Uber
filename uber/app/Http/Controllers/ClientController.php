@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -476,5 +477,50 @@ class ClientController extends Controller
         $categories = DB::table("categorie_restaurant")->get();
 
         return view("professionnel-creation-restaurant", compact("categories"));
+    }
+
+    public function edit()
+    {
+        $client = Auth::user(); 
+        return view('client.edit', compact('client'));
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'nom' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
+            'telephone' => 'required|numeric',
+        ]);
+
+        $client = Auth::user();
+        $client->update([
+            'mail_client' => $request->email,
+            'nom_cp' => $request->nom,
+            'prenom_cp' => $request->prenom,
+            'tel_client' => $request->telephone,
+        ]);
+
+        return redirect()->route('profil', ['id_client' => $client->id_client])
+            ->with('success', 'Vos informations ont été mises à jour.');
+    }
+
+    public function updatePhoto(Request $request)
+    {
+        $request->validate([
+            'pp_img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $client = Auth::user();
+
+        if ($client->photo && $client->photo !== 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png') {
+            Storage::disk('public')->delete($client->photo);
+        }
+
+        $path = $request->file('pp_img')->store('profile_photos', 'public');
+        $client->update(['photo' => $path]);
+
+        return back()->with('success', 'Votre photo de profil a été mise à jour.');
     }
 }

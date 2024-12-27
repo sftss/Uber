@@ -74,6 +74,7 @@ Route::prefix('cart')->name('cart.')->group(function () {
     Route::patch('update/{id}', [CartController::class, 'update'])->name('update');
 });
 
+Route::post('/profil/update-photo', [ClientController::class, 'updatePhoto'])->name('client.updatePhoto');
 
 Route::get('/profil/{id_client}', [ClientController::class, 'profil'])->name('profil');
 Route::get('/profil/{id_client}/add-card', [CBController::class, 'create'])->name('card.create');
@@ -81,9 +82,12 @@ Route::post('/profil/{id_client}/add-card', [CBController::class, 'store'])->nam
 
 Route::get('/profil/{id_client}/delete-card/{id_cb}', [CBController::class, 'destroy'])->name('card.delete');
 
-Route::get('/info-compte', function() {
-    return view('info-compte');
+Route::get('/client', function() {
+    return view('client');
 });
+Route::get('/client/edit', [ClientController::class, 'edit'])->name('compte.edit');
+Route::post('/client/edit', [ClientController::class, 'update'])->name('compte.update');
+
 
 Route::get('/chauffeur-main', function() {
     return view('chauffeur-main');
@@ -151,12 +155,15 @@ Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('login.post');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
-
-
 Route::get('loginch', [LoginController::class, 'showLoginFormch'])->name('loginch');
 Route::post('loginch', [LoginController::class, 'loginch'])->name('login.postch');
 Route::post('logoutch', [LoginController::class, 'logoutch'])->name('logoutch');
-
+// sélection connexion
+Route::get('pagedeconnexion', [LoginController::class, 'showLoginSelection'])->name('login.selection');
+// Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
+// Route::get('loginch', [LoginController::class, 'showLoginFormCh'])->name('loginch');
+// Route::get('loginService', [LoginController::class, 'showLoginServiceForm'])->name('loginService');
+// Route::get('loginservice', [LoginController::class, 'showLoginServiceForm'])->name('loginService');
 
 
 Route::get('/politique', function () {

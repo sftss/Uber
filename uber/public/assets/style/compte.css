@@ -219,9 +219,8 @@ hr {
   color: #ccc;
 }
 
-/* Container principal pour la page des informations du compte */
 .container.info-compte {
-  max-width: 800px;
+  max-width: 60%;
   margin: 0 auto;
   padding: 2rem;
   background-color: #fff;
@@ -468,13 +467,10 @@ hr {
   margin: 2% 0 2% 0;
 }
 
-
 #suggestionsDepart {
   border: solid black 1px;
   margin-bottom: 10px;
 }
-
-
 
 #suggestionsDepart div {
   padding: 8px;
@@ -485,4 +481,27 @@ hr {
 #suggestionsDepart div:hover {
   background-color: #f0f0f0;
   border: solid black 1px;
+}
+
+.lk_img:hover {
+  text-decoration: underline;
+}
+
+.pp {
+  max-width: 30%;
+  min-height: 30%;
+  min-width: 30%;
+  max-height: 30%;
+  /* border-radius: 30%; */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.pp:hover {
+  transform: scale(1.07);
+}
+#img-cont {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }

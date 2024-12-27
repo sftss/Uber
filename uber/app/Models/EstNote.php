@@ -14,7 +14,6 @@ class EstNote extends Model
     protected $fillable = ['id_note', 'id_chauffeur'];
     public $timestamps = false;
 
-    // Relations
     public function note()
     {
         return $this->belongsTo(Note::class, 'id_note');

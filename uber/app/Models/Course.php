@@ -27,7 +27,6 @@ class Course extends Model
 
     public function index()
     {
-        // Récupérer toutes les courses
         $courses = Course::all();
 
         return view('courses.index', compact('courses'));

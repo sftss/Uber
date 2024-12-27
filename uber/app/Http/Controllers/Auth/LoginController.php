@@ -11,7 +11,6 @@ use App\Models\Chauffeur;
 
 class LoginController extends Controller
 {
-    // Afficher le formulaire de connexion
     public function showLoginForm()
     {
         return view('auth.login');
@@ -22,10 +21,18 @@ class LoginController extends Controller
         return view('auth.loginch');
     }
 
-    // Gérer la soumission du formulaire de connexion
+    public function showLoginServiceForm()
+    {
+        return view('auth.loginservice');
+    }
+
+    public function showLoginSelection()
+    {
+        return view('auth.pagedeconnexion');
+    }
+
     public function login(Request $request)
     {
-        // Validation des données
         $request->validate([
             'mail_client' => 'required|email',
             'mdp_client' => 'required|string',
@@ -37,17 +44,19 @@ class LoginController extends Controller
         if ($client && Hash::check($request->mdp_client, $client->mdp_client)) {
 
             Auth::login($client);
-
+            $role = $client->role->lib_role ?? 'guest';
 
             if($client->est_verif == null){
                 return redirect()->route('verifiermail')->with('success', 'Inscription réussie. Un email de confirmation vous a été envoyé.');
-
-            }else{
+            }
+            else{
+                session(['role' => $role]);
                 return redirect('/');
             }
         }
         return redirect()->back()->withErrors(['mail_client' => 'Les informations de connexion sont incorrectes.']);
     }
+
     public function logout()
     {
         Auth::logout();
@@ -56,7 +65,6 @@ class LoginController extends Controller
 
     public function loginch(Request $request)
     {
-        // Validation des données
         $request->validate([
             'mail_chauffeur' => 'required|email',
             'mdp_chauffeur' => 'required|string',
@@ -67,13 +75,14 @@ class LoginController extends Controller
 
         Auth::guard('chauffeurs')->login($Chauffeur);
 
-
-
         if ($Chauffeur && Hash::check($request->mdp_chauffeur, $Chauffeur->mdp_chauffeur)) {
+            session(['role' => $role]);
+
             return redirect()->route('home')->with('success', 'Inscription réussie. Un email de confirmation vous a été envoyé.');
         }
         return redirect()->back()->withErrors(['mail_chauffeur' => 'Les informations de connexion sont incorrectes.']);
     }
+
     public function logoutch()
     {
         Auth::guard('chauffeurs')->logout();
