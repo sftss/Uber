@@ -3,20 +3,6 @@
 <link href="{{ asset('assets/style/app.css') }}" rel="stylesheet">
 <link rel="icon" href="{{ URL::asset('assets/svg/uber-logo.svg') }}" type="image/svg+xml">
 
-@if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-
-        <a href="{{ route('cart.index') }}" class="btn btn-outline-light">Voir mon panier</a>
-    </div>
-@endif
-
-@if (session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-@endif
-
 <a href="{{ url('/lieux/search') }}">
     <p>Retour</p>
 </a>

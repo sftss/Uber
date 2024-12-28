@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title')</title>
-    <link rel="icon" href="{{ URL::asset('assets/svg/uber-logo.svg') }}" type="image/svg+xml">
+    <link rel="icon" href="{{ URL::asset('assets/img/Uber-logo.webp') }}" type="image/svg+xml">
 </head>
 
 <body>
@@ -18,8 +18,8 @@
                         <a class="nav-link" href="{{ url('/restaurants/search') }}">Mes restaurants</a>
                     </li>
                     <li class="nav-item">
-                        <!-- {{--<a class="nav-link" href="{{ url('/professionnel-creation/restaurant/12') }}">Créer un restaurant</a>--}}     -->
-                    <a class="nav-link" href="{{ url('/creer-restaurant') }}">Créer un restaurant</a>
+                        <!-- {{-- <a class="nav-link" href="{{ url('/professionnel-creation/restaurant/12') }}">Créer un restaurant</a> --}}     -->
+                        <a class="nav-link" href="{{ url('/creer-restaurant') }}">Créer un restaurant</a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ url('/') }}" class="nav-link">Affichage Client</a>

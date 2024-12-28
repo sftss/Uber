@@ -29,16 +29,18 @@
                     <li class="nav-item">
                         <a href="{{ url('/professionnel-main') }}" class="nav-link">Affichage Professionnel</a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('help') }}" class="nav-link">Besoin d'aide ?</a>
+                    </li>
                 </ul>
             </div>
 
             <div class="navbar-connect">
                 @auth('web')
                     <!-- Si un client est connecté -->
-                    <span class="navbar-text">Bonjour, <a
+                    {{-- <!-- <span class="navbar-text">Bonjour, <a
                             href="{{ url('/profil/' . auth('web')->user()->id_client) }}">{{ auth('web')->user()->prenom_cp }}</a>
-                        !</span>
-
+                        !</span> --> --}}
                     <a href="{{ url('/profil/' . auth('web')->user()->id_client) }}"
                         class="btn btn-outline-light">Informations
                         du compte</a>

@@ -135,7 +135,7 @@
     <div class="container">
         <div class="header">
             <div class="container-img-logo">
-                <img alt="Logo Uber" src="{{ public_path('assets/img/Uber-Logo.png') }}" width="200">
+                <img alt="Logo Uber" src="{{ public_path('assets/img/Uber-Logo.webp') }}" width="200">
             </div>
             <div id="heading">
                 <h1 id="ADroite">{{ __('facture.invoice_title') }}</h1>
@@ -150,20 +150,23 @@
                 <p><strong>{{ __('facture.clientTel') }}:</strong> +33 {{ $client->tel_client }}</p>
             </div>
             @if (isset($chauffeur))
-            <div class="section">
-                <h3>{{ __('facture.driver_info') }}</h3>
-                <p><strong>{{ __('facture.client_name') }}:</strong> {{ $chauffeur->nom_chauffeur }} {{ $chauffeur->prenom_chauffeur }}</p>
-                <p><strong>Email:</strong> {{ $chauffeur->mail_chauffeur }}</p>
-                <p><strong>{{ __('facture.driverTel') }}:</strong> +33 {{ $chauffeur->tel_chauffeur }}</p>
-                <p><strong>{{ __('facture.nameEnt') }} :</strong> {{ $chauffeur->nom_entreprise }}</p>
-            </div>
+                <div class="section">
+                    <h3>{{ __('facture.driver_info') }}</h3>
+                    <p><strong>{{ __('facture.client_name') }}:</strong> {{ $chauffeur->nom_chauffeur }}
+                        {{ $chauffeur->prenom_chauffeur }}</p>
+                    <p><strong>Email:</strong> {{ $chauffeur->mail_chauffeur }}</p>
+                    <p><strong>{{ __('facture.driverTel') }}:</strong> +33 {{ $chauffeur->tel_chauffeur }}</p>
+                    <p><strong>{{ __('facture.nameEnt') }} :</strong> {{ $chauffeur->nom_entreprise }}</p>
+                </div>
             @endif
         </div>
         <div class="course-info">
             <div class="section">
                 <h3>{{ __('facture.course_info') }}</h3>
-                <p><strong>{{ __('facture.departure_address') }}:</strong> {{ $lieu_depart->rue }} {{ $lieu_depart->cp }} {{ $lieu_depart->ville }}</p>
-                <p><strong>{{ __('facture.arrival_address') }}:</strong> {{ $lieu_arrivee->rue }} {{ $lieu_arrivee->cp }} {{ $lieu_arrivee->ville }}</p>
+                <p><strong>{{ __('facture.departure_address') }}:</strong> {{ $lieu_depart->rue }}
+                    {{ $lieu_depart->cp }} {{ $lieu_depart->ville }}</p>
+                <p><strong>{{ __('facture.arrival_address') }}:</strong> {{ $lieu_arrivee->rue }}
+                    {{ $lieu_arrivee->cp }} {{ $lieu_arrivee->ville }}</p>
                 <p><strong>{{ __('facture.pickup_date') }}:</strong> {{ $date_prise_en_charge }}</p>
                 <p><strong>{{ __('facture.duration') }}:</strong> {{ $duree_course }}</p>
 
@@ -179,11 +182,11 @@
             </thead>
             <tbody>
                 @foreach ($items as $item)
-                <tr class="items">
-                    <td>{{ $item['name'] }}</td>
-                    <td>{{ number_format($item['price'], 2) }} €</td>
-                    <td>{{ $item['tva'] == '0%' ? '' : $item['tva'] }}</td>
-                </tr>
+                    <tr class="items">
+                        <td>{{ $item['name'] }}</td>
+                        <td>{{ number_format($item['price'], 2) }} €</td>
+                        <td>{{ $item['tva'] == '0%' ? '' : $item['tva'] }}</td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>
@@ -194,4 +197,5 @@
         </div>
     </div>
 </body>
+
 </html>

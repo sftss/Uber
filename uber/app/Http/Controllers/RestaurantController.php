@@ -12,9 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class RestaurantController extends Controller
 {
-    public function filter(Request $request) 
-    {
-        // Récupérer les paramètres de la requête
+    public function filter(Request $request) {
         $recherche = $request->input('lieu');
         $livre = $request->has('livre');
         $emporter = $request->has('emporter');
@@ -60,8 +58,7 @@ class RestaurantController extends Controller
             return view('restaurants.filter', compact('restaurants', 'recherche', 'categories', 'horaireOuverture', 'horaireFermeture'));
     }
 
-    public function show($id, Request $request) 
-{
+    public function show($id, Request $request) {
         $restaurant = DB::table('restaurant')
             ->join('adresse', 'restaurant.id_adresse', '=', 'adresse.id_adresse')
             ->leftJoin('a_pour_categorie', 'restaurant.id_restaurant', '=', 'a_pour_categorie.id_restaurant')
@@ -140,17 +137,13 @@ class RestaurantController extends Controller
         return view('restaurants.show', compact('restaurant', 'menus', 'plats', 'produits', 'categoriesProduits', 'categorieId'));
     }
 
-    public function affichercreation()
-    {
+    public function affichercreation() {
         $categories = DB::table('categorie_restaurant')->get(); // Pour autre filtre
         return view('restaurants.create', compact('categories'));
     }
 
-    // Traiter les données soumises par le formulaire
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         DB::transaction(function () use ($request) {
-            // Validation des données
             $validatedData = $request->validate([
                 'rue' => 'required|string|max:255',
                 'cp' => 'required|digits:5',
@@ -165,7 +158,6 @@ class RestaurantController extends Controller
                 'photo_restaurant' => 'required|string|max:500',
             ]);
 
-            // Création de l'adresse
             $departement = substr($validatedData['cp'], 0, 2) + 1;
 
             $adresse = Adresse::create([
@@ -198,5 +190,4 @@ class RestaurantController extends Controller
 
         return redirect()->route('restaurants.search')->with('success', 'Restaurant et adresse créés avec succès !');
     }
-
 }

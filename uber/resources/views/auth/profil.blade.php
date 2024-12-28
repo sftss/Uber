@@ -4,16 +4,16 @@
 <div class="container info-compte">
     <h1>Informations du Compte</h1>
 
+    <div id="img-cont">
+        <img alt="Photo de profil" class="pp" src="{{ Auth::user()->photo }}">
+        <form action="{{ route('client.updatePhoto') }}" method="POST">
+            @csrf
+            <label class="lk_img" for="pp_img" style="cursor: pointer;">Modifier votre photode profil</label>
+            <input name="pp_img" type="file" accept="image/*" id="pp_img" onchange="this.form.submit()"
+                style="display: none;">
+        </form>
+    </div>
 
-        <div id="img-cont">
-            <img alt="Photo de profil" class="pp" src="{{ Auth::user()->photo }}">
-            <form action="{{ route('client.updatePhoto') }}" method="POST">
-                @csrf
-                <label class="lk_img" for="pp_img" style="cursor: pointer;">Modifier votre photo</label>
-                <input name="pp_img" type="file" accept="image/*" id="pp_img" onchange="this.form.submit()"
-                    style="display: none;">
-            </form>
-        </div>
     <div class="account-info">
 
         <div class="info-item">

@@ -3,6 +3,8 @@
 <link href="{{ asset('assets/style/app.css') }}" rel="stylesheet">
 <link rel="icon" href="{{ URL::asset('assets/svg/uber-logo.svg') }}" type="image/svg+xml">
 
+<div class="txtFilter">Faîte vos courses avec Uber 🛒</div>
+
 <form method="GET" action="{{ route('lieux.search') }}" class="filter-form">
     <div class="form-group-restau">
         <label for="lieu" class="form-label">Rechercher un lieu de vente</label>

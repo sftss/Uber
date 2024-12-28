@@ -18,7 +18,6 @@ public function genererFacture($id_course, Request $request)
     
     $course = Course::with(['client', 'chauffeur', 'lieuDepart', 'lieuArrivee'])->findOrFail($id_course);
 
-    // Vérification via la session
     if ($request->session()->has("facture_generee_{$id_course}")) {
         $factureExistante = Facture::where('id_course', $id_course)->first();
         return $this->genererPDF($course, $factureExistante, $langue);
@@ -27,7 +26,6 @@ public function genererFacture($id_course, Request $request)
     $factureExistante = Facture::where('id_course', $id_course)->first();
 
     if ($factureExistante) {
-        // Marquer dans la session que la facture existe
         $request->session()->put("facture_generee_{$id_course}", true);
         return $this->genererPDF($course, $factureExistante, $langue);
     }
@@ -55,7 +53,6 @@ public function genererFacture($id_course, Request $request)
 
     $course->update(['est_facture' => true]);
 
-    // Marquer dans la session que la facture a été générée
     $request->session()->put("facture_generee_{$id_course}", true);
     
     return $this->genererPDF($course, $facture, $langue);

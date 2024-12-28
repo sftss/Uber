@@ -17,21 +17,26 @@
             <h3 class="course_title">Course numéro : {{ $course->id_course }}</h3>
             <ul class="course_details">
                 <li class="chauffeur">
-                    @if (is_null($course->prenom_chauffeur))
-                        Vélo : {{ $course->id_velo }}
+                    @if ($course->chauffeur)
+                        Chauffeur : {{ $course->chauffeur->prenom_chauffeur }} {{ $course->chauffeur->nom_chauffeur }}
                     @else
-                        Chauffeur : {{ $course->prenom_chauffeur }} {{ $course->nom_chauffeur }}
+                        Vélo : {{ $course->id_velo }}
                     @endif
                 </li>
-                <li class="depart">Lieu de départ : {{ $course->lieuDepart->rue }} {{ $course->lieuDepart->cp }} {{ $course->lieuDepart->ville }}</li>
-                <li class="arrivee">Lieu d'arrivée : {{ $course->lieuArrivee->rue }} {{ $course->lieuArrivee->cp }} {{ $course->lieuArrivee->ville }}</li>
+                <li class="depart">Lieu de départ : {{ $course->lieuDepart->rue }} {{ $course->lieuDepart->cp }}
+                    {{ $course->lieuDepart->ville }}</li>
+                <li class="arrivee">Lieu d'arrivée : {{ $course->lieuArrivee->rue }} {{ $course->lieuArrivee->cp }}
+                    {{ $course->lieuArrivee->ville }}</li>
                 <li class="prix">Prix : {{ $course->prix_reservation }} €</li>
-                <li class="date_prise_en_charge">Date de la course : {{ \Carbon\Carbon::parse($course->date_prise_en_charge)->locale('fr')->isoFormat('LL') }}</li>
-                <li class="duree">Durée : {{ \Carbon\Carbon::parse($course->duree_course)->format('H') }}h {{ \Carbon\Carbon::parse($course->duree_course)->format('i') }}min</li>
+                <li class="date_prise_en_charge">Date de la course :
+                    {{ \Carbon\Carbon::parse($course->date_prise_en_charge)->locale('fr')->isoFormat('LL') }}</li>
+                <li class="duree">Durée : {{ \Carbon\Carbon::parse($course->duree_course)->format('H') }}h
+                    {{ \Carbon\Carbon::parse($course->duree_course)->format('i') }}min</li>
                 <li class="temps_arrivee">
                     Heure d'arrivée :
                     @if ($course->heure_arrivee)
-                        {{ \Carbon\Carbon::parse($course->heure_arrivee)->format('H') }}h {{ \Carbon\Carbon::parse($course->heure_arrivee)->format('i') }}min
+                        {{ \Carbon\Carbon::parse($course->heure_arrivee)->format('H') }}h
+                        {{ \Carbon\Carbon::parse($course->heure_arrivee)->format('i') }}min
                     @else
                         Non spécifiée
                     @endif
@@ -47,9 +52,10 @@
                 </li>
                 <li class="terminee">
                     @if ($course->terminee)
-                    @if (!isset($course->est_facture))
+                        @if (!isset($course->est_facture))
                             <div class="review-form">
-                                <form action="{{ route('courses.submitReview', $course->id_course) }}" method="POST" class="reviewForm">
+                                <form action="{{ route('courses.submitReview', $course->id_course) }}" method="POST"
+                                    class="reviewForm">
                                     @csrf
                                     <label for="note" id="txtNoteCourse">Note :</label>
                                     <select id="selectNoteCourse" name="note" required>
@@ -60,12 +66,14 @@
                                         <option value="5" selected>5 - Excellent</option>
                                     </select>
                                     <label for="pourboire" id="txtPourboireCourse">Pourboire (€) :</label>
-                                    <input id="champPourboire" name="pourboire" type="number" min="0" step="1" max="{{ $course->prix_reservation }}" value="0">
+                                    <input id="champPourboire" name="pourboire" type="number" min="0"
+                                        step="1" max="{{ $course->prix_reservation }}" value="0">
                                     <button class="submitReview" type="submit">Soumettre</button>
                                 </form>
                             </div>
                         @else
-                            <form action="{{ route('courses.Facture', $course->id_course) }}" method="POST" style="display:inline" class="formGenereInvoice">
+                            <form action="{{ route('courses.Facture', $course->id_course) }}" method="POST"
+                                style="display:inline" class="formGenereInvoice">
                                 @csrf
                                 <label for="langue" id="labelLangue">Langue :</label>
                                 <select id="langue" name="langue">
@@ -75,36 +83,47 @@
                                     <option value="de">Deutschland</option>
                                     <option value="it">Italiano</option>
                                 </select>
-                                <button class="generateInvoiceButton" type="submit" target="_blank">Générer ma facture</button>
+                                <button class="generateInvoiceButton" type="submit" target="_blank">Générer ma
+                                    facture</button>
                             </form>
                         @endif
                     @else
                         @if (is_null($course->acceptee))
-                            <form action="{{ route('courses.update', ['id' => $course->id_course]) }}" method="POST" id="formCourseListe">
+                            <form action="{{ route('courses.update', ['id' => $course->id_course]) }}" method="POST"
+                                id="formCourseListe">
                                 @csrf
                                 @method('PUT')
-                                <button class="butMpageClient modifyButton" type="submit" data-course-id="{{ $course->id_course }}">Modifier</button>
+                                <button class="butMpageClient modifyButton" type="submit"
+                                    data-course-id="{{ $course->id_course }}">Modifier</button>
                             </form>
-                            <form action="{{ route('courses.destroy', $course->id_course) }}" method="POST" style="display:inline">
+                            <form action="{{ route('courses.destroy', $course->id_course) }}" method="POST"
+                                style="display:inline">
                                 @csrf
                                 @method('DELETE')
-                                <button class="butDpageClient delete_button" type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette course ?')">Annuler</button>
+                                <button class="butDpageClient delete_button" type="submit"
+                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette course ?')">Annuler</button>
                             </form>
                         @elseif ($course->acceptee === true)
-                            <form action="{{ route('client.terminer', $course->id_course) }}" method="POST" style="display:inline">
+                            <form action="{{ route('client.terminer', $course->id_course) }}" method="POST"
+                                style="display:inline">
                                 @csrf
                                 @method('PUT')
-                                <button class="acceptButton butTpageClient" type="submit" onclick="return confirm('Êtes-vous sûr de vouloir terminer cette course ?')">Terminer</button>
+                                <button class="acceptButton butTpageClient" type="submit"
+                                    onclick="return confirm('Êtes-vous sûr de vouloir terminer cette course ?')">Terminer</button>
                             </form>
-                            <form action="{{ route('courses.update', ['id' => $course->id_course]) }}" method="POST" id="formCourseListe">
+                            <form action="{{ route('courses.update', ['id' => $course->id_course]) }}" method="POST"
+                                id="formCourseListe">
                                 @csrf
                                 @method('PUT')
-                                <button class="butMpageClient modifyButton" type="submit" data-course-id="{{ $course->id_course }}">Modifier</button>
+                                <button class="butMpageClient modifyButton" type="submit"
+                                    data-course-id="{{ $course->id_course }}">Modifier</button>
                             </form>
-                            <form action="{{ route('courses.destroy', $course->id_course) }}" method="POST" style="display:inline">
+                            <form action="{{ route('courses.destroy', $course->id_course) }}" method="POST"
+                                style="display:inline">
                                 @csrf
                                 @method('DELETE')
-                                <button class="butDpageClient delete_button" type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette course ?')">Annuler</button>
+                                <button class="butDpageClient delete_button" type="submit"
+                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette course ?')">Annuler</button>
                             </form>
                         @endif
                     @endif

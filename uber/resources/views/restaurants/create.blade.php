@@ -1,13 +1,12 @@
-@extends('layouts.header')
+@extends('layouts.professionnel-header')
 
 <link href="{{ asset('assets/style/app.css') }}" rel="stylesheet">
 
 <div class="container">
     <h1 style="text-align: center; margin: 3% 0;">Créer votre propre restaurant dans Uber Eats 🍴</h1>
     <form id="formCreateProduit" action="{{ route('restaurants.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf <!-- Protection CSRF -->
+        @csrf
 
-        <!-- Adresse -->
         <h3>Adresse</h3>
         <hr>
         <div class="form-group">
@@ -26,18 +25,17 @@
                 required>
         </div>
 
-        <!-- Informations du restaurant -->
-        <h3>Informations du Restaurant</h3>
+        <h3>Informations du restaurant</h3>
         <hr>
         <div class="form-group">
             <label for="nom_etablissement">Nom du Restaurant</label>
             <input type="text" id="nom_etablissement" name="nom_etablissement" class="form-control"
-                placeholder="Entrez le nom" required>
+                placeholder="Entrez le nom" maxlength="300" required>
         </div>
         <div class="form-group">
             <label for="description_etablissement">Description</label>
-            <textarea id="description_etablissement" name="description_etablissement" class="form-control" rows="3"
-                placeholder="Entrez une description"></textarea>
+            <textarea style="font-family: Arial, sans-serif;" id="description_etablissement" name="description_etablissement"
+                class="form-control" rows="3" placeholder="Entrez une description"></textarea>
         </div>
         <div class="form-group">
             <label>Options</label>
@@ -75,7 +73,6 @@
             <input type="time" id="horaires_fermeture" name="horaires_fermeture" class="form-control" required>
         </div>
 
-        <!-- Bouton de soumission -->
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Créer</button>
         </div>

@@ -55,7 +55,11 @@ class CourseController extends Controller
             // ->orderBy("course.id_course", "desc") // Ordre décroissant pour afficher les plus récentes en premier
             // ->paginate(5);
 
-        $courses = Course::orderBy('id_course', "desc")->paginate(5);
+        // $courses = Course::orderBy('id_course', "desc")->paginate(5);
+
+        $courses = Course::with('chauffeur') // Charge la relation chauffeur
+            ->orderBy('id_course', 'desc')
+            ->paginate(5);
         // ->orderBy("id_course", "desc") // Ordre décroissant pour afficher les plus récentes en premier
             // ->paginate(5);
         // ->get();
@@ -92,8 +96,6 @@ class CourseController extends Controller
         ->update([
             'acceptee' => $acceptee
         ]);
-        
-        
         
         echo "<script>console.log(".$course.")</script>";
         $chauffeurId = $course->id_chauffeur;

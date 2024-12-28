@@ -58,7 +58,8 @@ Route::get('/restaurants/{id}', [RestaurantController::class, 'show'])->name('re
 
 Route::get('/lieux/search', [LieuVenteController::class, 'filter'])->name('lieux.search');
 Route::get('/lieux/{id}', [LieuVenteController::class, 'show'])->name('lieux.show');
-
+Route::get('/professionnel/lieux/create', [LieuVenteController::class, 'create'])->name('lieux.create');
+Route::post('/professionnel/lieux', [LieuVenteController::class, 'store'])->name('lieux.store');
 
 
 Route::get('/send-email', [MailController::class, 'sendVerificationEmail']);
@@ -97,7 +98,7 @@ Route::get('/chauffeur-propositions/{id}', [ChauffeurController::class, 'Affiche
 Route::get('/chauffeur-archives/{id}', [ChauffeurController::class, 'AfficherCoursesPassees'])->name('archives');
 
 Route::get('/professionnel-main', function() {
-    return view('professionnel-main');
+    return view('/professionnel/professionnel-main');
 });
 
 Route::get('/professionnel-restaurants/{id}', [ClientController::class, 'AfficherRestaurants'])->name('restaurants');
@@ -122,14 +123,10 @@ Route::post('/ajouter-adresse', [ClientController::class, 'valideadresse'])->nam
 Route::delete('/supprimer-adresse/{id}', [ClientController::class, 'supprimerAdresse'])->name('supprimer.adresse');
 
 
-
-
 Route::get('/commande-list',[ClientController::class ,'voircommandes'])->name('voircommande');
 
 Route::get('/creer-restaurant', [RestaurantController::class, 'affichercreation'])->name('affichercreation');
 Route::post('/restaurants', [RestaurantController::class, 'store'])->name('restaurants.store');
-
-
 
 
 Route::get('/restaurant/{restaurant_id}/produit/create', [ProduitController::class, 'create'])->name('produit.create');
@@ -160,10 +157,10 @@ Route::post('loginch', [LoginController::class, 'loginch'])->name('login.postch'
 Route::post('logoutch', [LoginController::class, 'logoutch'])->name('logoutch');
 // sélection connexion
 Route::get('pagedeconnexion', [LoginController::class, 'showLoginSelection'])->name('login.selection');
-// Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
-// Route::get('loginch', [LoginController::class, 'showLoginFormCh'])->name('loginch');
-// Route::get('loginService', [LoginController::class, 'showLoginServiceForm'])->name('loginService');
-// Route::get('loginservice', [LoginController::class, 'showLoginServiceForm'])->name('loginService');
+Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::get('loginch', [LoginController::class, 'showLoginFormCh'])->name('loginch');
+Route::get('loginService', [LoginController::class, 'showLoginServiceForm'])->name('loginService');
+Route::get('loginservice', [LoginController::class, 'showLoginServiceForm'])->name('loginService');
 
 
 Route::get('/politique', function () {
@@ -187,3 +184,8 @@ Route::post('/verification', [MailController::class, 'verifyCode'])->name('verif
 Route::get('/verificationmail', [MailController::class, 'sendMail'])->name('verifiermail');
 
 Route::get('/envoi-sms', [SmsController::class, 'sendSms']);
+
+
+Route::get('/help', function () {
+    return view('help.aide');
+})->name('help');
