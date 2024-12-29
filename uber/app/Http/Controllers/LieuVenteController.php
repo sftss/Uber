@@ -121,7 +121,7 @@ class LieuVenteController extends Controller
             'ville' => $validatedData['ville'],
             'cp' => $validatedData['cp'],
         ]);
-
+                
         $lieuVente = LieuVente::create([
             'nom_etablissement' => $validatedData['nom_etablissement'],
             'description_etablissement' => $validatedData['description_etablissement'],

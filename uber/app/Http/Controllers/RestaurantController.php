@@ -37,6 +37,7 @@ class RestaurantController extends Controller
                 $join->on('restaurant.id_restaurant', '=', 'horaires_restaurant.id_restaurant')
                     ->where('horaires_restaurant.id_jour', '=', DB::raw('EXTRACT(DOW FROM CURRENT_DATE)')); // Récupérer les horaires du jour actuel
             })
+        ->select('restaurant.*', 'adresse.*', 'categorie_restaurant.*', 'horaires_restaurant.horaires_ouverture', 'horaires_restaurant.horaires_fermeture')
 
             ->when($recherche, function ($query, $recherche) {
                 return $query->where(function ($q) use ($recherche) {
@@ -87,7 +88,8 @@ class RestaurantController extends Controller
             ->leftjoin('plat', 'compose_de.id_plat', '=', 'plat.id_plat')
             ->leftJoin('categorie_produit', 'plat.id_categorie_produit', '=', 'categorie_produit.id_categorie_produit')
             ->leftJoin('propose_menu', 'menu.id_menu', '=', 'propose_menu.id_menu')
-            ->leftJoin('restaurant', 'propose_menu.id_restaurant', '=', 'restaurant.id_restaurant')            
+            ->leftJoin('restaurant', 'propose_menu.id_restaurant', '=', 'restaurant.id_restaurant')  
+          
             ->where('propose_menu.id_restaurant', $id)
             ->when($recherche, function ($query, $recherche) {
                 return $query->where(function ($q) use ($recherche) {
@@ -130,8 +132,8 @@ class RestaurantController extends Controller
                 return $query->where('produit.id_categorie_produit', $categorie);
             })
             ->get();
-        $categories = DB::table('categorie_produit')->get(); // Pour autre filtre
-        $categorieId = $request->input('categorie', ''); // Catégorie sélectionnée
+        $categories = DB::table('categorie_produit')->get(); 
+        $categorieId = $request->input('categorie', '');
         $categoriesProduits = DB::table('categorie_produit')->get();
 
         return view('restaurants.show', compact('restaurant', 'menus', 'plats', 'produits', 'categoriesProduits', 'categorieId'));
@@ -167,7 +169,6 @@ class RestaurantController extends Controller
                 'cp' => $validatedData['cp'],
             ]);
 
-            // Création du restaurant
             $restaurant = Restaurant::create([
                 'nom_etablissement' => $validatedData['nom_etablissement'],
                 'description_etablissement' => $validatedData['description_etablissement'],
@@ -181,7 +182,6 @@ class RestaurantController extends Controller
             ]);
 
 
-            // Association du restaurant à la catégorie
             DB::table('a_pour_categorie')->insert([
                 'id_restaurant' => $restaurant->id_restaurant,
                 'id_categorie' => $validatedData['category'],

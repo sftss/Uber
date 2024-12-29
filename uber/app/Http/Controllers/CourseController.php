@@ -65,7 +65,7 @@ class CourseController extends Controller
         // ->get();
         // dd($courses);
 
-        return view("course-list", ["courses" => $courses]);
+        return view("course/course-list", ["courses" => $courses]);
     }
 
     public function destroy($id) {

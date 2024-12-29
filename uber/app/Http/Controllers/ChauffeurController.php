@@ -22,7 +22,7 @@ class ChauffeurController extends Controller
             $coursePourModification = Course::with(['lieuDepart', 'lieuArrivee'])->findOrFail($id);
         }
 
-        return view("map", [
+        return view("course/map", [
             'chauffeurs' => $chauffeurs,
             'categories' => $categories,
             'coursePourModification' => $coursePourModification
@@ -55,7 +55,7 @@ class ChauffeurController extends Controller
             ->orderBy('course.id_course', 'desc')
             ->paginate(5);    
 
-        return view('chauffeur-propositions', ['courses' => $courses]);
+        return view('chauffeur/chauffeur-propositions', ['courses' => $courses]);
     }
 
     public function AfficherCoursesPassees($id)
@@ -84,7 +84,7 @@ class ChauffeurController extends Controller
             ->orderBy('course.id_course', 'desc')
             ->paginate(5);    
 
-        return view('chauffeur-propositions', ['courses' => $courses]);
+        return view('chauffeur/chauffeur-propositions', ['courses' => $courses]);
     }
 
     public function terminer($id) {

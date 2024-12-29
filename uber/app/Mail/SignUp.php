@@ -24,7 +24,7 @@ class SignUp extends Mailable
     {
         return $this->subject('Vérification de votre compte Uber pour la SAE de Mr.Colin (le GOAT💪).')
             ->from('mathieu.servonnet@etu.univ-smb.fr', 's231_Uber')
-            ->view('SignUpView') // Utilisez la vue Blade
-            ->with(['code_verif' => $this->code_verif]); // Passez le code_verif à la vue
+            ->view('auth/SignUpView') 
+            ->with(['code_verif' => $this->code_verif]);
     }
 }

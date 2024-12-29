@@ -83,7 +83,7 @@ public function genererFacture($id_course, Request $request)
             'duree_course' => $course->duree_course,
         ];
 
-        $pdf = Pdf::loadView('facture', $data);
+        $pdf = Pdf::loadView('course/facture', $data);
         return $pdf->stream("facture_course_{$course->id_course}.pdf");
     }
 }

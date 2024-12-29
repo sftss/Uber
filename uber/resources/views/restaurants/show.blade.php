@@ -8,9 +8,11 @@
     <img src="{{ $restaurant->photo_restaurant }}" alt="Image de {{ $restaurant->nom_etablissement }}"
         class="restaurant-image">
     <div class="restaurant-details">
+
+        {{-- <?php dd($restaurant); ?> --}}
         <h3>{{ $restaurant->nom_etablissement }}</h3>
         <p><strong>Description : </strong> {{ $restaurant->description_etablissement }}</p>
-        <p><strong>Adresse : </strong>{{ $restaurant->rue }}, {{ $restaurant->cp }} {{ $restaurant->ville }}</p>
+        <p><strong>Adresse : </strong>{{ $restaurant->rue }} {{ $restaurant->cp }} {{ $restaurant->ville }}</p>
         <p><strong>Livraison :</strong> {{ $restaurant->propose_livraison ? 'Oui' : 'Non' }}</p>
         <p><strong>À emporter :</strong> {{ $restaurant->propose_retrait ? 'Oui' : 'Non' }}</p>
         <p><strong>Catégorie :</strong> {{ $restaurant->lib_categorie ?? 'Non spécifiée' }}</p>
@@ -30,13 +32,10 @@
         <p>Vous êtes le propriétaire</p>
 
         <div class="createProprioBut">
-
             <a href="{{ route('produit.create', ['restaurant_id' => $restaurant->id_restaurant]) }}"
                 class="btn btn-primary">Ajouter un produit</a>
-
             <a href="{{ route('plat.create', ['restaurant_id' => $restaurant->id_restaurant]) }}"
                 class="btn btn-primary">Ajouter un plat</a>
-
             <a href="{{ route('menu.create', ['restaurant_id' => $restaurant->id_restaurant]) }}"
                 class="btn btn-primary">Ajouter un menu</a>
         </div>
@@ -47,18 +46,6 @@
     <div class="alert alert-success">
         {{ session('success') }}
         <a href="{{ route('cart.index') }}" class="btn btn-outline-light">Voir mon panier</a>
-    </div>
-@endif
-
-@if (session('successs'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
-
-@if (session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
     </div>
 @endif
 
@@ -80,7 +67,7 @@
             @endforeach
         </select>
     </div>
-    <button class="filter-but-eat" type="submit">Filtrer</button>
+    <button class="filter-but-eat" style="margin-top: 2%;" type="submit">Filtrer</button>
 </form>
 
 <a href="{{ url('/panier') }}" id="panier">🛒</a>
@@ -129,7 +116,6 @@
                     </form>
                 </div>
             @endforeach
-
         @endif
     </div>
 </section>
@@ -163,10 +149,8 @@
 <script src="{{ asset('js/main.js') }}"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Sélectionner l'alerte
         const alert = document.querySelector('.alert');
         if (alert) {
-            // Attendre 5 secondes (5000 ms) avant de masquer l'alerte
             setTimeout(() => {
                 alert.classList.add('hide');
             }, 5000);

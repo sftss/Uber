@@ -468,7 +468,7 @@ class ClientController extends Controller
             ->groupBy("id_commande_repas"); // Grouper par commande
 
         // Retourner la vue avec les commandes regroupées
-        return view("commande-list", ["commandes" => $commandes]);
+        return view("cart/commande-list", ["commandes" => $commandes]);
     }
 
     public function CreerRestaurant()

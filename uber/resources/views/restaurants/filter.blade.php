@@ -59,6 +59,7 @@
 <section class="restaurants-list">
     @if (isset($restaurants) && $restaurants->isNotEmpty())
         @foreach ($restaurants as $restaurant)
+            {{-- <?php dd($restaurant); ?> --}}
             <a href="{{ route('restaurants.show', $restaurant->id_restaurant) }}" class="restaurant-card">
                 <img src="{{ $restaurant->photo_restaurant }}" alt="Image de {{ $restaurant->nom_etablissement }}"
                     class="restaurant-image">

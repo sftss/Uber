@@ -91,7 +91,7 @@ Route::post('/client/edit', [ClientController::class, 'update'])->name('compte.u
 
 
 Route::get('/chauffeur-main', function() {
-    return view('chauffeur-main');
+    return view('chauffeur/chauffeur-main');
 });
 
 Route::get('/chauffeur-propositions/{id}', [ChauffeurController::class, 'AfficherPropositions'])->name('propositions');
@@ -164,7 +164,7 @@ Route::get('loginservice', [LoginController::class, 'showLoginServiceForm'])->na
 
 
 Route::get('/politique', function () {
-    return view('politique');
+    return view('help/politique');
 })->name('politique');
 
 Route::get('confirm-email/{code}', [RegistrationController::class, 'confirmEmail'])->name('confirm.email');
