@@ -117,6 +117,9 @@ class LieuVenteController extends Controller
             }
 
             $departement = substr($validatedData['cp'], 0, 2);
+            if($departement > 19){
+                $departement = $departement + 1;
+            }
             Log::info('Département créé', ['departement' => $departement]);
 
             $adresse = Adresse::create([

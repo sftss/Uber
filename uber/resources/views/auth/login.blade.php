@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
 @auth
     @php
         $role = auth()->user()->role->lib_role ?? 'guest';
@@ -10,11 +9,12 @@
 @endauth
 
 @extends('layouts.header')
+<link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
 
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card-header">Login</div>
+    <div>
+        <div>
+            <div class="card-header">Connexion client</div>
             <div class="card">
 
                 <div class="card-body">

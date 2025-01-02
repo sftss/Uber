@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Adresse;
 use App\Models\Restaurant;
 use App\Models\Jour;
+use App\Models\CommandeRepas;
 use App\Models\HorairesRestaurant;
 use App\Models\APourCategorie;
 use Illuminate\Support\Facades\Auth;
@@ -183,6 +184,9 @@ class RestaurantController extends Controller
             }
 
             $departement = substr($validatedData['cp'], 0, 2);
+            if($departement > 19){
+                $departement = $departement + 1;
+            }
             Log::info('Département créé', ['departement' => $departement]);
 
             $adresse = Adresse::create([
@@ -228,17 +232,21 @@ class RestaurantController extends Controller
         return redirect()->route('restaurants.search')->with('success', 'Restaurant et adresse créés avec succès !');
     }
     
-    public function affichercommandes($id) {
-
-        $commandes = DB::table('commande_repas as c')
+    public function affichercommandes(Request $request, $id)
+{
+    // Récupérer les commandes pour un restaurant donné
+    $commandes = DB::table('commande_repas as c')
         ->select(
             'c.id_commande_repas',
             'r.nom_etablissement as restaurant',
             'c.horaire_livraison',
             'c.temps_de_livraison',
+            'c.id_chauffeur',
+            'cha.nom_chauffeur',
+            'r.id_restaurant',
             DB::raw("STRING_AGG(DISTINCT p.nom_produit, ', ') as produits"),
             DB::raw("STRING_AGG(DISTINCT pt.libelle_plat, ', ') as plats"),
-            DB::raw("STRING_AGG(DISTINCT m.libelle_menu, ', ') as menus"),
+            DB::raw("STRING_AGG(DISTINCT m.libelle_menu, ', ') as menus")
         )
         ->leftJoin('est_contenu_dans as ecd', 'ecd.id_commande_repas', '=', 'c.id_commande_repas')
         ->leftJoin('produit as p', 'ecd.id_produit', '=', 'p.id_produit')
@@ -249,16 +257,18 @@ class RestaurantController extends Controller
         ->leftJoin('vends as v', 'p.id_produit', '=', 'v.id_produit')
         ->leftJoin('propose as pr', 'ecdp.id_plat', '=', 'pr.id_plat')
         ->leftJoin('propose_menu as pm', 'm.id_menu', '=', 'pm.id_menu')
+        ->leftJoin('chauffeur as cha','cha.id_chauffeur','=','c.id_chauffeur')
         ->leftJoin('restaurant as r', function ($join) {
             $join->on('v.id_restaurant', '=', 'r.id_restaurant')
                 ->orOn('pr.id_restaurant', '=', 'r.id_restaurant')
                 ->orOn('pm.id_restaurant', '=', 'r.id_restaurant');
         })
         ->where('r.id_restaurant', '=', $id)
-        ->groupBy('c.id_commande_repas', 'r.nom_etablissement')
+        ->groupBy('c.id_commande_repas', 'r.nom_etablissement','r.id_restaurant','cha.nom_chauffeur')
         ->get();
 
-        $livreurs = DB::table('restaurant as r')
+    // Récupérer les chauffeurs pour ce restaurant
+    $livreurs = DB::table('restaurant as r')
         ->select('c.*')
         ->leftJoin('relie_a as ra', 'ra.id_restaurant', '=', 'r.id_restaurant')
         ->leftJoin('chauffeur as c', 'ra.id_chauffeur', '=', 'c.id_chauffeur')
@@ -266,9 +276,37 @@ class RestaurantController extends Controller
         ->where('c.type_chauffeur', 'Livreur')
         ->get();
 
-    return view('restaurants.affichercommandes', compact('commandes', 'livreurs'));
+    // Si le formulaire a été soumis pour attribuer un chauffeur, mise à jour de la commande
+    if ($request->has('id_chauffeur')) {
+        $commande = CommandeRepas::findOrFail($request->id_commande_repas);
+        $commande->id_chauffeur = $request->id_chauffeur;
+        $commande->save();
 
+        return redirect()->route('restaurants.affichercommandes', $id)
+                         ->with('success', 'Chauffeur attribué avec succès.');
     }
+
+    return view('restaurants.affichercommandes', compact('commandes', 'livreurs', 'id'));
+}
+
+    public function attribuerChauffeur(Request $request, $id)
+    {
+        $commande = CommandeRepas::findOrFail($request->id_commande_repas);
+
+        if ($request->id_chauffeur === 'null') {
+            $commande->id_chauffeur = null;
+        } else {
+            $commande->id_chauffeur = $request->id_chauffeur;
+        }
+
+        $commande->save();
+
+        return redirect()->route('restaurants.affichercommandes', $id)
+                        ->with('success', 'Chauffeur attribué avec succès.');
+    }
+
+
+
 }
 
 

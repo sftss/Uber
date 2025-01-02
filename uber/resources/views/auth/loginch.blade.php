@@ -2,26 +2,15 @@
 <link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
 
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card-header">Login</div>
+    <div>
+        <div>
+            <div class="card-header">Connexion chauffeur</div>
             <div class="card" style="transform: translateX(-2%);">
 
                 <div class="card-body">
                     <div id=formLogin>
                         <form method="POST" action="{{ route('loginch') }}">
-
                             @csrf
-
-                            @if ($errors->any())
-                                <div class="alert alert-danger pageLoginErreur">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
 
                             <div class="form-group">
                                 <label for="mail_chauffeur">Email</label>

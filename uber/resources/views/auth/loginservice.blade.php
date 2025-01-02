@@ -3,13 +3,12 @@
 @extends('layouts.header')
 <link rel="icon" href="{{ URL::asset('assets/svg/uber-logo.svg') }}" type="image/svg+xml">
 
-<div class="container mt-5">
-    <h1 style="margin-top: 5%; display: flex; flex-direction: column; align-items: center;">
-        Connexion Services</h1>
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+<div>
+    <div class="card-header">Connexion service</div>
+    <div>
+        <div>
             <div class="card">
-                <div class="card-body">
+                <div class="card-body" style="margin-top: -3%;">
                     <form method="POST">
                         @csrf
                         <div class="form-group">
@@ -36,7 +35,7 @@
                             </select>
                         </div>
 
-                        <div class="text-center">
+                        <div style="display: flex;justify-content: center;">
                             <button type="submit" class="btn btn-primary">Connexion</button>
                         </div>
                     </form>

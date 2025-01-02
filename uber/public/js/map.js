@@ -835,6 +835,7 @@ function creerCourse(chauffeur) {
             id_course: coursePourModification
         ? coursePourModification.id_course
         : null,
+        operation: "insert",
     };
 
     if (coursePourModification) {

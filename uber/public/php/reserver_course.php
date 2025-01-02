@@ -1,19 +1,13 @@
 <?php
 
-
-
-
-
-// Activer le rapport d'erreurs PHP
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 try {
-    // Paramètres de connexion à la base de données (remplis avec les informations fournies)
-    $host = '127.0.0.1';  // Ou utiliser env('DB_HOST', '127.0.0.1')
-    $port = '5432';        // Ou utiliser env('DB_PORT', '5432')
-    $database = 's231_uber'; // Ou utiliser env('DB_DATABASE', 's231_uber')
-    $username = 's231';     // Ou utiliser env('DB_USERNAME', 's231')
-    $password = 'etsmb31'; // Ou utiliser env('DB_PASSWORD', 'etsmb31')
+    $host = '127.0.0.1';  
+    $port = '5432';    
+    $database = 's231_uber'; 
+    $username = 's231';     
+    $password = 'etsmb31'; 
     $charset = 'utf8';
     $search_path = 's_uber'; // Le schéma spécifique
 
@@ -41,8 +35,8 @@ try {
     $prix_reservation = $data['prix_reservation'] ?? null;
     $tempscourse = $data['tempscourse'] ?? null;
     $date_depart = $data['date_trajet'] ?? null;
-
-   
+    $operation = $data['operation'] ?? null;
+    $chauffeurstableau=$data['chauffeurtab'] ?? null;
 
     $code_departement_depart = substr($lieu_depart_cp, 0, 2);
     $code_departement_arrivee = substr($lieu_arrivee_cp, 0, 2);
@@ -58,9 +52,8 @@ try {
 
 
 
-    
+
     // Vérifier que les données nécessaires sont présentes
-    if ( $chauffeur_nom && $lieu_depart_rue && $lieu_arrivee_rue) {
         
         // Récupération de l'id du département du départ et d'arrivée dans la DB
         $stmrecupdep_depart = $db->prepare("SELECT id_departement FROM departement WHERE CODE_DEPARTEMENT = :code_departement");
@@ -138,6 +131,7 @@ try {
         $duree_course = $heurescourse . ":" . $minutescourse . ":" . $secondescourse;
 
         $terminée = 'false';
+        if{$operation=='insert'}{
         //Insertion de la course ENFIN WALLAH 
         $stm_insert_course = $db->prepare("INSERT INTO course 
         (ID_CHAUFFEUR, ID_VELO, ID_LIEU_DEPART, ID_LIEU_ARRIVEE, ID_CLIENT, PRIX_RESERVATION, DATE_PRISE_EN_CHARGE, DUREE_COURSE, heure_arrivee, TERMINEE) 
@@ -173,14 +167,57 @@ try {
         // Retourner la réponse en JSON
         header('Content-Type: application/json');
         echo json_encode( $response );
-    } else {
-        // Si les informations sont manquantes, renvoyer une erreur
-        http_response_code(400);
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Informations manquantes'
+}
+    else if {$operation=='table'}{
+                // Créer une table temporaire
+
+                   $db->exec("CREATE TEMPORARY TABLE temp_course (
+                    id_course SERIAL PRIMARY KEY,
+                    id_chauffeur INT,
+                    id_velo INT,
+                    id_lieu_depart INT,
+                    id_lieu_arrivee INT,
+                    id_client INT,
+                    prix_reservation NUMERIC(6,2),
+                    date_prise_en_charge DATE,
+                    duree_course TIME,
+                    heure_arrivee TIME,
+                    terminee BOOL
+        )");
+            
+
+        
+        // Préparer l'insertion des données dans la table temporaire
+        $stmt = $db->prepare("INSERT INTO temp_course 
+            (id_chauffeur, id_velo, id_lieu_depart, id_lieu_arrivee, id_client, prix_reservation, date_prise_en_charge, duree_course, heure_arrivee, terminee) 
+            VALUES 
+            (:id_chauffeur, :id_velo, :id_lieu_depart, :id_lieu_arrivee, :id_client, :prix_reservation, :date_prise_en_charge, :duree_course, :heure_arrivee, :terminee)");
+
+        // Exécuter l'insertion
+        $stmt->execute([
+        ':id_chauffeur' => null,
+        ':id_velo' => null, 
+        ':id_lieu_depart' => $id_adresse_depart,
+        ':id_lieu_arrivee' => $id_adresse_arrivee,
+        ':id_client' => 1, 
+        ':prix_reservation' => $prix_reservation,
+        ':date_prise_en_charge' => substr($date_depart, 0, 10),
+        ':duree_course' => $duree_course,
+        ':heure_arrivee' => null, 
+        ':terminee' => $terminée,
         ]);
-    }
+        
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Table temporaire créée et données insérées avec succès.'
+                ]);
+            }
+            
+        else if ($operation=='delete'){
+            $db->exec("DROP TABLE IF EXISTS temp_course");
+        }
+        
+    
 
 } catch (PDOException $e) {
     // Si une erreur de base de données se produit

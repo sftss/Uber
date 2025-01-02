@@ -37,43 +37,43 @@
 
             <div class="navbar-connect">
                 @auth('clients')
-                    <!-- Si un client est connecté -->
                     <span class="navbar-text">Bonjour, <a
                             href="{{ url('/profil/' . auth('clients')->user()->id_client) }}">{{ auth('clients')->user()->prenom_cp }}</a>
-                        !</span> 
+                        !</span>
 
-                        <a href="{{ url('/') }}" onclick="event.preventDefault(); document.getElementById('logout-form-web').submit();" class="btn btn-outline-light">
-                            Déconnexion
-                        </a>
-                        <form id="logout-form-web" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            @csrf
-                        </form>
+                    <a href="{{ url('/') }}"
+                        onclick="event.preventDefault(); document.getElementById('logout-form-web').submit();"
+                        class="btn btn-outline-light">
+                        Déconnexion
+                    </a>
+                    <form id="logout-form-web" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
                 @endauth
 
                 @auth('chauffeurs')
-                    <!-- Si un chauffeur est connecté -->
                     <span class="navbar-text">Bonjour, <a
-                            href="{{ url('/profil-chauffeur/' . auth('chauffeurs')->user()->id_chauffeur) }}">{{ auth('chauffeurs')->user()->prenom_chauffeur }}</a>
-                        !</span>
+                            href="{{ url('/profil-chauffeur/' . auth('chauffeurs')->user()->id_chauffeur) }}">{{ auth('chauffeurs')->user()->prenom_chauffeur }}</a></span>
 
-                        <a href="{{ url('/') }}" onclick="event.preventDefault(); document.getElementById('logout-form-chauffeurs').submit();" class="btn btn-outline-light">
-                            Déconnexion
-                        </a>
-                        <form id="logout-form-chauffeurs" action="{{ route('logoutch') }}" method="POST" style="display: none;">
-                            @csrf
-                        </form>
+                    <a href="{{ url('/') }}"
+                        onclick="event.preventDefault(); document.getElementById('logout-form-chauffeurs').submit();"
+                        class="btn btn-outline-light">
+                        Déconnexion
+                    </a>
+                    <form id="logout-form-chauffeurs" action="{{ route('logoutch') }}" method="POST"
+                        style="display: none;">
+                        @csrf
+                    </form>
                 @endauth
 
                 @guest('clients')
                     @guest('chauffeurs')
-                        <!-- Si ni client ni chauffeur n'est connecté -->
                         <a href="{{ route('login.selection') }}" class="btn btn-outline-light">Connexion</a>
-                        <a href="{{ route('register.form') }}" class="btn btn-light">S'inscrire</a>
+                        <a href="{{ route('register.selection') }}" class="btn btn-light">S'inscrire</a>
                     @endguest
                 @endguest
 
             </div>
-
         </nav>
     </header>
 
@@ -120,7 +120,6 @@
             </div>
         </div>
     </footer>
-
 </body>
 
 </html>

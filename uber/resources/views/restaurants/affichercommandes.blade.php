@@ -34,6 +34,42 @@
                         {{ $commande->menus }}
                     @endif
                 </p>
+                <p>Attribuer un chauffeur</p>
+
+                <form method="POST" action="{{ route('restaurants.attribuerChauffeur', $commande->id_restaurant) }}">
+                    @csrf
+                    <input type="hidden" name="id_commande_repas" value="{{ $commande->id_commande_repas }}">
+                    
+                    @if (is_null($commande->id_chauffeur))
+                        <select name="id_chauffeur" id="id_chauffeur" required>
+                            <option value="" disabled selected>Sélectionner un chauffeur</option>
+                            @foreach ($livreurs as $livreur)
+                                <option value="{{ $livreur->id_chauffeur }}">
+                                    {{ $livreur->nom_chauffeur }} ({{ $livreur->type_chauffeur }})
+                                </option>
+                            @endforeach
+                            <option value="null">Aucun chauffeur</option>
+                        </select>
+                    @else
+                        <p>Chauffeur actuel : {{$commande->nom_chauffeur}}</p>
+                        
+                        <select name="id_chauffeur" id="id_chauffeur" required>
+                            <option value="null">Aucun chauffeur</option>
+                            @foreach ($livreurs as $livreur)
+                                <option value="{{ $livreur->id_chauffeur }}"
+                                    @if ($commande->id_chauffeur == $livreur->id_chauffeur) selected @endif>
+                                    {{ $livreur->nom_chauffeur }} ({{ $livreur->type_chauffeur }})
+                                </option>
+                            @endforeach
+                        </select>
+                    @endif
+
+                    <button type="submit">Attribuer</button>
+                </form>
+
+
+
+
             </div>
         @endif
     @endforeach

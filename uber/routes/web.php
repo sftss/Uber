@@ -58,6 +58,7 @@ Route::get('/restaurants/search', [RestaurantController::class, 'filter'])->name
 Route::get('/restaurants/{id}', [RestaurantController::class, 'show'])->name('restaurants.show');
 
 Route::get('/restaurants/{id}/commandes', [RestaurantController::class, 'affichercommandes'])->name('restaurants.affichercommandes');
+Route::post('/restaurants/{id}/commandes/attribuer-chauffeur', [RestaurantController::class, 'attribuerChauffeur'])->name('restaurants.attribuerChauffeur');
 
 
 Route::get('/lieux/search', [LieuVenteController::class, 'filter'])->name('lieux.search');
@@ -159,9 +160,14 @@ Route::post('/lieux/{lieu_id}/produit/store', [ProduitController::class, 'storeF
 
 Route::post('add/{type}/{id}', [CartController::class, 'add'])->name('cart.add');
 
+// Afficher le formulaire de sélection du type d'inscription
+Route::get('pageinscription', [RegisterController::class, 'showRegistrationSelection'])->name('register.selection');
+
+// Formulaire d'inscription pour les clients
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register.form');
 Route::post('register', [RegisterController::class, 'register'])->name('register');
 
+// Formulaire d'inscription pour les chauffeurs
 Route::get('registerch', [RegisterController::class, 'showRegistrationFormch'])->name('register.formch');
 Route::post('registerch', [RegisterController::class, 'registerch'])->name('registerch');
 
@@ -174,7 +180,7 @@ Route::get('loginch', [LoginController::class, 'showLoginFormch'])->name('loginc
 Route::post('loginch', [LoginController::class, 'loginch'])->name('login.postch');
 Route::post('logoutch', [LoginController::class, 'logoutch'])->name('logoutch');
 // sélection connexion
-Route::get('pagedeconnexion', [LoginController::class, 'showLoginSelection'])->name('login.selection');
+Route::get('pageconnexion', [LoginController::class, 'showLoginSelection'])->name('login.selection');
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::get('loginch', [LoginController::class, 'showLoginFormCh'])->name('loginch');
 Route::get('loginService', [LoginController::class, 'showLoginServiceForm'])->name('loginService');

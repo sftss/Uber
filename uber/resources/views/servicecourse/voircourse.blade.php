@@ -14,9 +14,6 @@
     </form>
 
     @if (isset($courses))
-        <script>
-            console.log(@json($courses));
-        </script>
         @foreach ($courses as $course)
             <div class="course_container">
                 <h3 class="course_title">Course numéro : {{ $course->id_course }}</h3>
@@ -52,7 +49,7 @@
                         @endif
                     </li>
                 </ul>
-                <button>Envoyez les propositions a tous les chauffeurs</button>
+                <button class='envoi'>Envoyez les propositions a tous les chauffeurs</button>
             </div>
         @endforeach
     @else
@@ -60,5 +57,15 @@
             <p>Aucune course n'est disponible pour ce département.</p>
         </div>
     @endif
+
+    <script>
+        const courses = @json($courses);
+        console.log(courses)
+        /*let buttonEnvoi = document.querySelectorAll(".envoi")
+
+        buttonEnvoi.addEventListener('click', (e) => {
+
+        });*/
+    </script>
 
 </body>
