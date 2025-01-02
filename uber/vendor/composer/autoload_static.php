@@ -228,8 +228,8 @@ class ComposerStaticInit9c491b8531eec05ba41a11d9276a5749
         ),
         'Vonage\\' => 
         array (
-            0 => __DIR__ . '/..' . '/vonage/jwt/src',
-            1 => __DIR__ . '/..' . '/vonage/client-core/src',
+            0 => __DIR__ . '/..' . '/vonage/client-core/src',
+            1 => __DIR__ . '/..' . '/vonage/jwt/src',
         ),
         'Twilio\\' => 
         array (
@@ -698,6 +698,9 @@ class ComposerStaticInit9c491b8531eec05ba41a11d9276a5749
         'App\\Models\\EstContenuPlat' => __DIR__ . '/../..' . '/app/Models/EstContenuPlat.php',
         'App\\Models\\EstNote' => __DIR__ . '/../..' . '/app/Models/EstNote.php',
         'App\\Models\\Facture' => __DIR__ . '/../..' . '/app/Models/Facture.php',
+        'App\\Models\\HorairesLieuVente' => __DIR__ . '/../..' . '/app/Models/HorairesLieuVente.php',
+        'App\\Models\\HorairesRestaurant' => __DIR__ . '/../..' . '/app/Models/HorairesRestaurant.php',
+        'App\\Models\\Jour' => __DIR__ . '/../..' . '/app/Models/Jour.php',
         'App\\Models\\LieuVente' => __DIR__ . '/../..' . '/app/Models/LieuVente.php',
         'App\\Models\\Menu' => __DIR__ . '/../..' . '/app/Models/Menu.php',
         'App\\Models\\Note' => __DIR__ . '/../..' . '/app/Models/Note.php',

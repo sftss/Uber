@@ -12,6 +12,6 @@ class APourCategorie extends Model
     protected $table = "a_pour_categorie";
     protected $primaryKey = ['id_restaurant', 'id_categorie'];
     protected $fillable = ['id_restaurant', 'id_categorie'];
-    
+ 
     public $timestamps = false;
 }

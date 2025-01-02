@@ -54,7 +54,11 @@ Route::post('/courses/{id_course}/facture', [FactureController::class, 'genererF
 Route::get('/restaurants/filter', [RestaurantController::class, 'filter'])->name('restaurants.filter');
 
 Route::get('/restaurants/search', [RestaurantController::class, 'filter'])->name('restaurants.search');
+
 Route::get('/restaurants/{id}', [RestaurantController::class, 'show'])->name('restaurants.show');
+
+Route::get('/restaurants/{id}/commandes', [RestaurantController::class, 'affichercommandes'])->name('restaurants.affichercommandes');
+
 
 Route::get('/lieux/search', [LieuVenteController::class, 'filter'])->name('lieux.search');
 Route::get('/lieux/{id}', [LieuVenteController::class, 'show'])->name('lieux.show');
@@ -94,6 +98,18 @@ Route::get('/chauffeur-main', function() {
     return view('chauffeur/chauffeur-main');
 });
 
+Route::get('/service-course', function() {
+    return view('servicecourse/servicecourse-main');
+});
+
+Route::get('/voircourse', function() {
+    return view('servicecourse/voircourse');
+});
+
+
+Route::match(['GET', 'POST'], '/traitement', [AdresseController::class, 'traitement'])->name('traitement');
+
+
 Route::get('/chauffeur-propositions/{id}', [ChauffeurController::class, 'AfficherPropositions'])->name('propositions');
 Route::get('/chauffeur-archives/{id}', [ChauffeurController::class, 'AfficherCoursesPassees'])->name('archives');
 
@@ -102,7 +118,7 @@ Route::get('/professionnel-main', function() {
 });
 
 Route::get('/professionnel-restaurants/{id}', [ClientController::class, 'AfficherRestaurants'])->name('restaurants');
-Route::get('/professionnel-creation/restaurant/{id}', [ClientController::class, 'CreerRestaurant'])->name('creation.restaurant');
+// Route::get('/professionnel-creation/restaurant/{id}', [ClientController::class, 'CreerRestaurant'])->name('creation.restaurant');
 
 
 Route::post('/cart/add/{type}/{id}', [CartController::class, 'add'])->name('cart.add');
@@ -125,19 +141,21 @@ Route::delete('/supprimer-adresse/{id}', [ClientController::class, 'supprimerAdr
 
 Route::get('/commande-list',[ClientController::class ,'voircommandes'])->name('voircommande');
 
-Route::get('/creer-restaurant', [RestaurantController::class, 'affichercreation'])->name('affichercreation');
+Route::get('/creer-restaurant', [RestaurantController::class, 'create'])->name('create');
 Route::post('/restaurants', [RestaurantController::class, 'store'])->name('restaurants.store');
-
 
 Route::get('/restaurant/{restaurant_id}/produit/create', [ProduitController::class, 'create'])->name('produit.create');
 Route::post('produit/store', [ProduitController::class, 'store'])->name('produit.store');
-
 
 Route::get('/restaurant/{restaurant_id}/plat/create', [PlatController::class, 'create'])->name('plat.create');
 Route::post('plat/store', [PlatController::class, 'store'])->name('plat.store');
 
 Route::get('restaurant/{restaurant_id}/menu/create', [MenuController::class, 'create'])->name('menu.create');
 Route::post('menu/store', [MenuController::class, 'store'])->name('menu.store');
+
+Route::get('/lieux/{lieu_id}/produit/create', [ProduitController::class, 'createForLieu'])->name('lieux.produit.create');
+Route::post('/lieux/{lieu_id}/produit/store', [ProduitController::class, 'storeForLieu'])->name('lieux.produit.store');
+
 
 Route::post('add/{type}/{id}', [CartController::class, 'add'])->name('cart.add');
 

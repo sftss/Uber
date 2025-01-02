@@ -17,11 +17,32 @@
         <p><strong>À emporter :</strong> {{ $restaurant->propose_retrait ? 'Oui' : 'Non' }}</p>
         <p><strong>Catégorie :</strong> {{ $restaurant->lib_categorie ?? 'Non spécifiée' }}</p>
         <p><strong>Horaires:</strong>
-            @if ($restaurant->horaires_ouverture && $restaurant->horaires_fermeture)
-                {{ date('H:i', strtotime($restaurant->horaires_ouverture)) }} -
-                {{ date('H:i', strtotime($restaurant->horaires_fermeture)) }}
+            @if ($horaires->isNotEmpty())
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Jour</th>
+                            <th>Horaires</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($horaires as $horaire)
+                            <tr>
+                                <td>{{ ucfirst($horaire->jour) }}</td>
+                                <td>
+                                    @if ($horaire->horaires_ouverture && $horaire->horaires_fermeture)
+                                        {{ date('H:i', strtotime($horaire->horaires_ouverture)) }} -
+                                        {{ date('H:i', strtotime($horaire->horaires_fermeture)) }}
+                                    @else
+                                        Fermé
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             @else
-                Non spécifiés
+                <p>Les horaires ne sont pas disponibles pour ce restaurant.</p>
             @endif
         </p>
     </div>
@@ -30,7 +51,6 @@
 <div class="createProprio">
     @if (auth()->check() && $restaurant->id_proprietaire == auth()->user()->id_client)
         <p>Vous êtes le propriétaire</p>
-
         <div class="createProprioBut">
             <a href="{{ route('produit.create', ['restaurant_id' => $restaurant->id_restaurant]) }}"
                 class="btn btn-primary">Ajouter un produit</a>
@@ -39,6 +59,8 @@
             <a href="{{ route('menu.create', ['restaurant_id' => $restaurant->id_restaurant]) }}"
                 class="btn btn-primary">Ajouter un menu</a>
         </div>
+        <a href="{{ route('restaurants.affichercommandes', ['id' => $restaurant->id_restaurant]) }}"
+                class="btn btn-primary">Afficher les commandes en cours</a>
     @endif
 </div>
 

@@ -14,5 +14,4 @@ class Couleur extends Model
     protected $table = "couleur";
     protected $primaryKey = "id_couleur";
     public $timestamps = false;
-
 }

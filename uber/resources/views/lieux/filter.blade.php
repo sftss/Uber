@@ -48,9 +48,13 @@
                     <h3>{{ $lieu->nom_etablissement }}</h3>
                     <p><strong>Ville :</strong> {{ $lieu->ville }}</p>
                     <p><strong>Livraison :</strong> {{ $lieu->propose_livraison ? 'Oui' : 'Non' }}</p>
-                    <p><strong>Horaires :</strong>
-                        {{ date('H:i', strtotime($lieu->horaires_ouverture)) }} -
-                        {{ date('H:i', strtotime($lieu->horaires_fermeture)) }}
+                    <p><strong>Horaires:</strong>
+                        @if ($lieu->horaires_ouverture && $lieu->horaires_fermeture)
+                            {{ date('H:i', strtotime($lieu->horaires_ouverture)) }} -
+                            {{ date('H:i', strtotime($lieu->horaires_fermeture)) }}
+                        @else
+                            Fermé
+                        @endif
                     </p>
                 </div>
             </a>

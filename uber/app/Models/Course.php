@@ -25,35 +25,28 @@ class Course extends Model
 
     public $timestamps = false;
 
-    public function index()
-    {
+    public function index() {
         $courses = Course::all();
-
         return view('courses.index', compact('courses'));
     }
 
-    public function lieuDepart()
-    {
+    public function lieuDepart() {
         return $this->belongsTo(Adresse::class, 'id_lieu_depart', 'id_adresse');
     }
 
-    public function lieuArrivee()
-    {
+    public function lieuArrivee() {
         return $this->belongsTo(Adresse::class, 'id_lieu_arrivee', 'id_adresse');
     }
 
-    public function chauffeur()
-    {
+    public function chauffeur() {
         return $this->belongsTo(Chauffeur::class, 'id_chauffeur', 'id_chauffeur');
     }
 
-    public function client()
-    {
+    public function client() {
         return $this->belongsTo(Client::class, 'id_client', 'id_client');
     }
-    public function facture() 
-    {
+
+    public function facture() {
         return $this->hasOne(Facture::class, 'id_course', 'id_course');
     }
-
 }

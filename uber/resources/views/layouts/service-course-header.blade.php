@@ -15,7 +15,7 @@
             <div class="navbar-links">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/chauffeur-propositions/7') }}">Courses par Secteur</a>
+                        <a class="nav-link" href="{{ url('/voircourse') }}">Courses par Secteur</a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ url('/') }}" class="nav-link">Affichage Client</a>

@@ -766,6 +766,9 @@ select {
 .hidden {
   top: -100px;
 }
+.is-invalid {
+  border-color: #dc3545;
+}
 .time-slot {
   padding: 5px;
   margin: 5px 0;
@@ -936,7 +939,6 @@ h2 {
   color: #292929;
   margin: 3% 3% 2% 3%;
   text-transform: uppercase;
-  border-left: 4px solid black;
   padding-left: 10px;
 }
 

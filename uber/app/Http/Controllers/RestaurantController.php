@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use App\Models\Adresse;
 use App\Models\Restaurant;
+use App\Models\Jour;
+use App\Models\HorairesRestaurant;
 use App\Models\APourCategorie;
 use Illuminate\Support\Facades\Auth;
 
@@ -53,8 +56,8 @@ class RestaurantController extends Controller
             })
             ->distinct()
             ->paginate(10);
-
             $categories = DB::table('categorie_restaurant')->get();
+
 
             return view('restaurants.filter', compact('restaurants', 'recherche', 'categories', 'horaireOuverture', 'horaireFermeture'));
     }
@@ -83,6 +86,12 @@ class RestaurantController extends Controller
         $recherche = $request->input('recherche');
         $categorie = $request->input('categorie');
 
+        $horaires = DB::table('horaires_restaurant as h')
+            ->join('jour as j', 'j.id_jour', '=', 'h.id_jour')
+            ->where('h.id_restaurant', '=', $id)
+            ->select('j.lib_jour as jour', 'h.horaires_ouverture', 'h.horaires_fermeture')
+            ->orderBy('h.id_jour')
+            ->get();
         $menus = DB::table('menu')
             ->leftjoin('compose_de', 'menu.id_menu', '=', 'compose_de.id_menu')
             ->leftjoin('plat', 'compose_de.id_plat', '=', 'plat.id_plat')
@@ -136,12 +145,14 @@ class RestaurantController extends Controller
         $categorieId = $request->input('categorie', '');
         $categoriesProduits = DB::table('categorie_produit')->get();
 
-        return view('restaurants.show', compact('restaurant', 'menus', 'plats', 'produits', 'categoriesProduits', 'categorieId'));
+        return view('restaurants.show', compact('restaurant', 'menus', 'plats', 'produits', 'categoriesProduits', 'categorieId','horaires'));
     }
 
-    public function affichercreation() {
-        $categories = DB::table('categorie_restaurant')->get(); // Pour autre filtre
-        return view('restaurants.create', compact('categories'));
+    public function create() {
+        $adresses = DB::table('adresse')->get();
+        $categories = DB::table('categorie_restaurant')->get(); 
+        $jours = Jour::all();
+        return view('restaurants.create', compact('adresses', 'jours', 'categories'));
     }
 
     public function store(Request $request) {
@@ -155,12 +166,24 @@ class RestaurantController extends Controller
                 'propose_livraison' => 'boolean',
                 'propose_retrait' => 'boolean',
                 'category' => 'required|exists:categorie_restaurant,id_categorie',
-                'horaires_ouverture' => 'required|date_format:H:i',
-                'horaires_fermeture' => 'required|date_format:H:i',
+                'horaires' => 'required|array',
+                'horaires.*.ouverture' => 'nullable|date_format:H:i',
+                'horaires.*.fermeture' => 'nullable|date_format:H:i',
+                'horaires.*.ferme' => 'nullable|boolean',
                 'photo_restaurant' => 'required|string|max:500',
             ]);
+            Log::info('Données validées', $validatedData);
 
-            $departement = substr($validatedData['cp'], 0, 2) + 1;
+            foreach ($validatedData['horaires'] as $jourId => $horaire) {
+                if (isset($horaire['ouverture'], $horaire['fermeture']) && $horaire['ouverture'] >= $horaire['fermeture']) {
+                    throw ValidationException::withMessages([
+                        "horaires.{$jourId}.ouverture" => "L'heure d'ouverture doit précéder l'heure de fermeture pour le jour {$jourId}.",
+                    ]);
+                }
+            }
+
+            $departement = substr($validatedData['cp'], 0, 2);
+            Log::info('Département créé', ['departement' => $departement]);
 
             $adresse = Adresse::create([
                 'id_departement' => $departement,
@@ -168,26 +191,110 @@ class RestaurantController extends Controller
                 'ville' => $validatedData['ville'],
                 'cp' => $validatedData['cp'],
             ]);
+            Log::info('Adresse créée', ['adresse' => $adresse]);
 
             $restaurant = Restaurant::create([
                 'nom_etablissement' => $validatedData['nom_etablissement'],
                 'description_etablissement' => $validatedData['description_etablissement'],
                 'propose_livraison' => $request->has('propose_livraison') ? 1 : 0,
                 'propose_retrait' => $request->has('propose_retrait') ? 1 : 0,
-                'horaires_ouverture' => $validatedData['horaires_ouverture'],
-                'horaires_fermeture' => $validatedData['horaires_fermeture'],
+                'horaires_ouverture' => $horaire['ouverture'] ?? null,
+                'horaires_fermeture' => $horaire['fermeture'] ?? null,
+                'ferme' => isset($horaire['ferme']) ? 1 : 0,
                 'id_adresse' => $adresse->id_adresse,
                 'photo_restaurant' => $validatedData['photo_restaurant'],
                 'id_proprietaire' => Auth::user()->id_client,
             ]);
+            Log::info('Restaurant créé', ['restaurant' => $restaurant]);
 
-
+            foreach ($validatedData['horaires'] as $jourId => $horaire) {
+                HorairesRestaurant::create([
+                    'id_jour' => $jourId,
+                    'id_restaurant' => $restaurant->id_restaurant,
+                    'horaires_ouverture' => $horaire['ouverture'] ?? null,
+                    'horaires_fermeture' => $horaire['fermeture'] ?? null,
+                    'ferme' => isset($horaire['ferme']) ? 1 : 0,
+                ]);
+            }
+            Log::info('Horaire restaurant créé', ['HorairesRestaurant' => $horaire]);
+            
             DB::table('a_pour_categorie')->insert([
                 'id_restaurant' => $restaurant->id_restaurant,
                 'id_categorie' => $validatedData['category'],
             ]);
         });
+        Log::info('Transaction terminée');
 
         return redirect()->route('restaurants.search')->with('success', 'Restaurant et adresse créés avec succès !');
     }
+    
+    public function affichercommandes($id) {
+
+        $commandes = DB::table('commande_repas as c')
+        ->select(
+            'c.id_commande_repas',
+            'r.nom_etablissement as restaurant',
+            'c.horaire_livraison',
+            'c.temps_de_livraison',
+            DB::raw("STRING_AGG(DISTINCT p.nom_produit, ', ') as produits"),
+            DB::raw("STRING_AGG(DISTINCT pt.libelle_plat, ', ') as plats"),
+            DB::raw("STRING_AGG(DISTINCT m.libelle_menu, ', ') as menus"),
+        )
+        ->leftJoin('est_contenu_dans as ecd', 'ecd.id_commande_repas', '=', 'c.id_commande_repas')
+        ->leftJoin('produit as p', 'ecd.id_produit', '=', 'p.id_produit')
+        ->leftJoin('est_contenu_dans_menu as ecdm', 'ecdm.id_commande_repas', '=', 'c.id_commande_repas')
+        ->leftJoin('menu as m', 'ecdm.id_menu', '=', 'm.id_menu')
+        ->leftJoin('est_contenu_dans_plat as ecdp', 'ecdp.id_commande_repas', '=', 'c.id_commande_repas')
+        ->leftJoin('plat as pt', 'ecdp.id_plat', '=', 'pt.id_plat')
+        ->leftJoin('vends as v', 'p.id_produit', '=', 'v.id_produit')
+        ->leftJoin('propose as pr', 'ecdp.id_plat', '=', 'pr.id_plat')
+        ->leftJoin('propose_menu as pm', 'm.id_menu', '=', 'pm.id_menu')
+        ->leftJoin('restaurant as r', function ($join) {
+            $join->on('v.id_restaurant', '=', 'r.id_restaurant')
+                ->orOn('pr.id_restaurant', '=', 'r.id_restaurant')
+                ->orOn('pm.id_restaurant', '=', 'r.id_restaurant');
+        })
+        ->where('r.id_restaurant', '=', $id)
+        ->groupBy('c.id_commande_repas', 'r.nom_etablissement')
+        ->get();
+
+        $livreurs = DB::table('restaurant as r')
+        ->select('c.*')
+        ->leftJoin('relie_a as ra', 'ra.id_restaurant', '=', 'r.id_restaurant')
+        ->leftJoin('chauffeur as c', 'ra.id_chauffeur', '=', 'c.id_chauffeur')
+        ->where('r.id_restaurant', $id)
+        ->where('c.type_chauffeur', 'Livreur')
+        ->get();
+
+    return view('restaurants.affichercommandes', compact('commandes', 'livreurs'));
+
+    }
 }
+
+
+
+
+/* set search_path to s_uber;
+
+SELECT 
+    c.id_commande_repas,
+    r.nom_etablissement AS restaurant,
+    STRING_AGG(DISTINCT p.nom_produit, ', ') AS produits,
+    STRING_AGG(DISTINCT pt.libelle_plat, ', ') AS plats,
+    STRING_AGG(DISTINCT m.libelle_menu, ', ') AS menus
+FROM
+    commande_repas c
+LEFT JOIN est_contenu_dans ecd ON ecd.id_commande_repas = c.id_commande_repas
+LEFT JOIN produit p ON ecd.id_produit = p.id_produit
+LEFT JOIN est_contenu_dans_menu ecdm ON ecdm.id_commande_repas = c.id_commande_repas
+LEFT JOIN menu m ON ecdm.id_menu = m.id_menu
+LEFT JOIN est_contenu_dans_plat ecdp ON ecdp.id_commande_repas = c.id_commande_repas
+LEFT JOIN plat pt ON ecdp.id_plat = pt.id_plat
+LEFT JOIN vends v ON p.id_produit = v.id_produit
+LEFT JOIN propose pr ON ecdp.id_plat = pr.id_plat
+LEFT JOIN propose_menu pm ON m.id_menu = pm.id_menu
+LEFT JOIN restaurant r ON v.id_restaurant = r.id_restaurant
+                        OR pr.id_restaurant = r.id_restaurant
+                        OR pm.id_restaurant = r.id_restaurant
+WHERE r.id_restaurant = 2
+GROUP BY c.id_commande_repas, r.nom_etablissement;*/

@@ -128,13 +128,13 @@ try {
 
 
         //Recup id chauffeur avec son nom et prenom
-        $stmid_chauffeur = $db->prepare("SELECT id_chauffeur FROM chauffeur WHERE nom_chauffeur = :nom and prenom_chauffeur = :prenom ");
+       /* $stmid_chauffeur = $db->prepare("SELECT id_chauffeur FROM chauffeur WHERE nom_chauffeur = :nom and prenom_chauffeur = :prenom ");
         $stmid_chauffeur->execute([
             ':nom' => $chauffeur_nom,
             ':prenom' => $chauffeur_prenom,
         ]);
         $id_chauffeur = $stmid_chauffeur->fetch(PDO::FETCH_ASSOC);
-        $id_chauffeur = $id_chauffeur['id_chauffeur']; 
+        $id_chauffeur = $id_chauffeur['id_chauffeur']; */
         $duree_course = $heurescourse . ":" . $minutescourse . ":" . $secondescourse;
 
         $terminée = 'false';
@@ -144,7 +144,7 @@ try {
         VALUES 
         (:id_chauffeur, :id_velo, :id_lieu_depart, :id_lieu_arrivee, :id_client, :prix_reservation, :date_prise_en_charge, :duree_course, :heure_arrivee, :terminee)");
         $stm_insert_course->execute([
-        ':id_chauffeur' => $id_chauffeur,
+        ':id_chauffeur' => null,
         ':id_velo' => null, // ou un id vélo valide si applicable
         ':id_lieu_depart' => $id_adresse_depart,
         ':id_lieu_arrivee' => $id_adresse_arrivee,

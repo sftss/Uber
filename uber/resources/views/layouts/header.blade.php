@@ -36,22 +36,18 @@
             </div>
 
             <div class="navbar-connect">
-                @auth('web')
+                @auth('clients')
                     <!-- Si un client est connecté -->
-                    {{-- <!-- <span class="navbar-text">Bonjour, <a
-                            href="{{ url('/profil/' . auth('web')->user()->id_client) }}">{{ auth('web')->user()->prenom_cp }}</a>
-                        !</span> --> --}}
-                    <a href="{{ url('/profil/' . auth('web')->user()->id_client) }}"
-                        class="btn btn-outline-light">Informations
-                        du compte</a>
+                    <span class="navbar-text">Bonjour, <a
+                            href="{{ url('/profil/' . auth('clients')->user()->id_client) }}">{{ auth('clients')->user()->prenom_cp }}</a>
+                        !</span> 
 
-                    <a href="{{ url('/') }}"
-                        onclick="event.preventDefault(); document.getElementById('logout-form-web').submit();"
-                        class="btn btn-outline-light">Déconnexion</a>
-
-                    <form id="logout-form-web" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
+                        <a href="{{ url('/') }}" onclick="event.preventDefault(); document.getElementById('logout-form-web').submit();" class="btn btn-outline-light">
+                            Déconnexion
+                        </a>
+                        <form id="logout-form-web" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
                 @endauth
 
                 @auth('chauffeurs')
@@ -60,25 +56,22 @@
                             href="{{ url('/profil-chauffeur/' . auth('chauffeurs')->user()->id_chauffeur) }}">{{ auth('chauffeurs')->user()->prenom_chauffeur }}</a>
                         !</span>
 
-                    <a href="{{ url('/profil-chauffeur/' . auth('chauffeurs')->user()->id_chauffeur) }}"
-                        class="btn btn-outline-light">Informations du compte</a>
-
-                    <a href="{{ url('/') }}"
-                        onclick="event.preventDefault(); document.getElementById('logout-form-chauffeurs').submit();"
-                        class="btn btn-outline-light">Déconnexion</a>
-
-                    <form id="logout-form-chauffeurs" action="{{ route('logoutch') }}" method="POST"
-                        style="display: none;">
-                        @csrf
-                    </form>
+                        <a href="{{ url('/') }}" onclick="event.preventDefault(); document.getElementById('logout-form-chauffeurs').submit();" class="btn btn-outline-light">
+                            Déconnexion
+                        </a>
+                        <form id="logout-form-chauffeurs" action="{{ route('logoutch') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
                 @endauth
 
-                @guest('web')
+                @guest('clients')
                     @guest('chauffeurs')
+                        <!-- Si ni client ni chauffeur n'est connecté -->
                         <a href="{{ route('login.selection') }}" class="btn btn-outline-light">Connexion</a>
                         <a href="{{ route('register.form') }}" class="btn btn-light">S'inscrire</a>
                     @endguest
                 @endguest
+
             </div>
 
         </nav>

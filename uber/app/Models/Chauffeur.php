@@ -14,8 +14,7 @@ class Chauffeur extends Authenticatable
     protected $primaryKey = "id_chauffeur";
     public $timestamps = false;
 
-    public function adresse(): HasOne
-    {
+    public function adresse(): HasOne {
         return $this->hasOne(
             Adresse::class, 
             "id_adresse", 
@@ -23,8 +22,7 @@ class Chauffeur extends Authenticatable
         );
     }
 
-    public function vehicule(): HasOne
-    {
+    public function vehicule(): HasOne {
         return $this->hasOne(
             Vehicule::class,
             "id_chauffeur",
@@ -39,6 +37,6 @@ class Chauffeur extends Authenticatable
     ];
 
     protected $hidden = [
-        'mdp_chauffeur', // Pour cacher le mot de passe dans les réponses JSON
+        'mdp_chauffeur', 
     ];
 }

@@ -10,9 +10,7 @@ class Possede extends Model
     use HasFactory;
 
     protected $table = 'possede';
-
     protected $primaryKey = ['id_client', 'id_cb'];
-
     public $incrementing = false;
 
     protected $fillable = [

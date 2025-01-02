@@ -16,16 +16,12 @@ use App\Models\Course;
 class ClientController extends Controller
 {
     // Ajouter un middleware pour s'assurer que l'utilisateur est authentifié
-    public function __construct()
-    {
+    public function __construct() {
         $this->middleware("auth");
     }
 
-    public function panierclient(Request $request)
-    {
-        // Vérifier si l'utilisateur est authentifié
+    public function panierclient(Request $request) {
         if (Auth::check()) {
-            // Récupérer l'ID du client connecté
             $clientId = Auth::user()->id_client;
 
             $paniers = DB::table("panier as p")
@@ -89,12 +85,10 @@ class ClientController extends Controller
                 );
         }
     }
-    public function profil($id)
-    {
-        // Récupération de l'utilisateur connecté
+    
+    public function profil($id) {
         $currentUser = auth()->user();
 
-        // Vérification que l'utilisateur connecté est autorisé à accéder à cette page
         if (!$currentUser || $currentUser->id_client != $id) {
             return redirect("/")->with(
                 "error",
@@ -102,7 +96,6 @@ class ClientController extends Controller
             );
         }
 
-        // Récupération des données du client et des cartes bancaires associées
         $client = DB::table("client as c")
             ->leftJoin("possede as p", "p.id_client", "=", "c.id_client")
             ->leftJoin("cb as cb", "cb.id_cb", "=", "p.id_cb")
@@ -136,22 +129,18 @@ class ClientController extends Controller
             return redirect("/")->with("error", "Utilisateur introuvable.");
         }
 
-        // Retourner la vue avec les informations du client et des cartes
         return view("auth.profil", ["client" => $client]);
     }
 
-    public function ajtadresse()
-    {
+    public function ajtadresse() {
         return view("client.client_ajt_adresse");
     }
-    public function ajtcarte()
-    {
+
+    public function ajtcarte() {
         return view("auth.add-card");
     }
 
-    public function valideadresse(Request $request)
-    {
-        // Validation des champs
+    public function valideadresse(Request $request) {
         $validatedData = $request->validate(
             [
                 "rue" => "required|string|max:255",
@@ -199,12 +188,10 @@ class ClientController extends Controller
         }
     }
 
-    public function supprimerAdresse($id, Request $request)
-    {
+    public function supprimerAdresse($id, Request $request) {
         $adresse = Adresse::find($id);
 
         if ($adresse) {
-            // Supprimer la relation avec SeFaitLivrerA
             SeFaitLivrerA::where("id_adresse", $id)->delete();
 
             $adresse->delete();
@@ -235,9 +222,7 @@ class ClientController extends Controller
         }
     }
 
-    public function validerPanier(Request $request)
-    {
-        // Récupérer les adresses de l'utilisateur
+    public function validerPanier(Request $request) {
         $adresses = DB::table("adresse as a")
             ->leftJoin(
                 "se_fait_livrer_a as sfla",
@@ -249,10 +234,7 @@ class ClientController extends Controller
             ->where("sfla.id_client", Auth::user()->id_client)
             ->get();
 
-        // Debug : Voir les adresses récupérées
-
-        // Si la collection est vide (aucune adresse)
-        if ($adresses->isEmpty()) {
+            if ($adresses->isEmpty()) {
             return redirect()
                 ->route("ajtadresse", ["from" => "cart"])
                 ->with(
@@ -260,12 +242,10 @@ class ClientController extends Controller
                     "Veuillez ajouter une adresse avant de valider votre panier."
                 );
         } elseif (count($adresses) > 1) {
-            // Si l'utilisateur a exactement une adresse, l'utiliser pour valider le panier
             $adresse = $adresses[0];
             if ($adresse == null) {
                 echo "<script>console.log('Ceci est un message PHP dans la console');</script>";
             }
-            // Récupérer la première adresse
             else {
                 $this->validerAvecAdresse($adresse, $request);
             }
@@ -275,12 +255,10 @@ class ClientController extends Controller
         }
     }
 
-    public function validerAvecAdresse(Request $request)
-    {
+    public function validerAvecAdresse(Request $request) {
         $idAdresse = $request->input("adresse");
         $idCarte = $request->input("carte");
 
-        // Vérification de la carte bancaire
         $carte = DB::table("cb")
             ->where("id_cb", $idCarte)
             ->first();
@@ -291,7 +269,6 @@ class ClientController extends Controller
                 ->with("error", "La carte bancaire sélectionnée est invalide.");
         }
 
-        // Vérification de l'adresse
         $adresse = DB::table("adresse")
             ->where("id_adresse", $idAdresse)
             ->first();
@@ -302,7 +279,6 @@ class ClientController extends Controller
                 ->with("error", 'L\'adresse sélectionnée est invalide.');
         }
 
-        // Création de la commande
         $commande = new CommandeRepas();
         $commande->id_adresse = $idAdresse;
         $commande->id_chauffeur = null;
@@ -312,10 +288,8 @@ class ClientController extends Controller
         $commande->temps_de_livraison = null;
         $commande->save();
 
-        // ID de la commande
         $idCommandeRepas = $commande->id_commande_repas;
 
-        // Récupération du panier et enregistrement des détails de commande
         $idPanier = DB::table("panier")
             ->where("id_client", Auth::user()->id_client)
             ->value("id_panier");
@@ -328,16 +302,13 @@ class ClientController extends Controller
 
         $this->transfererContenuPanier($idPanier, $idCommandeRepas);
 
-        // Redirection avec succès
         return view("cart.confirmed")->with(
             "success",
             "Votre commande a été validée avec succès."
         );
     }
 
-    private function transfererContenuPanier($idPanier, $idCommandeRepas)
-    {
-        // Récupération des produits
+    private function transfererContenuPanier($idPanier, $idCommandeRepas) {
         $produits = DB::table("contient as c")
             ->join("produit as p", "c.id_produit", "=", "p.id_produit")
             ->where("c.id_panier", $idPanier)
@@ -349,14 +320,12 @@ class ClientController extends Controller
             )
             ->get();
 
-        // Récupération des plats
         $plats = DB::table("contient_plat as c")
             ->join("plat as p", "c.id_plat", "=", "p.id_plat")
             ->where("c.id_panier", $idPanier)
             ->select("c.id_plat", "c.quantite", "p.libelle_plat", "p.prix_plat")
             ->get();
 
-        // Récupération des menus
         $menus = DB::table("contient_menu as c")
             ->join("menu as m", "c.id_menu", "=", "m.id_menu")
             ->where("c.id_panier", $idPanier)
@@ -388,8 +357,7 @@ class ClientController extends Controller
         }
     }
 
-    public function terminer($id)
-    {
+    public function terminer($id) {
         $course = Course::findOrFail($id);
         $terminee = "true";
         echo "<script>console.log(" . $course . ")</script>";
@@ -424,11 +392,9 @@ class ClientController extends Controller
             ->with("success", "Course terminée avec succès.");
     }
 
-    public function voircommandes()
-    {
+    public function voircommandes() {
         $clientId = Auth::user()->id_client;
 
-        // Récupération des données du client et des cartes bancaires associées
         $commandes = DB::table("commande_repas as cr")
             ->leftJoin(
                 "est_contenu_dans as ecd",
@@ -471,22 +437,12 @@ class ClientController extends Controller
         return view("cart/commande-list", ["commandes" => $commandes]);
     }
 
-    public function CreerRestaurant()
-    {
-        // Récupérer toutes les catégories disponibles
-        $categories = DB::table("categorie_restaurant")->get();
-
-        return view("professionnel-creation-restaurant", compact("categories"));
-    }
-
-    public function edit()
-    {
+    public function edit() {
         $client = Auth::user(); 
         return view('client.edit', compact('client'));
     }
 
-    public function update(Request $request)
-    {
+    public function update(Request $request) {
         $request->validate([
             'email' => 'required|email',
             'nom' => 'required|string|max:255',
@@ -506,8 +462,7 @@ class ClientController extends Controller
             ->with('success', 'Vos informations ont été mises à jour.');
     }
 
-    public function updatePhoto(Request $request)
-    {
+    public function updatePhoto(Request $request) {
         $request->validate([
             'pp_img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);

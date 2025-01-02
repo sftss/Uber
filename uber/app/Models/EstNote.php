@@ -14,13 +14,11 @@ class EstNote extends Model
     protected $fillable = ['id_note', 'id_chauffeur'];
     public $timestamps = false;
 
-    public function note()
-    {
+    public function note() {
         return $this->belongsTo(Note::class, 'id_note');
     }
 
-    public function chauffeur()
-    {
+    public function chauffeur() {
         return $this->belongsTo(Chauffeur::class, 'id_chauffeur');
     }
 }

@@ -74,7 +74,7 @@
                             {{ date('H:i', strtotime($restaurant->horaires_ouverture)) }} -
                             {{ date('H:i', strtotime($restaurant->horaires_fermeture)) }}
                         @else
-                            Non spécifiés
+                            Fermé
                         @endif
                     </p>
                 </div>

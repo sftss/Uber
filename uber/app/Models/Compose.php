@@ -9,10 +9,7 @@ class Compose extends Model
 {
     use HasFactory;
     protected $table = 'compose';
-
-    // Définir la clé primaire composite
     protected $primaryKey = ['id_menu', 'id_produit'];
-
     public $incrementing = false;
 
     protected $fillable = [

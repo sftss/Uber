@@ -3,7 +3,7 @@
 
 <main class="container">
     <section class="privacy-policy">
-        <h1 class="text-center title">Mise en conformité avec la réglementation sur les cookies</h1>
+        <h1 class="text-center title">Politique de confidentialité</h1>
 
         <div class="section">
             <h2>Présentation</h2>
@@ -159,6 +159,17 @@
                 personnelles et la mise en place des mises à jour régulières des systèmes permet de minimiser les
                 risques.</p>
         </div>
+
+        <div class="section">
+            <h2>Contact DPO</h2>
+            <p>Le DPO garantit que les règles relatives à la collecte et à la sécurité des données personnelles dans le
+                cadre du RGPD sont respectées. Si vous avez une quelconque réclamations ou question, vous pouvez
+                contacter le DPO de UBER France à l'aide de ces coordonnées :</p>
+            <p><strong>Nom et prénom : </strong>TASDEMIR Sefer</p>
+            <p><strong>Adresse : </strong>5 Rue CHARLOT 75003 PARIS 3</p>
+            <p><strong>Adresse éléctronique : </strong>sefer.tasdemir@etu.univ-smb.fr</p>
+            <p><strong>Téléphone : </strong>+33 6 52 60 65 60</p>
+        </div>
     </section>
 </main>
 
@@ -172,7 +183,6 @@
         }
 
         .title {
-            color: #4CAF50;
             font-size: 2.5em;
             margin-bottom: 20px;
             text-align: center;
@@ -186,7 +196,6 @@
         }
 
         h2 {
-            color: #4CAF50;
             font-size: 1.8em;
             margin-top: 0;
         }

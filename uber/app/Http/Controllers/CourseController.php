@@ -210,4 +210,7 @@ class CourseController extends Controller
         $course = Course::findOrFail($courseId);
         return view('Facture', ['course' => $course]);
     }
+
+
+
 }

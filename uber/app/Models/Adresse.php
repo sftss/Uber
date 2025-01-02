@@ -15,15 +15,14 @@ class Adresse extends Model
     protected $primaryKey = "id_adresse";
     public $timestamps = false;
 
+    protected $fillable = [
+         'id_adresse','id_departement', 'rue', 'ville', 'cp'
+    ];
+
     public function departement(): HasOne{
         return $this->hasOne(
             Departement::class, 
             "id_departement", 
             "id_departement");
     }
-
-    protected $fillable = [
-         'id_adresse','id_departement', 'rue', 'ville', 'cp'
-    ];
-
 }

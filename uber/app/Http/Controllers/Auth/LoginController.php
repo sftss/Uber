@@ -59,7 +59,7 @@ class LoginController extends Controller
 
     public function logout()
     {
-        Auth::logout();
+        Auth::guard('clients')->logout(); // Utilisez 'clients' ici
         return redirect()->route('home')->with('success', 'Déconnexion réussie.');
     }
 
@@ -72,20 +72,23 @@ class LoginController extends Controller
 
 
         $Chauffeur = Chauffeur::where('mail_chauffeur', $request->mail_chauffeur)->first();
-
+        if (!$Chauffeur) {
+            // Si aucun chauffeur n'est trouvé, renvoyez une réponse ou une erreur
+            return redirect()->back()->withErrors(['email' => 'Chauffeur non trouvé.']);
+        }
         Auth::guard('chauffeurs')->login($Chauffeur);
 
         if ($Chauffeur && Hash::check($request->mdp_chauffeur, $Chauffeur->mdp_chauffeur)) {
-            session(['role' => $role]);
+            //session(['role' => $role]);
 
             return redirect()->route('home')->with('success', 'Inscription réussie. Un email de confirmation vous a été envoyé.');
         }
         return redirect()->back()->withErrors(['mail_chauffeur' => 'Les informations de connexion sont incorrectes.']);
     }
 
-    public function logoutch()
+    public function logoutCh()
     {
-        Auth::guard('chauffeurs')->logout();
+        Auth::guard('chauffeurs')->logout(); // Utilisez 'chauffeurs' ici
         return redirect()->route('home')->with('success', 'Déconnexion réussie.');
     }
 }

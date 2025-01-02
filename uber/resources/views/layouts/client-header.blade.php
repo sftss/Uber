@@ -39,9 +39,7 @@
                             href="{{ url('/profil/' . auth('web')->user()->id_client) }}">{{ auth('web')->user()->prenom_cp }}</a>
                         !</span>
 
-                    <a href="{{ url('/profil/' . auth('web')->user()->id_client) }}"
-                        class="btn btn-outline-light">Informations
-                        du compte</a>
+                    
 
                     <a href="{{ url('/') }}"
                         onclick="event.preventDefault(); document.getElementById('logout-form-web').submit();"
@@ -57,9 +55,6 @@
                     <span class="navbar-text">Bonjour, <a
                             href="{{ url('/profil-chauffeur/' . auth('chauffeurs')->user()->id_chauffeur) }}">{{ auth('chauffeurs')->user()->prenom_chauffeur }}</a>
                         !</span>
-
-                    <a href="{{ url('/profil-chauffeur/' . auth('chauffeurs')->user()->id_chauffeur) }}"
-                        class="btn btn-outline-light">Informations du compte</a>
 
                     <a href="{{ url('/') }}"
                         onclick="event.preventDefault(); document.getElementById('logout-form-chauffeurs').submit();"

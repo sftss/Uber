@@ -9,10 +9,7 @@ class Propose extends Model
 {
     use HasFactory;
     protected $table = 'propose';
-
-    // Définir la clé primaire composite
     protected $primaryKey = ['id_restaurant', 'id_plat'];
-
     public $incrementing = false;
 
     protected $fillable = [

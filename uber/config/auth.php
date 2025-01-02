@@ -3,20 +3,20 @@
 return [
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'clients',
         'passwords' => 'users',
     ],
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'clients',
-        ],
-        'chauffeurs' => [
-            'driver' => 'session',
-            'provider' => 'chauffeurs',
-        ],
+    'clients' => [
+        'driver' => 'session',
+        'provider' => 'clients',
     ],
+    'chauffeurs' => [
+        'driver' => 'session',
+        'provider' => 'chauffeurs',
+    ],
+],
 
     'providers' => [
         'clients' => [

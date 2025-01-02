@@ -9,10 +9,7 @@ class Vends extends Model
 {
     use HasFactory;
     protected $table = 'vends';
-
-    // Définir la clé primaire composite
     protected $primaryKey = ['id_restaurant', 'id_produit'];
-
     public $incrementing = false;
 
     protected $fillable = [

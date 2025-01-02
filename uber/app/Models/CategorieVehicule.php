@@ -14,5 +14,4 @@ class CategorieVehicule extends Model
     protected $table = "categorie_vehicule";
     protected $primaryKey = "id_categorie_vehicule";
     public $timestamps = false;
-
 }

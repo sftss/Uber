@@ -11,7 +11,7 @@ class Note extends Model
 
     protected $table = "note";
     protected $primaryKey = "id_note";
-        protected $fillable = ['valeur_note'];
+    protected $fillable = ['valeur_note'];
 
     public $timestamps = false;
 }

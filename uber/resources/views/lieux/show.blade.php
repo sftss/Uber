@@ -1,23 +1,55 @@
 @extends('layouts.header')
-
 <link href="{{ asset('assets/style/app.css') }}" rel="stylesheet">
 <link rel="icon" href="{{ URL::asset('assets/svg/uber-logo.svg') }}" type="image/svg+xml">
-
-<a href="{{ url('/lieux/search') }}">
-    <p>Retour</p>
-</a>
 
 <div class="restaurant-card">
     <img src="{{ $lieu->photo_lieu }}" alt="Image de {{ $lieu->nom_etablissement }} " class="restaurant-image">
     <div class="lieu-vente-details">
         <h3>{{ $lieu->nom_etablissement }}</h3>
-        <p><strong>Ville :</strong> {{ $lieu->ville }}</p>
+        <p><strong>Adresse : </strong> {{ $lieu->adresse->rue }} {{ $lieu->adresse->cp }} {{ $lieu->adresse->ville }}
+        </p>
         <p><strong>Livraison :</strong> {{ $lieu->propose_livraison ? 'Oui' : 'Non' }}</p>
-        <p><strong>Horaires :</strong>
-            {{ date('H:i', strtotime($lieu->horaires_ouverture)) }} -
-            {{ date('H:i', strtotime($lieu->horaires_fermeture)) }}
+        <p><strong>Horaires:</strong>
+            @if ($horaires->isNotEmpty())
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Jour</th>
+                            <th>Horaires</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($horaires as $horaire)
+                            <tr>
+                                <td>{{ $horaire->lib_jour }}</td>
+                                <td>
+                                    @if ($horaire->horaires_ouverture && $horaire->horaires_fermeture)
+                                        {{ date('H:i', strtotime($horaire->horaires_ouverture)) }} -
+                                        {{ date('H:i', strtotime($horaire->horaires_fermeture)) }}
+                                    @else
+                                        Fermé
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <p>Les horaires ne sont pas disponibles pour ce restaurant.</p>
+            @endif
         </p>
     </div>
+</div>
+
+<div class="createProprio">
+    @if (auth()->check() && $lieu->id_proprietaire == auth()->user()->id_client)
+        <p>Vous êtes le propriétaire</p>
+        <div class="createProprioBut">
+            <a class="btn btn-primary"
+                href="{{ route('lieux.produit.create', ['lieu_id' => $lieu->id_lieu_de_vente_pf]) }}">Ajouter un
+                produit</a>
+        </div>
+    @endif
 </div>
 
 <form method="GET" action="{{ route('lieux.show', $lieu->id_lieu_de_vente_pf) }}" class="filter-form">
@@ -68,10 +100,8 @@
 <script src="{{ asset('js/main.js') }}"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Sélectionner l'alerte
         const alert = document.querySelector('.alert');
         if (alert) {
-            // Attendre 5 secondes (5000 ms) avant de masquer l'alerte
             setTimeout(() => {
                 alert.classList.add('hide');
             }, 5000);

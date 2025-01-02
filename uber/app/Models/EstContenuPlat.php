@@ -9,13 +9,8 @@ class EstContenuPlat extends Model
 {
     use HasFactory;
     protected $table = 'est_contenu_dans_plat';
-
-    // Définir la clé primaire composite
-    protected $primaryKey = ['id_pla', 'id_commande_repas'];
-
-    // Indiquer que la clé primaire composite n'est pas auto-incrémentée
+    protected $primaryKey = ['id_plat', 'id_commande_repas'];
     public $incrementing = false;
-
     protected $fillable = [
         'id_plat',
         'id_commande_repas',

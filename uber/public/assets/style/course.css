@@ -547,6 +547,7 @@ li.acceptee {
   cursor: pointer;
 }
 .review-form {
+  max-width: 40%;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -691,38 +692,38 @@ button[disabled]:hover {
   background-color: #218838;
 }
 .language-selector {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: Arial, sans-serif;
 }
 
 #labelLangue {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #333;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
 }
 
 #langue {
-    padding: 10px 15px;
-    font-size: 1rem;
-    font-weight: normal;
-    color: #333;
-    background-color: #f1f1f1;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    outline: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  padding: 10px 15px;
+  font-size: 1rem;
+  font-weight: normal;
+  color: #333;
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 #langue:focus {
-    border-color: #048f4c;
-    box-shadow: 0 0 5px rgba(107, 219, 150, 0.5);
+  border-color: #048f4c;
+  box-shadow: 0 0 5px rgba(107, 219, 150, 0.5);
 }
 option {
-  background-color: #dddddd ;
+  background-color: #dddddd;
 }
 #langue:hover {
-    background-color: #eaeaea;
+  background-color: #eaeaea;
 }

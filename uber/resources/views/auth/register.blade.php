@@ -139,8 +139,8 @@
                                 <input type="checkbox" name="politique_confidentialite" id="politique_confidentialite"
                                     required>
                                 <label for="politique_confidentialite" class="ml-2">
-                                    J'ai lu et j'accepte la <a class="txtPolConf" href="{{ route('politique') }}"
-                                        target="_blank">politique de confidentialité (voir ici)</a>
+                                    J'ai lu et j'accepte la <a class="txtPolConf"
+                                        href="{{ route('politique') }}">politique de confidentialité (voir ici)</a>
                                 </label>
                             </div>
                         </div>
