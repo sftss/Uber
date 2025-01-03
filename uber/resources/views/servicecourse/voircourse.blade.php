@@ -52,13 +52,8 @@
                 <button class='envoi'>Envoyez les propositions a tous les chauffeurs</button>
             </div>
         @endforeach
-    @else
-        <div class="no_courses_message">
-            <p>Aucune course n'est disponible pour ce département.</p>
-        </div>
-    @endif
-
-    <script>
+        <script>
+        
         const courses = @json($courses);
         console.log(courses)
         /*let buttonEnvoi = document.querySelectorAll(".envoi")
@@ -67,5 +62,12 @@
 
         });*/
     </script>
+    @else
+        <div class="no_courses_message">
+            <p>Aucune course n'est disponible pour ce département.</p>
+        </div>
+    @endif
+
+ 
 
 </body>

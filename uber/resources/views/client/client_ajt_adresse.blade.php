@@ -3,6 +3,8 @@
 
 <form action="{{ route('ajouter.adresse') }}" method="POST" class="adresse-form">
     @csrf
+    <h1 style="text-align:center;margin:0 0 2% 0;">Modifier mes informations</h1>
+
     <div class="form-group">
         <label for="rue" class="form-label">Rue :</label>
         <input type="text" id="rue" name="rue" required maxlength="255" class="form-input">

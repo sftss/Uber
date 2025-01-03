@@ -30,8 +30,7 @@
         <select id="categorie" name="categorie" class="form-input">
             <option value="">Toutes les catégories</option>
             @foreach ($categories as $categorie)
-                <option value="{{ $categorie->id_categorie }}"
-                    {{ request('categorie') == $categorie->id_categorie ? 'selected' : '' }}>
+                <option value="{{ $categorie->id_categorie }}">
                     {{ $categorie->lib_categorie }}
                 </option>
             @endforeach

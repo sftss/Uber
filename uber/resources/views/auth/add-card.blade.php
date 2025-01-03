@@ -38,5 +38,10 @@
             <button type="submit" class="btn btn-primary">Ajouter la carte</button>
         </div>
     </form>
-
 </div>
+
+<script>
+    document.querySelector('form').addEventListener('submit', function() {
+        this.querySelector('button[type="submit"]').disabled = true;
+    });
+</script>

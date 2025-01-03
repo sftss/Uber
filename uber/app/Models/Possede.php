@@ -19,4 +19,13 @@ class Possede extends Model
     ];
 
     public $timestamps = false;
+
+    public function client() {
+        return $this->belongsTo(Client::class, 'id_client');
+    }
+
+    public function carte() {
+        return $this->belongsTo(CB::class, 'id_cb');
+    }
+
 }

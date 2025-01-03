@@ -1,4 +1,4 @@
-@extends('layouts.header')
+<!-- @extends('layouts.header')
 
 <link rel="stylesheet" href="{{ URL::asset('assets/style/compte.css') }}" />
 
@@ -43,4 +43,4 @@
         </div>
     </div>
 </div>
-
+ -->

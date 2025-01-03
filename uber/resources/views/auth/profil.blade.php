@@ -41,6 +41,7 @@
                         <div class="modal-header">
                             <h4 class="modal-title" id="cardModalLabel">Cartes Bancaires Associées</h4>
                         </div>
+                        <hr />
                         <div class="modal-body">
                             @foreach ($client as $card)
                                 <div class="card-info affichageCB">
@@ -52,7 +53,6 @@
                                         {{ \Carbon\Carbon::parse($card->date_fin_validite)->format('m/y') ?? 'Non renseigné' }}
                                     </p>
                                     <p><strong>Type de carte :</strong> {{ $card->type_cb ?? 'Non renseigné' }}</p>
-                                    <!-- Lien pour supprimer la carte -->
                                     <a href="{{ route('card.delete', ['id_client' => Auth::user()->id_client, 'id_cb' => $card->id_cb]) }}"
                                         class="btn btn-danger"
                                         onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette carte ?')">‣
@@ -97,9 +97,8 @@
                 <p id="sansAdresse">Vous n'avez pas d'adresse enregistrée, veuillez en enregistrer une.</p>
             @endif
             <a href="{{ route('ajtadresse', ['from' => 'profil']) }}" class="btn btn-outline-light ajouterInfo">Ajouter
-                une adresse 🏠</a>
+                une adresse favorite 🏠</a>
         </div>
-
         <hr>
 
         <div class="actions">

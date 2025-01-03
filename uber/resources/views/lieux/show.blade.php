@@ -63,9 +63,8 @@
         <select id="categorie" name="categorie" class="form-input">
             <option value="">-- Sélectionner une catégorie --</option>
             @foreach ($categories as $categorie)
-                <option value="{{ $categorie->id_categorie_produit }}"
-                    {{ request('categorie') == $categorie->id_categorie_produit ? 'selected' : '' }}>
-                    {{ $categorie->libelle_categorie }}
+                <option value="{{ $categorie->id_categorie }}">
+                    {{ $categorie->lib_categorie }}
                 </option>
             @endforeach
         </select>

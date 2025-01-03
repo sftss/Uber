@@ -48,6 +48,7 @@
                 <label for="propose_retrait">À emporter</label>
             </div>
         </div>
+
         <div class="form-group">
             <label for="category">Catégorie</label>
             <select id="category" name="category" class="form-control" required>

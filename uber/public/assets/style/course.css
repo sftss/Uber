@@ -720,3 +720,9 @@ option {
 #langue:hover {
   background-color: #eaeaea;
 }
+.no-courses-message {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 18px;
+  color: #666;
+}

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use App\Models\Adresse;
 use App\Models\Restaurant;
+use App\Models\Chauffeur;
 use App\Models\Jour;
 use App\Models\CommandeRepas;
 use App\Models\HorairesRestaurant;
@@ -293,17 +294,39 @@ class RestaurantController extends Controller
     {
         $commande = CommandeRepas::findOrFail($request->id_commande_repas);
 
+        // Si aucun chauffeur n'est attribué
         if ($request->id_chauffeur === 'null') {
-            $commande->id_chauffeur = null;
+            // Si un chauffeur était déjà attribué, on le remet disponible
+            if ($commande->id_chauffeur !== null) {
+                $chauffeur = Chauffeur::findOrFail($commande->id_chauffeur);
+                $chauffeur->est_dispo = 'true'; // Remettre à disponible
+                $chauffeur->save();
+            }
+
+            $commande->id_chauffeur = null; // Désattribution du chauffeur
         } else {
+            // Si un chauffeur est sélectionné
+            // Si un chauffeur était déjà attribué, on le remet disponible
+            if ($commande->id_chauffeur !== null) {
+                $chauffeur = Chauffeur::findOrFail($commande->id_chauffeur);
+                $chauffeur->est_dispo = 'true'; // Remettre à disponible
+                $chauffeur->save();
+            }
+
+            // Attribution du nouveau chauffeur
             $commande->id_chauffeur = $request->id_chauffeur;
+            $chauffeur = Chauffeur::findOrFail($request->id_chauffeur);
+            $chauffeur->est_dispo = 'false'; // Marquer comme non disponible
+            $chauffeur->save();
         }
 
+        // Sauvegarder la commande avec l'attribution du chauffeur
         $commande->save();
 
         return redirect()->route('restaurants.affichercommandes', $id)
                         ->with('success', 'Chauffeur attribué avec succès.');
     }
+
 
 
 

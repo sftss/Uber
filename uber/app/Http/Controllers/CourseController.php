@@ -56,13 +56,20 @@ class CourseController extends Controller
             // ->paginate(5);
 
         // $courses = Course::orderBy('id_course', "desc")->paginate(5);
-
-        $courses = Course::with('chauffeur') // Charge la relation chauffeur
-            ->orderBy('id_course', 'desc')
-            ->paginate(5);
         // ->orderBy("id_course", "desc") // Ordre décroissant pour afficher les plus récentes en premier
             // ->paginate(5);
         // ->get();
+
+        // $courses = Course::with('chauffeur') 
+        //     ->orderBy('id_course', 'desc')
+        //     ->paginate(5);
+
+        $clientId = Auth::id();
+        $courses = Course::with('chauffeur', 'lieuDepart', 'lieuArrivee')
+            ->where('id_client', $clientId) 
+            ->orderBy('id_course', 'desc')
+            ->paginate(5);
+
         // dd($courses);
 
         return view("course/course-list", ["courses" => $courses]);
@@ -139,7 +146,7 @@ class CourseController extends Controller
     public function update(Request $request, $id) {
         // Validation des données
         $validated = $request->validate([
-            'chauffeur' => 'nullable|string|max:255',   // Permet d'être vide si non renseigné
+            'chauffeur' => 'nullable|string|max:255', 
             'depart' => 'required|string|max:255',
             'arrivee' => 'required|string|max:255',
             'prix' => 'required|numeric',
@@ -149,12 +156,12 @@ class CourseController extends Controller
         ]);
 
         if ($request->chauffeur === 'Vélo') {
-            $validated['chauffeur'] = null;  // Mettre chauffeur à null si vélo
+            $validated['chauffeur'] = null;  
         }
-        // Récupérer la course et mettre à jour les données
+
         $course = Course::findOrFail($id);
         $course->update([
-            'id_chauffeur' => $validated['chauffeur'],  // Utilisation de id_chauffeur pour la mise à jour
+            'id_chauffeur' => $validated['chauffeur'], 
             'id_lieu_depart' => $validated['depart'],
             'id_lieu_arrivee' => $validated['arrivee'],
             'prix_reservation' => $validated['prix'],
@@ -166,14 +173,11 @@ class CourseController extends Controller
         return response()->json(['success' => 'Course updated successfully']);
     }
 
-    public function terminer(Request $request, $id_course)
-    {
-        // Mettre à jour le statut de la course
+    public function terminer(Request $request, $id_course) {
         $course = Course::findOrFail($id_course);
         $course->terminee = true;
         $course->save();
 
-        // Ajouter un message de confirmation (facultatif)
         return redirect()->back()->with('success', 'La course a été terminée. Vous pouvez maintenant donner votre avis.');
     }   
      
@@ -196,7 +200,7 @@ class CourseController extends Controller
         $estnote->id_chauffeur = $course->id_chauffeur;
         $estnote->save();
 
-        $course->est_facture = true; // Marquer la course comme facturée
+        $course->est_facture = true;
         $course->save();
 
 
@@ -210,7 +214,4 @@ class CourseController extends Controller
         $course = Course::findOrFail($courseId);
         return view('Facture', ['course' => $course]);
     }
-
-
-
 }

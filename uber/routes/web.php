@@ -30,7 +30,7 @@ Route::get('/', function () {
 
 Route::get('/test-mail', [MailController::class, 'sendMail']);
 
-Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
+Route::get('/courses', [CourseController::class, 'index'])->middleware('auth')->name('courses.index');
 Route::delete('/courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');
 
 Route::put('/courses/{id}', [ChauffeurController::class, 'index'])->name('courses.update');

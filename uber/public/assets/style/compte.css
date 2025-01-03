@@ -488,10 +488,10 @@ hr {
 }
 
 .pp {
-  max-width: 30%;
-  min-height: 30%;
-  min-width: 30%;
-  max-height: 30%;
+  max-width: 15%;
+  min-height: 15%;
+  min-width: 15%;
+  max-height: 15%;
   /* border-radius: 30%; */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;

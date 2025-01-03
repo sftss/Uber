@@ -38,7 +38,6 @@ try {
 
     $chauffeurstableau=$data['chauffeurtab'] ?? null;
 
-
     $code_departement_depart = substr($lieu_depart_cp, 0, 2);
     $code_departement_arrivee = substr($lieu_arrivee_cp, 0, 2);
 
@@ -132,45 +131,57 @@ try {
         $duree_course = $heurescourse . ":" . $minutescourse . ":" . $secondescourse;
 
         $terminée = 'false';
-        $test = 'insert';
-        //Insertion de la course ENFIN WALLAH 
-        $stm_insert_course = $db->prepare("INSERT INTO course 
-        (ID_CHAUFFEUR, ID_VELO, ID_LIEU_DEPART, ID_LIEU_ARRIVEE, ID_CLIENT, PRIX_RESERVATION, DATE_PRISE_EN_CHARGE, DUREE_COURSE, heure_arrivee, TERMINEE) 
-        VALUES 
-        (:id_chauffeur, :id_velo, :id_lieu_depart, :id_lieu_arrivee, :id_client, :prix_reservation, :date_prise_en_charge, :duree_course, :heure_arrivee, :terminee)");
-        $stm_insert_course->execute([
+                // Créer une table temporaire
+
+                   $db->exec("CREATE TEMPORARY TABLE temp_course (
+                    id_course SERIAL PRIMARY KEY,
+                    id_chauffeur INT,
+                    id_velo INT,
+                    id_lieu_depart INT,
+                    id_lieu_arrivee INT,
+                    id_client INT,
+                    prix_reservation NUMERIC(6,2),
+                    date_prise_en_charge DATE,
+                    duree_course TIME,
+                    heure_arrivee TIME,
+                    terminee BOOL
+        )");
+            
+
+        
+        // Préparer l'insertion des données dans la table temporaire
+        $stmt = $db->prepare("INSERT INTO temp_course 
+            (id_chauffeur, id_velo, id_lieu_depart, id_lieu_arrivee, id_client, prix_reservation, date_prise_en_charge, duree_course, heure_arrivee, terminee) 
+            VALUES 
+            (:id_chauffeur, :id_velo, :id_lieu_depart, :id_lieu_arrivee, :id_client, :prix_reservation, :date_prise_en_charge, :duree_course, :heure_arrivee, :terminee)");
+
+        // Exécuter l'insertion
+        $stmt->execute([
         ':id_chauffeur' => null,
-        ':id_velo' => null, // ou un id vélo valide si applicable
+        ':id_velo' => null, 
         ':id_lieu_depart' => $id_adresse_depart,
         ':id_lieu_arrivee' => $id_adresse_arrivee,
-        ':id_client' => 1, // Assurez-vous que l'ID du client est valide
+        ':id_client' => 1, 
         ':prix_reservation' => $prix_reservation,
         ':date_prise_en_charge' => substr($date_depart, 0, 10),
         ':duree_course' => $duree_course,
-        ':heure_arrivee' => null, // ou l'heure d'arrivée valide
-        ':terminee' => $terminée, // si vous souhaitez marquer la course comme non terminée
+        ':heure_arrivee' => null, 
+        ':terminee' => $terminée,
         ]);
-    
-        // Préparer la réponse à envoyer au client
-        $response = [
-            'status' => 'success',
-            'message' => 'Informations de la course récupérées',
-            'details' => [
-                'chauffeur' => $id_chauffeur,
-                'depart' => $id_adresse_depart,
-                'arrivee' => $id_adresse_arrivee,
-                'prix_reservation' => $prix_reservation,
-                'date_trajet' => substr($date_depart, 0, 10),
-                'duree_course' => $duree_course
-            ]
-        ];
-
-        // Retourner la réponse en JSON
-        header('Content-Type: application/json');
-        echo json_encode( $response );
+        
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Table temporaire créée et données insérées avec succès.'
+                ]);
+            
+            
+        else if ($operation=='delete'){
+            $db->exec("DROP TABLE IF EXISTS temp_course");
+        }
+        
     
 
-} catch (PDOException $e) {
+    }catch (PDOException $e) {
     // Si une erreur de base de données se produit
     error_log('Erreur PDO: ' . $e->getMessage());
     http_response_code(500);
