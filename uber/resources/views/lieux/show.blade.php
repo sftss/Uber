@@ -49,6 +49,8 @@
                 href="{{ route('lieux.produit.create', ['lieu_id' => $lieu->id_lieu_de_vente_pf]) }}">Ajouter un
                 produit</a>
         </div>
+        <a href="{{ route('lieux.affichercommandes', ['id' => $lieu->id_lieu_de_vente_pf]) }}"
+                class="btn btn-primary">Afficher les commandes en cours</a>
     @endif
 </div>
 
@@ -63,8 +65,8 @@
         <select id="categorie" name="categorie" class="form-input">
             <option value="">-- Sélectionner une catégorie --</option>
             @foreach ($categories as $categorie)
-                <option value="{{ $categorie->id_categorie }}">
-                    {{ $categorie->lib_categorie }}
+                <option value="{{ $categorie->id_categorie_produit }}">
+                    {{ $categorie->libelle_categorie }}
                 </option>
             @endforeach
         </select>

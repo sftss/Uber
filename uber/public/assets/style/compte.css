@@ -33,8 +33,9 @@ hr {
   transition: background-color 0.3s;
   border: none;
   cursor: pointer;
-  margin-top: 1%;
+  margin: 1%;
   margin-bottom: 3%;
+  font-weight: bold;
 }
 
 .btn-primary:hover {
@@ -85,11 +86,12 @@ hr {
   text-decoration: none;
   display: flex;
   flex-wrap: nowrap;
+  transition: all 0.3s ease;
 }
 
 .navbar-nav .nav-link:hover {
-  background-color: #06c167;
-  color: #000;
+  background-color: #4e4e4e;
+  color: white;
 }
 
 .navbar-connect {
@@ -142,7 +144,6 @@ hr {
   margin-bottom: 3%;
   margin-top: 3%;
 }
-
 .footer-section {
   flex: 1 1 200px;
   margin: 10px;
@@ -371,6 +372,7 @@ hr {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-weight: bold;
 }
 
 .form-submit-btn:hover {
@@ -504,4 +506,41 @@ hr {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.chnagerMdp:hover {
+  color: #b13636;
+}
+.containerMdp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.containerMdp h2 {
+  margin-bottom: 3%;
+}
+
+@media (prefers-color-scheme: dark) {
+  body,
+  .card-header {
+    background-color: #181a1b;
+    color: whitesmoke;
+  }
+  .card,
+  .adresse-form {
+    background-color: #292929;
+  }
+  .card p,
+  h3,
+  h2,
+  h1,
+  .form-group label,
+  #cardModalLabel {
+    color: whitesmoke;
+  }
+  .container.info-compte {
+    background-color: rgb(39 39 39);
+  }
+  .info-compte h1 {
+    color: white;
+  }
 }

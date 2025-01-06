@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Adresse;
 use App\Models\SeFaitLivrerA;
 use App\Models\CommandeRepas;
@@ -15,7 +16,6 @@ use App\Models\Course;
 
 class ClientController extends Controller
 {
-    // Ajouter un middleware pour s'assurer que l'utilisateur est authentifié
     public function __construct() {
         $this->middleware("auth");
     }
@@ -194,7 +194,6 @@ class ClientController extends Controller
         if ($adresse) {
             SeFaitLivrerA::where("id_adresse", $id)->delete();
 
-            $adresse->delete();
 
             $from = $request->input("from");
 
@@ -281,7 +280,7 @@ class ClientController extends Controller
 
         $commande = new CommandeRepas();
         $commande->id_adresse = $idAdresse;
-        $commande->id_chauffeur = null;
+        $commande->id_chauffeur = null; //////id_chauffeur = $chauffeurId sefer
         $commande->id_client = Auth::user()->id_client;
         $commande->type_livraison = "commande";
         $commande->horaire_livraison = null;
@@ -302,10 +301,10 @@ class ClientController extends Controller
 
         $this->transfererContenuPanier($idPanier, $idCommandeRepas);
 
-        return view("cart.confirmed")->with(
-            "success",
-            "Votre commande a été validée avec succès."
-        );
+        return redirect()->route('mailpaiement')->with('success', 'Paiement validé ,');
+        
+
+
     }
 
     private function transfererContenuPanier($idPanier, $idCommandeRepas) {
@@ -477,5 +476,28 @@ class ClientController extends Controller
         $client->update(['photo' => $path]);
 
         return back()->with('success', 'Votre photo de profil a été mise à jour.');
+    }
+
+    public function editPassword() {
+    return view('client.edit-password');
+    }
+
+    public function updatePassword(Request $request) {
+    $request->validate([
+        'current_password' => 'required',
+        'new_password' => 'required|min:8|confirmed',
+    ], [
+        'current_password.required' => 'Le mot de passe actuel est requis.',
+        'new_password.required' => 'Le nouveau mot de passe est requis.',
+        'new_password.min' => 'Le nouveau mot de passe doit contenir au moins 8 caractères.',
+        'new_password.confirmed' => 'Les nouveaux mots de passe ne correspondent pas.',
+    ]);
+
+    $client = Auth::user();
+
+    $client->mdp_client = Hash::make($request->new_password);
+    $client->save();
+
+    return back()->with('success', 'Votre mot de passe a été mis à jour avec succès.');
     }
 }

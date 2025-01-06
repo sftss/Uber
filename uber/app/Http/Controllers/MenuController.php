@@ -27,7 +27,6 @@ class MenuController extends Controller
 
     public function store(Request $request)
     {
-        // Validation des données
         $request->validate([
             'id_restaurant' => 'required|integer|exists:restaurant,id_restaurant',
             'libelle_menu' => 'required|string|max:255',
@@ -37,24 +36,18 @@ class MenuController extends Controller
             'plat1' => 'nullable|string|max:255',
             'prixplat1' => 'nullable|numeric',
             'photoplat1' => 'nullable|string|max:2048',
-            // Ajoutez plus de validations pour d'autres plats si nécessaire
         ]);
 
-        // Création du menu
         $menu = new Menu();
         $menu->id_restaurant = $request->id_restaurant;
         $menu->libelle_menu = $request->libelle_menu;
         $menu->prix_menu = $request->prix_menu;
 
-        // Enregistrement de la photo du menu
         if ($request->filled('photo_menu')) {
             $menu->photo_menu = $request->photo_menu;
         }
 
-
         $menu->save();
-
-
 
         $produit=new Produit();
         $produit->nom_produit = $request->plat1;

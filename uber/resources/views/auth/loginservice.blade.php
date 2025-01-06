@@ -7,7 +7,7 @@
     <div class="card-header">Connexion service</div>
     <div>
         <div>
-            <div class="card">
+            <div class="card nimp">
                 <div class="card-body" style="margin-top: -3%;">
                     <form method="POST">
                         @csrf

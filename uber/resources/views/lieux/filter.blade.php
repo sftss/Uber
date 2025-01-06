@@ -1,4 +1,4 @@
-@extends('layouts.header')
+@extends('layouts.professionnel-header')
 
 <link href="{{ asset('assets/style/app.css') }}" rel="stylesheet">
 <link rel="icon" href="{{ URL::asset('assets/svg/uber-logo.svg') }}" type="image/svg+xml">
@@ -37,7 +37,6 @@
 
     <button type="submit" class="btn btn-primary">Filtrer</button>
 </form>
-
 <section class="restaurants-list">
     @if (isset($lieux) && $lieux->isNotEmpty())
         @foreach ($lieux as $lieu)
@@ -48,7 +47,7 @@
                     <h3>{{ $lieu->nom_etablissement }}</h3>
                     <p><strong>Ville :</strong> {{ $lieu->ville }}</p>
                     <p><strong>Livraison :</strong> {{ $lieu->propose_livraison ? 'Oui' : 'Non' }}</p>
-                    <p><strong>Horaires:</strong>
+                    <p><strong>Horaires :</strong>
                         @if ($lieu->horaires_ouverture && $lieu->horaires_fermeture)
                             {{ date('H:i', strtotime($lieu->horaires_ouverture)) }} -
                             {{ date('H:i', strtotime($lieu->horaires_fermeture)) }}
@@ -59,9 +58,15 @@
                 </div>
             </a>
         @endforeach
-    @elseif(isset($lieux))
+
+        <div id="butPagination" class="pagination-container">
+            {{ $lieux->appends(request()->query())->links('pagination::default') }}
+            <a href="{{ url('/panier') }}" id="panier">🛒</a>
+        </div>
+    @elseif (isset($lieux))
         <p class="no-results">Aucun lieu ne correspond à vos critères.</p>
     @endif
 </section>
+
 <a href="{{ url('/panier') }}" id="panier">🛒</a>
 <script src="{{ asset('js/main.js') }}"></script>

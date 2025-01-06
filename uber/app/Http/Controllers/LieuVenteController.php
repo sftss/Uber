@@ -13,45 +13,53 @@ use Illuminate\Support\Facades\Auth;
 
 class LieuVenteController extends Controller
 {
-    public function filter(Request $request) {
-        $recherche = $request->input('lieu');
-        $livre = $request->boolean('livre');
-        $horraire = $request->input('horaire-selected');
-        $horaireOuverture = null;
-        $horaireFermeture = null;
+public function filter(Request $request) {
+    $recherche = $request->input('lieu');
+    $livre = $request->boolean('livre');
+    $horraire = $request->input('horaire-selected');
+    $horaireOuverture = null;
+    $horaireFermeture = null;
 
-        if ($horraire) {
-            [$horaireOuverture, $horaireFermeture] = array_map(
-                fn($time) => date('H:i:s', strtotime(trim($time))),
-                explode(' - ', $horraire)
-            );
-        }
-
-        $lieux = DB::table('lieu_de_vente_pf')
-            ->join('adresse', 'lieu_de_vente_pf.id_adresse', '=', 'adresse.id_adresse')
-            ->join('horaires_lieu_vente', 'lieu_de_vente_pf.id_lieu_de_vente_pf', '=', 'horaires_lieu_vente.id_lieu_de_vente_pf')
-            ->when($recherche, function ($query, $recherche) {
-                return $query->where(function ($q) use ($recherche) {
-                    $q->whereRaw('LOWER(adresse.ville) LIKE LOWER(?)', ['%' . $recherche . '%'])
-                    ->orWhereRaw('LOWER(lieu_de_vente_pf.nom_etablissement) LIKE LOWER(?)', ['%' . $recherche . '%']);
-                });
-            })
-            ->when($livre, function ($query) use ($livre) {
-                $query->where('lieu_de_vente_pf.propose_livraison', $livre);
-            })
-            ->when($horaireOuverture && $horaireFermeture, function ($query) use ($horaireOuverture, $horaireFermeture) {
-                return $query->where(function ($q) use ($horaireOuverture, $horaireFermeture) {
-                    $q->where('horaires_lieu_vente.horaires_ouverture', '<=', $horaireOuverture)
-                    ->where('horaires_lieu_vente.horaires_fermeture', '>=', $horaireFermeture);
-                });
-            })
-            ->select('lieu_de_vente_pf.*', 'adresse.ville', 'horaires_lieu_vente.horaires_ouverture', 'horaires_lieu_vente.horaires_fermeture')
-            ->distinct()
-            ->get();
-
-            return view('lieux.filter', compact('lieux'));
+    if ($horraire) {
+        [$horaireOuverture, $horaireFermeture] = array_map(
+            fn($time) => date('H:i:s', strtotime(trim($time))),
+            explode(' - ', $horraire)
+        );
     }
 
+    $lieux = LieuVente::query()
+        ->join('adresse', 'lieu_de_vente_pf.id_adresse', '=', 'adresse.id_adresse')
+        ->leftJoin('horaires_lieu_vente', function ($join) {
+            $join->on('lieu_de_vente_pf.id_lieu_de_vente_pf', '=', 'horaires_lieu_vente.id_lieu_de_vente_pf')
+                ->where('horaires_lieu_vente.id_jour', '=', DB::raw('EXTRACT(DOW FROM CURRENT_DATE)')); // Horaires du jour actuel
+        })
+        ->when($recherche, function ($query, $recherche) {
+            $query->where(function ($q) use ($recherche) {
+                $q->whereRaw('LOWER(adresse.ville) LIKE LOWER(?)', ['%' . $recherche . '%'])
+                  ->orWhereRaw('LOWER(lieu_de_vente_pf.nom_etablissement) LIKE LOWER(?)', ['%' . $recherche . '%']);
+            });
+        })
+        ->when($livre, function ($query) use ($livre) {
+            $query->where('lieu_de_vente_pf.propose_livraison', $livre);
+        })
+        ->when($horaireOuverture && $horaireFermeture, function ($query) use ($horaireOuverture, $horaireFermeture) {
+            $query->where(function ($q) use ($horaireOuverture, $horaireFermeture) {
+                $q->where('horaires_lieu_vente.horaires_ouverture', '<=', $horaireOuverture)
+                  ->where('horaires_lieu_vente.horaires_fermeture', '>=', $horaireFermeture);
+            });
+        })
+        ->select(
+            'lieu_de_vente_pf.*',
+            'adresse.ville',
+            'horaires_lieu_vente.horaires_ouverture',
+            'horaires_lieu_vente.horaires_fermeture'
+        )
+        ->distinct()
+        ->paginate(10); // Utilisation de paginate pour créer un LengthAwarePaginator
+
+    return view('lieux.filter', compact('lieux', 'recherche', 'horaireOuverture', 'horaireFermeture'));
+}
+    
     public function show($id_lieu_de_vente_pf, Request $request) {
         $lieu = LieuVente::with(['horaires.jour', 'adresse'])
             ->where('id_lieu_de_vente_pf', $id_lieu_de_vente_pf)
@@ -159,5 +167,103 @@ class LieuVenteController extends Controller
             throw $e;
         }
             return redirect()->route('lieux.search')->with('success', 'Lieu de vente créé.');
+    }
+
+
+
+    
+    public function affichercommandes(Request $request, $id)
+{
+    $etablissement = DB::table('lieu_de_vente_pf as lv')
+        ->select('lv.nom_etablissement','lv.propose_livraison')
+        ->where('lv.id_lieu_de_vente_pf', $id)
+        ->first();
+
+    // Récupérer les commandes pour un restaurant donnée
+    $commandes = DB::table('commande_repas as c')
+    ->select(
+        'c.id_commande_repas',
+        'lv.nom_etablissement as lieu_de_vente',
+        DB::raw('STRING_AGG(p.nom_produit, \', \') as produits'), // Utiliser STRING_AGG pour PostgreSQL
+        'c.horaire_livraison',
+        'c.temps_de_livraison',
+        'c.id_chauffeur',
+        'lv.id_lieu_de_vente_pf'
+    )
+    ->leftJoin('est_contenu_dans as co', 'c.id_commande_repas', '=', 'co.id_commande_repas')
+    ->leftJoin('produit as p', 'co.id_produit', '=', 'p.id_produit')
+    ->leftJoin('est_vendu as ev', 'p.id_produit', '=', 'ev.id_produit')
+    ->leftJoin('lieu_de_vente_pf as lv', 'ev.id_lieu_de_vente_pf', '=', 'lv.id_lieu_de_vente_pf')
+    ->where('lv.id_lieu_de_vente_pf', $id)
+    ->groupBy(
+        'c.id_commande_repas',
+        'lv.nom_etablissement',
+        'c.horaire_livraison',
+        'c.temps_de_livraison',
+        'c.id_chauffeur',
+        'lv.id_lieu_de_vente_pf'
+    )
+    ->get();
+
+
+
+    // Récupérer les chauffeurs pour ce restaurant
+    $livreurs = DB::table('lieu_de_vente_pf as l')
+        ->select('c.*',
+        )
+        ->leftJoin('lie_a as ra', 'ra.id_lieu_de_vente_pf', '=', 'l.id_lieu_de_vente_pf')
+        ->leftJoin('chauffeur as c', 'ra.id_chauffeur', '=', 'c.id_chauffeur')
+        ->where('l.id_lieu_de_vente_pf', $id)
+        ->where('c.type_chauffeur', 'Livreur')
+        ->get();
+
+    // Si le formulaire a été soumis pour attribuer un chauffeur, mise à jour de la commande
+    if ($request->has('id_chauffeur')) {
+        $commande = CommandeRepas::findOrFail($request->id_commande_repas);
+        $commande->id_chauffeur = $request->id_chauffeur;
+        $commande->save();
+
+        return redirect()->route('lieux.affichercommandes', $id)
+                         ->with('success', 'Chauffeur attribué avec succès.');
+    }
+
+    return view('lieux.affichercommandes', compact('commandes', 'livreurs', 'id','etablissement'));
+}
+
+    public function attribuerChauffeur(Request $request, $id)
+    {
+        $commande = CommandeRepas::findOrFail($request->id_commande_repas);
+
+        // Si aucun chauffeur n'est attribué
+        if ($request->id_chauffeur === 'null') {
+            // Si un chauffeur était déjà attribué, on le remet disponible
+            if ($commande->id_chauffeur !== null) {
+                $chauffeur = Chauffeur::findOrFail($commande->id_chauffeur);
+                $chauffeur->est_dispo = 'true'; // Remettre à disponible
+                $chauffeur->save();
+            }
+
+            $commande->id_chauffeur = null; // Désattribution du chauffeur
+        } else {
+            // Si un chauffeur est sélectionné
+            // Si un chauffeur était déjà attribué, on le remet disponible
+            if ($commande->id_chauffeur !== null) {
+                $chauffeur = Chauffeur::findOrFail($commande->id_chauffeur);
+                $chauffeur->est_dispo = 'true'; // Remettre à disponible
+                $chauffeur->save();
+            }
+
+            // Attribution du nouveau chauffeur
+            $commande->id_chauffeur = $request->id_chauffeur;
+            $chauffeur = Chauffeur::findOrFail($request->id_chauffeur);
+            $chauffeur->est_dispo = 'false'; // Marquer comme non disponible
+            $chauffeur->save();
+        }
+
+        // Sauvegarder la commande avec l'attribution du chauffeur
+        $commande->save();
+
+        return redirect()->route('restaurants.affichercommandes', $id)
+                        ->with('success', 'Chauffeur attribué avec succès.');
     }
 }

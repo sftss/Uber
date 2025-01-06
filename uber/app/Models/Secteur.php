@@ -9,6 +9,7 @@ class Secteur extends Model
 {
     use HasFactory;
     protected $table = 'secteur_d_activite';
-    protected $primaryKey = 'id_sd';  
+    protected $primaryKey = 'id_sd';
+    protected $fillable = ['lib_sd'];
     public $timestamps = false;
 }

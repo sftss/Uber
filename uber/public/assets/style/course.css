@@ -19,12 +19,11 @@ h2 {
   color: #343a40;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  border-bottom: 3px solid #58b947; /* Vert Uber */
   display: inline-block;
   margin-left: 3%;
-
   text-transform: uppercase;
-  border-left: 4px solid #28a745;
+  border-bottom: 4px solid #58b947;
+  border-left: 4px solid #58b947;
   padding-left: 10px;
 }
 a {
@@ -141,7 +140,6 @@ a {
   align-items: center;
   background: #ffffff;
   padding: 10px 20px;
-  border-bottom: 2px solid #58b947;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
@@ -186,11 +184,12 @@ a {
   text-decoration: none;
   display: flex;
   flex-wrap: nowrap;
+  transition: all 0.3s ease;
 }
 
 .navbar-nav .nav-link:hover {
-  background-color: #06c167;
-  color: #000;
+  background-color: #4e4e4e;
+  color: white;
 }
 
 .navbar-connect {
@@ -540,7 +539,7 @@ li.acceptee {
   cursor: pointer;
 }
 .review-form {
-  max-width: 40%;
+  max-width: fit-content;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -660,7 +659,7 @@ button[disabled]:hover {
   cursor: not-allowed;
 }
 .pageClient {
-  height: 65%;
+  height: 50%;
 }
 .butMpageClient {
   transform: scale(1.3) translate(140%, -10%);
@@ -725,4 +724,54 @@ option {
   margin: 20px 0;
   font-size: 18px;
   color: #666;
+}
+.no-courses-message p,
+.no-courses-message a {
+  color: #666;
+  font-size: 2rem;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+#pouvezIci:hover {
+  text-decoration: underline;
+  transform: scale(1.1);
+}
+input {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #181a1b;
+    color: whitesmoke;
+  }
+  h2,
+  .review-form label,
+  .course_details li,
+  #labelLangue {
+    color: white;
+  }
+  h2 {
+    border-left: 4px solid #b4fea8;
+    border-bottom: 4px solid #b4fea8;
+  }
+  .course_container {
+    background-color: rgb(39 39 39);
+    border: 2px solid #b4fea8;
+  }
+  .review-form {
+    background-color: rgb(54, 54, 54);
+  }
+  h3.course_title {
+    color: #b4fea8;
+    border-bottom: 2px solid #b4fea8;
+  }
+  #livraisonTxtCourse {
+    color: black;
+  }
 }

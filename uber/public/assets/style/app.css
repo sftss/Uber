@@ -7,7 +7,7 @@
 body {
   font-family: "Arial", sans-serif;
   color: #333;
-  background-color: #f3f3f3;
+  background-color: #ffffff;
   line-height: 1.6;
   padding-top: 80px;
 }
@@ -70,11 +70,12 @@ button {
   text-decoration: none;
   display: flex;
   flex-wrap: nowrap;
+  transition: all 0.3s ease;
 }
 
 .navbar-nav .nav-link:hover {
-  background-color: #06c167;
-  color: #000;
+  background-color: #4e4e4e;
+  color: white;
 }
 
 .navbar-connect {
@@ -237,7 +238,11 @@ button {
 .CreerCompte:hover::after {
   opacity: 1;
 }
-
+input {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
 input[type="email"],
 input[type="password"],
 select {
@@ -249,9 +254,13 @@ select {
   outline: none;
   transition: border-color 0.3s ease-in-out;
 }
-
+.nimp {
+  max-width: fit-content;
+}
 .card {
   display: flex;
+  margin-left: auto;
+  margin-right: auto;
   align-items: center;
   background: #fff;
   padding: 5%;
@@ -376,6 +385,7 @@ select {
   width: 100%;
   height: 250px;
   object-fit: cover;
+  background-color: #fff;
 }
 
 .restaurant-details {
@@ -803,8 +813,25 @@ select {
   font-size: 38px;
   text-align: center;
   margin: 2% 0 8px;
+ 
 }
 
+#fond {
+  position: relative; /* Assurez-vous que la position relative est définie pour le fond */
+  background-image: url('https://www.comeindubai.com/wp-content/uploads/2021/04/fast-food-dubai-scaled.jpeg');
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+#fond::before {
+  content: ''; /* Nécessaire pour créer une pseudo-élément */
+  background-image: inherit; /* Prendre la même image de fond que le parent */
+  background-size: cover;
+  background-position: center center;
+  filter: blur(10px); /* Applique un flou de 10 pixels */
+  z-index: -1; /* Met l'image floutée derrière le contenu */
+}
 .lieu-vente-card {
   max-width: 800px;
   margin: 0 auto 20px;
@@ -845,12 +872,14 @@ select {
 }
 
 .card-header {
+  margin: 2% 2%;
   background-color: #292929;
   color: white;
   padding: 20px;
   font-size: 22px;
   text-align: center;
   font-weight: bold;
+  font-size: 2rem;
 }
 
 form {
@@ -876,7 +905,6 @@ label {
   margin-bottom: 5px;
   max-width: 70%;
 }
-
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -1006,6 +1034,7 @@ table img {
 
 /* Boutons de formulaire */
 form button.btn-submit {
+  font-weight: bold;
   padding: 10px 20px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -1168,7 +1197,8 @@ input[type="number"] {
   transform: scale(1.05);
 }
 #formLogin {
-  transform: translateX(25%);
+  display: flex;
+  justify-content: center;
 }
 .form-group-lieu {
   display: block;
@@ -1369,6 +1399,7 @@ button.btn-primary {
   padding: 0.5rem 1rem;
   cursor: pointer;
   transition: background-color 0.3s;
+  font-weight: bold;
 }
 
 button.btn-primary:hover {
@@ -1414,8 +1445,7 @@ select {
   border-color: #a32f39;
 }
 #formInscription {
-  width: 125%;
-  transform: translateX(-5%);
+  width: auto;
 }
 .ButFormInsciption {
   flex-direction: row;
@@ -1441,7 +1471,6 @@ select {
   opacity: 0;
   transition: opacity 0.3s ease;
 }
-
 #creerCptChauffeur:hover::after {
   opacity: 1;
 }
@@ -1467,6 +1496,9 @@ select {
   align-self: flex-end;
   min-width: 50%;
 }
+.navbar-text a {
+  text-decoration: underline;
+}
 
 #formValiderPanier button:hover {
   background-color: #434343;
@@ -1474,4 +1506,77 @@ select {
 }
 #formValiderPanier select {
   width: 70%;
+}
+.no-courses-message {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 18px;
+  color: #666;
+}
+.no-courses-message p,
+.no-courses-message a {
+  color: #666;
+  font-size: 2rem;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+#pouvezIci:hover {
+  text-decoration: underline;
+  transform: scale(1.1);
+}
+
+#helpcacher {
+  display: none;
+}
+#helpmontrer {
+  display: block;
+}
+
+
+
+@media (prefers-color-scheme: dark) {
+  body,
+  .card-header {
+    background-color: #181a1b;
+    color: whitesmoke;
+  }
+  .card {
+    background-color: #292929;
+  }
+  .card p,
+  h3,
+  h2,
+  h1,
+  .menus-container h2,
+  .panier-title {
+    color: whitesmoke;
+  }
+  .suggestions .subtitle {
+    color: whitesmoke;
+  }
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="date"],
+  select {
+    border: 2px solid #6d6d6d;
+  }
+  input[type="checkbox"] {
+    cursor: pointer;
+  }
+
+  input:focus {
+    border-color: #4caf50;
+  }
+  .restaurants-list,
+  .menus-container {
+    background-color: #181a1b;
+  }
+  div.checkBoxSearchRestau label,
+  p,
+  .planifier-header,
+  #livraisonTxtCourse,
+  table td {
+    color: #000;
+  }
 }

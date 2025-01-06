@@ -185,5 +185,4 @@ class RegisterController extends Controller
             
         return redirect()->route('home')->with('success', 'Inscription réussie.');
     }
-
 }

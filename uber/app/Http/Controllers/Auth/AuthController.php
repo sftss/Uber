@@ -9,8 +9,6 @@ class AuthController extends Controller
 {
     public function showRegistrationForm()
     {
-        return view('auth.register'); // Retourner la vue d'inscription
+        return view('auth.register');
     }
-
-    // Autres méthodes comme store pour gérer l'enregistrement
 }

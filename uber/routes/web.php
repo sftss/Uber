@@ -27,6 +27,9 @@ Route::get('/', function () {
     return view('main');
 })->name('home');
 
+Route::post('/planifier-rdv/{chauffeur_id}', [ChauffeurController::class, 'planifierRdv'])->name('planifier-rdv');
+
+Route::post('/changer-statuts-rdv/{chauffeur_id}', [ChauffeurController::class, 'changerStatutRdv'])->name('changer-statuts-rdv');
 
 Route::get('/test-mail', [MailController::class, 'sendMail']);
 
@@ -37,6 +40,16 @@ Route::put('/courses/{id}', [ChauffeurController::class, 'index'])->name('course
 
 Route::put('/courses/refuser/{course}', [CourseController::class, 'refuser'])->name('courses.refuser');
 Route::put('/courses/accepter/{course}', [CourseController::class, 'accepter'])->name('courses.accepter');
+
+Route::get('/chauffeur-propositions/{id}', [ChauffeurController::class, 'AfficherPropositions'])->name('propositions');
+Route::get('/chauffeur-archives/{id}', [ChauffeurController::class, 'AfficherCoursesPassees'])->name('archives');
+Route::get('/chauffeur-a-venir/{id}', [ChauffeurController::class, 'AfficherCoursesAVenir'])->name('a_venir');
+
+// Route::get('/chauffeur/{id}/propositions', [ChauffeurController::class, 'AfficherPropositions'])->name('chauffeur.propositions');
+Route::put('/course/{id}/accepter', [CourseController::class, 'accepter'])->name('courses.accepter');
+Route::put('/course/{id}/refuser', [CourseController::class, 'refuser'])->name('courses.refuser');
+Route::put('/chauffeur/{id}/terminer', [ChauffeurController::class, 'terminer'])->name('chauffeur.terminer');
+
 
 Route::put('/courses/terminer-chauffeur/{course}', [ChauffeurController::class, 'terminer'])->name('chauffeur.terminer');
 Route::put('/courses/terminer-client/{course}', [ClientController::class, 'terminer'])->name('client.terminer');
@@ -54,11 +67,15 @@ Route::post('/courses/{id_course}/facture', [FactureController::class, 'genererF
 Route::get('/restaurants/filter', [RestaurantController::class, 'filter'])->name('restaurants.filter');
 
 Route::get('/restaurants/search', [RestaurantController::class, 'filter'])->name('restaurants.search');
+Route::get('/restaurants/search/mesrestaurants', [RestaurantController::class, 'filtermoi'])->name('restaurants.searchmoi');
 
 Route::get('/restaurants/{id}', [RestaurantController::class, 'show'])->name('restaurants.show');
 
 Route::get('/restaurants/{id}/commandes', [RestaurantController::class, 'affichercommandes'])->name('restaurants.affichercommandes');
 Route::post('/restaurants/{id}/commandes/attribuer-chauffeur', [RestaurantController::class, 'attribuerChauffeur'])->name('restaurants.attribuerChauffeur');
+
+Route::get('/lieux/{id}/commandes', [LieuVenteController::class, 'affichercommandes'])->name('lieux.affichercommandes');
+Route::post('/lieux/{id}/commandes/attribuer-chauffeur', [LieuVenteController::class, 'attribuerChauffeur'])->name('lieux.attribuerChauffeur');
 
 
 Route::get('/lieux/search', [LieuVenteController::class, 'filter'])->name('lieux.search');
@@ -93,6 +110,8 @@ Route::get('/client', function() {
 });
 Route::get('/client/edit', [ClientController::class, 'edit'])->name('compte.edit');
 Route::post('/client/edit', [ClientController::class, 'update'])->name('compte.update');
+Route::get('/client/password/edit', [ClientController::class, 'editPassword'])->name('password.edit');
+Route::post('/client/password/update', [ClientController::class, 'updatePassword'])->name('password.update');
 
 
 Route::get('/chauffeur-main', function() {
@@ -108,11 +127,19 @@ Route::get('/voircourse', function() {
 });
 
 
+Route::get('/service-rh', function() {
+    return view('rh/rh-main');
+});
+
+Route::get('/voirchauffeur', function() {
+    return view('rh/voirchauffeur');
+});
+
+Route::get('/chauffeurs-a-valider', [ChauffeurController::class, 'AfficherChauffeurAValider'])->name('afficher-chauffeur-a-valider');
+
 Route::match(['GET', 'POST'], '/traitement', [AdresseController::class, 'traitement'])->name('traitement');
 
-
-Route::get('/chauffeur-propositions/{id}', [ChauffeurController::class, 'AfficherPropositions'])->name('propositions');
-Route::get('/chauffeur-archives/{id}', [ChauffeurController::class, 'AfficherCoursesPassees'])->name('archives');
+Route::post('/trouverchauffeurs', [ChauffeurController::class, 'trouverChauffeurs'])->name('trouverchauffeurs');
 
 Route::get('/professionnel-main', function() {
     return view('/professionnel/professionnel-main');
@@ -206,6 +233,8 @@ Route::post('/verification', [MailController::class, 'verifyCode'])->name('verif
 
 
 Route::get('/verificationmail', [MailController::class, 'sendMail'])->name('verifiermail');
+
+Route::get('/confirmpaiement', [MailController::class, 'sendMailPaiement'])->name('mailpaiement');
 
 Route::get('/envoi-sms', [SmsController::class, 'sendSms']);
 

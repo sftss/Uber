@@ -56,15 +56,27 @@
                 <p>Indiquez votre adresse de départ et votre destination. Vous pouvez également ajuster l'horaire selon
                     vos préférences.</p>
                 <div class="help-illustration">
-                    <img src="{{ asset('assets/img/aideCourse.webp') }}" alt="Saisie du point de départ et de l'arrivée"
+                    <img src="{{ asset('assets/img/') }}" alt="Saisie du point de départ et de l'arrivée avce toutes les infos nécessaires sur teams"
+                        class="help-image">
+                </div>
+                <strong> Vos préférences, nos propositions </strong>
+                <p> Selon vos paramètres de course, découvrez toutes les options disponibles adaptées à vos besoins.</p>
+                <div class="help-illustration">
+                    <img src="{{ asset('assets/img/') }}" alt="les options disponibles"
+                        class="help-image">
+                </div>
+                </div>
+                <strong> Détail de la course </strong>
+                <p> Après avoir choisi votre type de prestation, vous aurez la possibilité de consulter une page détaillant tous les aspects de votre réservation, si vous le souhaitez.</p>
+                <div class="help-illustration">
+                    <img src="{{ asset('assets/img/') }}" alt="detail de la course"
                         class="help-image">
                 </div>
             </li>
 
             <li class="guide-item">
                 <strong>Choix des prestations disponibles : </strong>
-                <p>En fonction des informations saisies, vous verrez tous les types de prestations disponibles (course
-                    standard, premium, etc.) avec les détails sur chaque option.</p>
+                <p>En fonction des informations que vous avez saisies, découvrez toutes les prestations disponibles (standard, premium, etc.), accompagnées des détails pour chaque option. Grâce au bouton 'Mes courses', accédez facilement à toutes les options que vous avez sélectionnées</p>
                 <div class="help-illustration">
                     <img src="{{ asset('assets/img/aideDetailCourse.webp') }}" alt="Choix des prestations disponibles"
                         class="help-image">
@@ -72,11 +84,9 @@
             </li>
 
             <li class="guide-item">
-                <strong>Récapitulatif de la réservation : </strong>
-                <p>Un récapitulatif de votre réservation apparaîtra, avec toutes les informations liées à votre course.
-                    Vous pourrez ensuite valider ou annuler la réservation selon votre choix.</p>
+                <p>Vous pourrez ensuite modifier ou annuler la réservation selon votre choix.</p>
                 <div class="help-illustration">
-                    <img src="{{ asset('assets/img/aideDetailCourse.webp') }}" alt="Récapitulatif de la réservation"
+                    <img src="{{ asset('assets/img/') }}" alt="Récapitulatif de la réservation"
                         class="help-image">
                 </div>
             </li>
@@ -91,11 +101,17 @@
                 </div>
             </li>
 
+
             <li class="guide-item">
-                <strong>Page de facture et évaluation : </strong>
-                <p>Vous aurez accès à une page de facture détaillée, où vous pourrez évaluer la course en donnant une
-                    note et un pourboire. Une facture vous sera également envoyée pour mieux comprendre la prestation.
+            <strong>Page de facture et évaluation : </strong>
+                <p>Pour terminer, vous aurez l'occasion d'évaluer votre course en attribuant une note et, si vous le souhaitez, de laisser un pourboire.
                 </p>
+                <div class="help-illustration">
+                    <img src="{{ asset('assets/img/aideDonnerNoteCourse.webp') }}" alt="Page de facture"
+                        class="help-image">
+                </div>
+
+                <p> Ensuite, vous pourrez obtenir votre facture pour mieux comprendre les détails de la prestation en cliquant sur le bouton 'Générer ma facture', où toutes les informations relatives à votre course seront affichées. </p>
                 <div class="help-illustration">
                     <img src="{{ asset('assets/img/aideFactureCourse.webp') }}" alt="Page de facture"
                         class="help-image">
@@ -110,8 +126,8 @@
             <li class="guide-item">
                 <i class="icon-credit-card"></i><strong>Ajoutez un mode de paiement depuis votre profil : </strong>
                 <div class="help-illustration">
-                    <img src="{{ asset('assets/images/payment.png') }}" alt="Exemple de gestion des paiements"
-                        class="help-image">
+                <img src="{{ asset('assets/img/aideAjouterCB.webp') }}" alt="Page de facture"
+                class="help-image">
                 </div>
             </li>
             <li class="guide-item">

@@ -191,8 +191,6 @@ document.getElementById("boutonValider").addEventListener("click", function () {
   }, 1000);
 });
 
-
-
 function getDate(date) {
   const day = String(date.getDate()).padStart(2, "0"); //padstart pour ajouter un 0 si le jour n'a qu'un chiffre
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -294,14 +292,14 @@ function getRoute(marker1, marker2) {
     .catch((error) => console.error(error));
 }
 
-// Fonction pour mettre à jour un marqueur de façon globale
+// maj marqueur
 function updateMarker(marker, result, suggestionText) {
   if (marker) {
-    // Si un marqueur existe déjà, on le déplace à la nouvelle position
+    // Si existe, déplace à la nouvelle position
     marker.setLatLng([result.lat, result.lon]);
     marker.bindPopup(suggestionText).openPopup();
   } else {
-    // Sinon, créer un nouveau marqueur
+    // Sinon, créer nouveau
     marker = L.marker([result.lat, result.lon])
       .addTo(map)
       .bindPopup(suggestionText)
@@ -310,28 +308,28 @@ function updateMarker(marker, result, suggestionText) {
   return marker;
 }
 
-// Fonction pour géocoder l'adresse, afficher les suggestions dans une liste déroulante et placer un marqueur
+// géocoder l'adresse, afficher suggestions dans une liste, placer un marqueur
 function geocodeAddress(inputElement, suggestionsBox, marker, isdepart) {
-  console.log("ta mere celui qui a modif")
+  console.log("ta mere celui qui a modif");
   inputElement.addEventListener(
     "input",
     debounce(function () {
       const query = inputElement.value;
-      suggestionsBox.innerHTML = ""; // Réinitialiser les suggestions
+      suggestionsBox.innerHTML = ""; // Réinitialiser suggestions
 
       if (query.length > 3) {
-        // on recherche que l'utilisateur a écrit plus de 3 caractères
+        // recherche à partir de 3 caractères
         fetch(
           `https://nominatim.openstreetmap.org/search?format=json&q=${query}%2C+France&addressdetails=1&limit=5`,
         )
           .then((response) => response.json())
           .then((data) => {
             if (data.length > 0) {
-              // on limite le nombre de suggestions à 5 pour que ça soit plus lisible
+              // limite nb suggestions à 5
               const limitedData = data.slice(0, 5);
 
               limitedData.forEach((result) => {
-                // on extrait les détails de l'adresse
+                // détails adresse
                 const address = result.address;
                 const number = address.house_number || ""; // Numéro de rue
                 const street = address.road || ""; // Rue
@@ -342,7 +340,7 @@ function geocodeAddress(inputElement, suggestionsBox, marker, isdepart) {
 
                 //const departmentCode = address["ISO3166-2-lvl6"].substring(3, 5) || ""; // Code du département //0652402353
 
-                // on construit la suggestion avec les détails pour améliorer la lisibilité
+                // suggestion avec détails pour lisibilité
                 const suggestionText = [
                   number && number,
                   street && street,
@@ -357,16 +355,16 @@ function geocodeAddress(inputElement, suggestionsBox, marker, isdepart) {
                 div.textContent = suggestionText.trim();
 
                 div.addEventListener("click", function () {
-                  // on met l'adresse sélectionnée dans le champ de saisie
+                  // adresse sélectionnée dans le champ de saisie
                   inputElement.value = suggestionText;
 
                   // on centre la map sur la position
                   map.setView([result.lat, result.lon], 13);
 
                   marker = updateMarker(marker, result, suggestionText);
-                  suggestionsBox.innerHTML = ""; // Fermer la liste après sélection
+                  suggestionsBox.innerHTML = ""; // Fermer liste après sélection
 
-                  // Affecter les variables des marqueurs en fonction du booléen donné en paramètres
+                  // Affecter variables des marqueurs en fonction du booléen paramètres
                   if (isdepart) {
                     markerDepart = marker;
                     //departementDepart = departmentCode;
@@ -374,44 +372,41 @@ function geocodeAddress(inputElement, suggestionsBox, marker, isdepart) {
                     markerArrivee = marker;
                   }
 
-                  // Si les deux marqueurs ont une valeur, on trace la route
+                  // Si deux marqueurs ont une valeur, trace la route
                   if (markerDepart != null && markerArrivee != null) {
                     getRoute(markerDepart, markerArrivee);
                   }
                 });
-
                 suggestionsBox.appendChild(div);
               });
             } else {
-              // Si aucune adresse n'est trouvée, afficher le message "L'adresse n'existe pas"
+              // Si aucune adresse trouvée, afficher message "L'adresse n'existe pas"
               const noResultsMessage = document.createElement("div");
               noResultsMessage.textContent = "L'adresse n'existe pas";
               suggestionsBox.appendChild(noResultsMessage);
             }
           })
           .catch((error) => {
-            console.error("Erreur lors de la récupération des données", error); // Gérer les erreurs de fetch
+            console.error("Erreur lors de la récupération des données", error); // Gérer erreurs fetch
           });
       } else {
         suggestionsBox.innerHTML = "";
       }
     }, 500),
-  ); // Délai de 1 seconde
+  ); // Délai 1s
 }
 let dateDepart;
-//si les deux marqueurs sont renseignés on lance la méthode désignée
+
 function trouverChauffeurs() {
-  // Reset processing flag at the start of the function
   isProcessing = false;
 
   dateDepart = new Date(inputDateDepart.value);
 
-  // Clear previous propositions
+  // nettoyer les propositions d'avant
   while (propositionsList.firstChild) {
     propositionsList.removeChild(propositionsList.firstChild);
   }
 
-  // Check processing flag at the start
   if (isProcessing) {
     return;
   }
@@ -421,17 +416,16 @@ function trouverChauffeurs() {
   if (getDate(dateDepart) == getDate(dateToday)) {
     if (!markerDepart || !markerArrivee) {
       alert("Veuillez saisir les deux adresses (départ et arrivée).");
-      isProcessing = false; // Reset flag if addresses are missing
+      isProcessing = false;
     } else {
       geocodeChauffeurs(chauffeurs);
     }
   } else {
     categories.forEach(AfficheCategorie);
-    isProcessing = false; // Reset flag after displaying categories
+    isProcessing = false;
   }
 }
 
-// Fonction de debouncing : déclenche la fonction après un délai
 function debounce(func, delay) {
   let timeout;
   return function (...args) {
@@ -440,7 +434,7 @@ function debounce(func, delay) {
   };
 }
 
-// fonction pour déterminer les chauffeurs proches de l'adresse de départ
+// déterminer chauffeurs proches de l'adresse de départ
 function geocodeChauffeurs(chauffeurs) {
   let chauffeursProches = [];
   let index = 0;
@@ -448,11 +442,11 @@ function geocodeChauffeurs(chauffeurs) {
   function traiterChauffeur() {
     if (index < chauffeurs.length) {
       let chauffeur = chauffeurs[index];
-      index++; // Incrémenter l'index pour traiter le prochain chauffeur
+      index++; // Incrémenter index pour prochain chauffeur
       calculDistanceChauffeur(chauffeur, (trajet) => {
         console.log(chauffeur);
         if (trajet !== null && trajet <= 60) {
-          // Ajouter le temps de trajet et afficher l'adresse si inférieur à 60 minutes
+          // Ajouter temps de trajet et afficher l'adresse si inférieur à 60 minutes
           AfficheAdresse(chauffeur, trajet); // Passer le chauffeur et le temps de trajet à la fonction
           console.log("inséré");
         }
@@ -821,6 +815,7 @@ function creerCourse(chauffeur) {
   ]).then(([lieuDepart, lieuArrivee]) => {
     // Construire la course avec les données enrichies
     const course = {
+      id_chauffeur: chauffeur.id_chauffeur,
       chauffeur_nom: chauffeur.nom_chauffeur,
       chauffeur_prenom: chauffeur.prenom_chauffeur,
       lieu_depart_rue: lieuDepart.rue,
@@ -832,10 +827,10 @@ function creerCourse(chauffeur) {
       prix_reservation: prixcourse,
       tempscourse: durationInSeconds,
       date_trajet: dateDepart,
-            id_course: coursePourModification
+      id_course: coursePourModification
         ? coursePourModification.id_course
         : null,
-        operation: "insert",
+      operation: "insert",
     };
 
     if (coursePourModification) {

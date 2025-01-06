@@ -10,31 +10,62 @@
 
 <body>
     <header class="header" id="header">
+
+        <!-- A GAUCHE DU HEADER -->
         <nav class="navbar">
             <a class="navbar-brand" href="{{ url('/') }}">Uber</a>
             <div class="navbar-links">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/map') }}">Déplacez-vous avec Uber</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ url('/restaurants/search') }}" class="nav-link">Uber Eats</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ url('/courses') }}" class="nav-link">Mes Courses</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ url('/chauffeur-main') }}" class="nav-link">Affichage Chauffeur</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ url('/professionnel-main') }}" class="nav-link">Affichage Professionnel</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('help') }}" class="nav-link">Besoin d'aide ?</a>
-                    </li>
-                </ul>
+                @auth('clients')
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/map') }}">Déplacez-vous avec Uber</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url('/restaurants/search') }}" class="nav-link">Uber Eats</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url('/courses') }}" class="nav-link">Mes Courses</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url('/professionnel-main') }}" class="nav-link">Affichage Professionnel</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('help') }}" class="nav-link">Besoin d'aide ?</a>
+                        </li>
+                    </ul>
+                @elseif (Auth::guard('chauffeurs')->check())
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link"
+                                href="{{ url('/chauffeur-propositions/' . Auth::guard('chauffeurs')->id()) }}">
+                                Propositions de course
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/chauffeur-archives/' . Auth::guard('chauffeurs')->id()) }}">
+                                Mes courses passées
+                            </a>
+                        </li>
+                    </ul>
+                @else
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/map') }}">Déplacez-vous avec Uber</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url('/restaurants/search') }}" class="nav-link">Uber Eats</a>
+                        </li>
+                         <!-- {{--<li class="nav-item">
+                            <a href="{{ url('/professionnel-main') }}" class="nav-link">Affichage Professionnel</a>
+                        </li>--}}     -->
+                        <li class="nav-item">
+                            <a href="{{ route('help') }}" class="nav-link">Besoin d'aide ?</a>
+                        </li>
+                    </ul>
+                @endauth
             </div>
 
+            <!-- A DROITE DU HEADER -->
             <div class="navbar-connect">
                 @auth('clients')
                     <span class="navbar-text">Bonjour, <a
@@ -49,11 +80,8 @@
                     <form id="logout-form-web" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
-                @endauth
-
-                @auth('chauffeurs')
-                    <span class="navbar-text">Bonjour, <a
-                            href="{{ url('/profil-chauffeur/' . auth('chauffeurs')->user()->id_chauffeur) }}">{{ auth('chauffeurs')->user()->prenom_chauffeur }}</a></span>
+                @elseif (Auth::guard('chauffeurs')->check())
+                    <span class="navbar-text">Bonjour, {{ auth('chauffeurs')->user()->prenom_chauffeur }}</span>
 
                     <a href="{{ url('/') }}"
                         onclick="event.preventDefault(); document.getElementById('logout-form-chauffeurs').submit();"
@@ -64,14 +92,10 @@
                         style="display: none;">
                         @csrf
                     </form>
+                @else
+                    <a href="{{ route('login.selection') }}" class="btn btn-outline-light">Connexion</a>
+                    <a href="{{ route('register.selection') }}" class="btn btn-light">S'inscrire</a>
                 @endauth
-
-                @guest('clients')
-                    @guest('chauffeurs')
-                        <a href="{{ route('login.selection') }}" class="btn btn-outline-light">Connexion</a>
-                        <a href="{{ route('register.selection') }}" class="btn btn-light">S'inscrire</a>
-                    @endguest
-                @endguest
 
             </div>
         </nav>

@@ -4,16 +4,17 @@
 <link href="{{ URL::asset('assets/style/course.css') }}" rel="stylesheet">
 
 <div id="butRetourListCourse">
-    <a class="back_button" href="{{ url('/') }}">
+    <!-- {{-- <a class="back_button" href="{{ url('/') }}">
         <span class="back_icon">←</span>
         <p>Retour</p>
-    </a>
+    </a> --}} -->
     <h2>Les courses</h2>
 </div>
 @if ($courses->isEmpty())
     <div class="no-courses-message">
         <p>Vous n'avez aucune course pour le moment.</p>
-        <p>Vous pouvez aller réserver une course ici</p>
+        <p id="pouvezIci"><a class="nav-link" href="{{ url('/map') }}">Vous pouvez aller réserver une course ici</a>
+        </p>
     </div>
 @else
     <ul>
@@ -25,8 +26,9 @@
                         @if ($course->chauffeur)
                             Chauffeur : {{ $course->chauffeur->prenom_chauffeur }}
                             {{ $course->chauffeur->nom_chauffeur }}
-                        @else
+                        @elseif ($course->id_velo)
                             Vélo : {{ $course->id_velo }}
+                        @else
                         @endif
                     </li>
                     <li class="depart">Lieu de départ : {{ $course->lieuDepart->rue }} {{ $course->lieuDepart->cp }}

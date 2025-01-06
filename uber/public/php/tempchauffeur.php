@@ -2,191 +2,119 @@
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+
 try {
-    $host = '127.0.0.1';  
-    $port = '5432';    
-    $database = 's231_uber'; 
-    $username = 's231';     
-    $password = 'etsmb31'; 
+    // Configuration de la connexion à la base de données
+    $host = '127.0.0.1';
+    $port = '5432';
+    $database = 's231_uber';
+    $username = 's231';
+    $password = 'etsmb31';
     $charset = 'utf8';
-    $search_path = 's_uber'; // Le schéma spécifique
+    $search_path = 's_uber';
 
-    // Créer la chaîne de connexion DSN
     $dsn = "pgsql:host=$host;port=$port;dbname=$database;options='--search_path=$search_path'";
-
-    // Connexion à la base de données PostgreSQL avec PDO
     $db = new PDO($dsn, $username, $password);
-
-    // Définir le mode de gestion des erreurs de PDO
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Récupérer les données JSON envoyées
     $data = json_decode(file_get_contents('php://input'), true);
 
-    // Extraire les informations spécifiques
-    $chauffeur_nom = $data['chauffeur_nom'] ?? null;
-    $chauffeur_prenom = $data['chauffeur_prenom'] ?? null;
-    $lieu_depart_rue = $data['lieu_depart_rue'] ?? null;    
-    $lieu_depart_ville = $data['lieu_depart_ville'] ?? null;
-    $lieu_depart_cp = $data['lieu_depart_cp'] ?? null;
-    $lieu_arrivee_rue = $data['lieu_arrivee_rue'] ?? null;
-    $lieu_arrivee_ville = $data['lieu_arrivee_ville'] ?? null;
-    $lieu_arrivee_cp = $data['lieu_arrivee_cp'] ?? null;
-    $prix_reservation = $data['prix_reservation'] ?? null;
-    $tempscourse = $data['tempscourse'] ?? null;
-    $date_depart = $data['date_trajet'] ?? null;
+    $operation = $_GET['operation'] ?? null;
 
-    $chauffeurstableau=$data['chauffeurtab'] ?? null;
+    if ($operation === 'read_temp') {
+        // Lire les données de la table temporaire
+        $stmt = $db->query("SELECT * FROM temp_course");
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $code_departement_depart = substr($lieu_depart_cp, 0, 2);
-    $code_departement_arrivee = substr($lieu_arrivee_cp, 0, 2);
-
-    $heurescourse = floor($tempscourse / 3600);
-    $minutescourse = floor(($tempscourse % 3600) / 60);
-    $secondescourse = $tempscourse % 60;
-
-    /*$id_client =  auth()->user()->id_client ?? null;
-    if($id_client==null){
-        $id_client=1;
-    }*/
-
-
-
-
-    // Vérifier que les données nécessaires sont présentes
-        
-        // Récupération de l'id du département du départ et d'arrivée dans la DB
-        $stmrecupdep_depart = $db->prepare("SELECT id_departement FROM departement WHERE CODE_DEPARTEMENT = :code_departement");
-        $stmrecupdep_depart->execute([
-            ':code_departement' => $code_departement_depart,  
+        echo json_encode([
+            'status' => 'success',
+            'data' => $rows,
         ]);
-        $id_dep_depart = $stmrecupdep_depart->fetch(PDO::FETCH_ASSOC);
-        $id_dep_depart_val = $id_dep_depart['id_departement'];  
+    } else {
 
-        $stmrecupdep_arrivee = $db->prepare("SELECT id_departement FROM departement WHERE CODE_DEPARTEMENT = :code_departement");
-        $stmrecupdep_arrivee->execute([
-            ':code_departement' => $code_departement_arrivee,  
-        ]);
-        $id_dep_arrivee = $stmrecupdep_arrivee->fetch(PDO::FETCH_ASSOC);
-        $id_dep_arrivee_val = $id_dep_arrivee['id_departement'];
-
-
-
-        // Préparer l'insertion du depart dans la DB
-        $stmdepart = $db->prepare("INSERT INTO adresse (id_departement, rue, ville, cp) VALUES (:id_departement, :rue, :ville, :cp)");
-        
-        // Exécuter la requête d'insertion
-        $stmdepart->execute([
-            ':id_departement' => intval($id_dep_depart_val),  
-            ':rue' => $lieu_depart_rue,
-            ':ville' => $lieu_depart_ville,
-            ':cp' => $lieu_depart_cp
-        ]);
-
-
-        // Préparer l'insertion de l'arrivée dans la DB
-        $stmarrivee = $db->prepare("INSERT INTO adresse (id_departement, rue, ville, cp) VALUES (:id_departement, :rue, :ville, :cp)");
-        
-        // Exécuter la requête d'insertion
-        $stmarrivee->execute([
-            ':id_departement' => intval($id_dep_arrivee_val),  
-            ':rue' => $lieu_arrivee_rue,
-            ':ville' => $lieu_arrivee_ville,
-            ':cp' => $lieu_arrivee_cp
-        ]);
-
-
-        //Recup id adresse de depart
-        $stmid_adresse_depart = $db->prepare("SELECT id_adresse FROM adresse WHERE RUE = :rue and VILLE = :ville and CP = :cp");
-        $stmid_adresse_depart->execute([
-            ':rue' => $lieu_depart_rue,
-            ':ville' => $lieu_depart_ville,
-            ':cp' => $lieu_depart_cp
-        ]);
-        $id_adresse_depart = $stmid_adresse_depart->fetch(PDO::FETCH_ASSOC);
-        $id_adresse_depart = $id_adresse_depart['id_adresse'];  
-
-        
-        //Recup id adresse d'arrivée
-        $stmid_adresse_arrivee = $db->prepare("SELECT id_adresse FROM adresse WHERE RUE = :rue and VILLE = :ville and CP = :cp");
-        $stmid_adresse_arrivee->execute([
-            ':rue' => $lieu_arrivee_rue,
-            ':ville' => $lieu_arrivee_ville,
-            ':cp' => $lieu_arrivee_cp
-        ]);
-        $id_adresse_arrivee = $stmid_adresse_arrivee->fetch(PDO::FETCH_ASSOC);
-        $id_adresse_arrivee = $id_adresse_arrivee['id_adresse']; 
-
-        
-
-
-        //Recup id chauffeur avec son nom et prenom
-       /* $stmid_chauffeur = $db->prepare("SELECT id_chauffeur FROM chauffeur WHERE nom_chauffeur = :nom and prenom_chauffeur = :prenom ");
-        $stmid_chauffeur->execute([
-            ':nom' => $chauffeur_nom,
-            ':prenom' => $chauffeur_prenom,
-        ]);
-        $id_chauffeur = $stmid_chauffeur->fetch(PDO::FETCH_ASSOC);
-        $id_chauffeur = $id_chauffeur['id_chauffeur']; */
-        $duree_course = $heurescourse . ":" . $minutescourse . ":" . $secondescourse;
-
-        $terminée = 'false';
-                // Créer une table temporaire
-
-                   $db->exec("CREATE TEMPORARY TABLE temp_course (
-                    id_course SERIAL PRIMARY KEY,
-                    id_chauffeur INT,
-                    id_velo INT,
-                    id_lieu_depart INT,
-                    id_lieu_arrivee INT,
-                    id_client INT,
-                    prix_reservation NUMERIC(6,2),
-                    date_prise_en_charge DATE,
-                    duree_course TIME,
-                    heure_arrivee TIME,
-                    terminee BOOL
-        )");
-            
-
-        
-        // Préparer l'insertion des données dans la table temporaire
-        $stmt = $db->prepare("INSERT INTO temp_course 
-            (id_chauffeur, id_velo, id_lieu_depart, id_lieu_arrivee, id_client, prix_reservation, date_prise_en_charge, duree_course, heure_arrivee, terminee) 
-            VALUES 
-            (:id_chauffeur, :id_velo, :id_lieu_depart, :id_lieu_arrivee, :id_client, :prix_reservation, :date_prise_en_charge, :duree_course, :heure_arrivee, :terminee)");
-
-        // Exécuter l'insertion
-        $stmt->execute([
-        ':id_chauffeur' => null,
-        ':id_velo' => null, 
-        ':id_lieu_depart' => $id_adresse_depart,
-        ':id_lieu_arrivee' => $id_adresse_arrivee,
-        ':id_client' => 1, 
-        ':prix_reservation' => $prix_reservation,
-        ':date_prise_en_charge' => substr($date_depart, 0, 10),
-        ':duree_course' => $duree_course,
-        ':heure_arrivee' => null, 
-        ':terminee' => $terminée,
-        ]);
-        
-                echo json_encode([
-                    'status' => 'success',
-                    'message' => 'Table temporaire créée et données insérées avec succès.'
-                ]);
-            
-            
-        else if ($operation=='delete'){
-            $db->exec("DROP TABLE IF EXISTS temp_course");
-        }
-        
     
+    // Vérifier la validité du tableau des chauffeurs
+    $chauffeurtab = $data['chauffeurtab'] ;
 
-    }catch (PDOException $e) {
-    // Si une erreur de base de données se produit
+    // Créer la table temporaire si elle n'existe pas encore
+    $db->exec("
+    DROP TABLE IF EXISTS temp_course;
+    CREATE TABLE temp_course (
+        id_course SERIAL PRIMARY KEY,
+        id_chauffeur INT,
+        id_velo INT,
+        id_lieu_depart INT,
+        id_lieu_arrivee INT,
+        id_client INT,
+        prix_reservation NUMERIC(6,2),
+        date_prise_en_charge DATE,
+        duree_course TIME,
+        heure_arrivee TIME,
+        terminee BOOL,
+        acceptee BOOL,
+        validation_client BOOL,
+        validation_chauffeur BOOL,
+        pourboire NUMERIC(6,2),
+        est_facture BOOL,
+        numcourse INT
+    )
+");
+
+
+    // Préparer l'insertion
+    $stmt = $db->prepare("
+        INSERT INTO temp_course 
+            (id_chauffeur, id_velo, id_lieu_depart, id_lieu_arrivee, id_client, prix_reservation, date_prise_en_charge, duree_course, heure_arrivee, terminee, numcourse) 
+        VALUES 
+            (:id_chauffeur, :id_velo, :id_lieu_depart, :id_lieu_arrivee, :id_client, :prix_reservation, :date_prise_en_charge, :duree_course, :heure_arrivee, :terminee, :numcourse)
+    ");
+
+    // Parcourir chaque chauffeur et créer une course
+    foreach ($chauffeurtab as $chauffeur) {
+        $id_chauffeur = $chauffeur['id_chauffeur'] ?? null;
+
+        if (!$id_chauffeur) {
+            // Si l'id du chauffeur est manquant, passer au suivant
+            continue;
+        }
+
+        $stmt->execute([
+            ':id_chauffeur' => $id_chauffeur,
+            ':id_velo' => $data['id_velo'] ?? null,
+            ':id_lieu_depart' => $data['id_lieu_depart'] ?? null,
+            ':id_lieu_arrivee' => $data['id_lieu_arrivee'] ?? null,
+            ':id_client' => $data['id_client'] ?? 1, // Par défaut, client ID = 1
+            ':prix_reservation' => $data['prix_reservation'] ?? null,
+            ':date_prise_en_charge' => $data['date_prise_en_charge'] ?? null,
+            ':duree_course' => $data['duree_course'] ?? null,
+            ':heure_arrivee' => null,
+            ':terminee' => 'false',
+            ':numcourse' => $data['id_course'] ?? null,
+
+        ]);
+    }
+
+    echo json_encode([
+        'status' => 'success',
+        'message' => 'Courses créées avec succès pour tous les chauffeurs.',
+    ]);
+}
+
+} catch (PDOException $e) {
+    // Gestion des erreurs de base de données
     error_log('Erreur PDO: ' . $e->getMessage());
     http_response_code(500);
     echo json_encode([
         'status' => 'error',
-        'message' => 'Erreur serveur: ' . $e->getMessage()
+        'message' => 'Erreur serveur: ' . $e->getMessage(),
+    ]);
+} catch (Exception $e) {
+    // Gestion des autres erreurs
+    error_log('Erreur: ' . $e->getMessage());
+    http_response_code(400);
+    echo json_encode([
+        'status' => 'error',
+        'message' => $e->getMessage(),
     ]);
 }

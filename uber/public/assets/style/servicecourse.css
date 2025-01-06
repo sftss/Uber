@@ -1,103 +1,116 @@
 /* App.css - Style inspiré d'Uber */
 
 h1 {
-    font-size: 2rem;
-    color: #000;
-    margin-bottom: 20px;
-    text-align: center;
+  font-size: 2rem;
+  color: #000;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 form {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    max-width: 400px;
-    width: 100%;
-    margin: 0 auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 8px;
-    text-align: center;
+  font-weight: bold;
+  margin-bottom: 8px;
+  text-align: center;
+  margin-bottom: 2%;
 }
 
 input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
 }
 
 button {
-    background-color: #000;
-    color: #fff;
-    border: none;
-    padding: 12px 20px;
-    font-size: 1rem;
-    border-radius: 25px;
-    cursor: pointer;
-    width: 100%;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1rem;
+  border-radius: 25px;
+  cursor: pointer;
+  width: 100%;
 }
 
 button:hover {
-    background-color: #333;
+  background-color: #333;
 }
 
 .course_container {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin: 20px auto;
-    max-width: 600px;
-    width: 100%;
-    text-align: left;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 600px;
+  width: 100%;
+  text-align: left;
 }
 
 .course_title {
-    font-size: 1.5rem;
-    color: #000;
-    margin-bottom: 15px;
+  font-size: 1.5rem;
+  color: #000;
+  margin-bottom: 15px;
 }
 
 .course_details {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .course_details li {
-    margin-bottom: 10px;
-    font-size: 1rem;
+  margin-bottom: 10px;
+  font-size: 1rem;
 }
-
 .no_courses_message {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    text-align: center;
-    font-size: 1rem;
-    color: #555;
-    max-width: 400px;
-    margin: 20px auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  font-size: 1rem;
+  color: #555;
+  max-width: 400px;
+  margin: 20px auto;
 }
-
+#formButAccept {
+  display: flex;
+  flex-direction: row-reverse;
+  box-shadow: none;
+}
 @media (max-width: 768px) {
-    form, .course_container, .no_courses_message {
-        padding: 15px;
-    }
+  form,
+  .course_container,
+  .no_courses_message {
+    padding: 15px;
+  }
 
-    h1 {
-        font-size: 1.5rem;
-    }
+  h1 {
+    font-size: 1.5rem;
+  }
 
-    button {
-        font-size: 0.9rem;
-    }
+  button {
+    font-size: 0.9rem;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  h1 {
+    color: white;
+  }
+  label {
+    color: #000;
+  }
 }

@@ -14,7 +14,7 @@ class SmsController extends Controller
         $client = new \Vonage\Client($basic);
 
         $response = $client->sms()->send(
-            new \Vonage\SMS\Message\SMS("33652656065", "Uber_s231", 'A text message sent using the Nexmo SMS API') //contenu du message
+            new \Vonage\SMS\Message\SMS("33652656065", "Uber", 'A text message sent using the Nexmo SMS API') //contenu du message
         );
         
         $message = $response->current();

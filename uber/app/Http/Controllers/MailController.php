@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SignUp;
+use App\Mail\Paiement;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -23,6 +24,19 @@ class MailController extends Controller
         return view('auth.verification');
         }
     }
+
+    public function sendMailPaiement(){
+
+        $mail = Auth::user()->mail_client;
+        Mail::to("$mail")->send(new Paiement());
+        return view("cart.confirmed")->with(
+            "success",
+            "Votre commande a été validée avec succès."
+        );
+
+    }
+    
+
     public function verifyCode(Request $request)
 {
 

@@ -23,17 +23,14 @@
                     <li class="nav-item">
                         <a href="{{ url('/courses') }}" class="nav-link">Mes Courses</a>
                     </li>
-                    <li class="nav-item">
+                     <!-- <li class="nav-item">
                         <a href="{{ url('/chauffeur-main') }}" class="nav-link">Affichage Chauffeur</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ url('/professionnel-main') }}" class="nav-link">Affichage Professionnel</a>
-                    </li>
+                    </li>-->
                 </ul>
             </div>
 
             <div class="navbar-connect">
-                @auth('web')
+                @auth('clients')
                     <!-- Si un client est connecté -->
                     <span class="navbar-text">Bonjour, <a
                             href="{{ url('/profil/' . auth('web')->user()->id_client) }}">{{ auth('web')->user()->prenom_cp }}</a>
@@ -49,7 +46,7 @@
                         @csrf
                     </form>
                 @endauth
-
+                
                 @auth('chauffeurs')
                     <!-- Si un chauffeur est connecté -->
                     <span class="navbar-text">Bonjour, <a
@@ -66,7 +63,7 @@
                     </form>
                 @endauth
 
-                @guest('web')
+                @guest('clients')
                     @guest('chauffeurs')
                         <a href="{{ route('login.selection') }}" class="btn btn-outline-light">Connexion</a>
                         <a href="{{ route('register.form') }}" class="btn btn-light">S'inscrire</a>

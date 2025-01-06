@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@prettier/plugin-php": "^0.22.2",
+    "flatpickr": "^4.6.9",
     "prettier": "^3.4.2"
   }
 }

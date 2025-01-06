@@ -60,13 +60,15 @@ class CourseController extends Controller
             // ->paginate(5);
         // ->get();
 
+        // $clientId = Auth::id();
         // $courses = Course::with('chauffeur') 
+        //     ->where('id_client', $clientId) 
         //     ->orderBy('id_course', 'desc')
         //     ->paginate(5);
 
-        $clientId = Auth::id();
+        $clientId = Auth::user()->id_client;
         $courses = Course::with('chauffeur', 'lieuDepart', 'lieuArrivee')
-            ->where('id_client', $clientId) 
+            // ->where('id_client', $clientId) 
             ->orderBy('id_course', 'desc')
             ->paginate(5);
 
@@ -92,6 +94,31 @@ class CourseController extends Controller
     }
 
     public function accepter($id) {
+        try {
+            // 1. Récupérer la ligne depuis `temp_course` où id_chauffeur = 7
+            $tempCourse = DB::table('temp_course')->where('id_chauffeur', 7)->first();
+        
+            if ($tempCourse) {
+                // 2. Insérer dans `course` avec `acceptee` à true
+                DB::table('course')
+                ->where('id_course', $tempCourse->numcourse)
+                ->update([
+                    'id_chauffeur' => 7,
+                    'acceptee' => true,
+                ]);
+
+        
+                // 3. Supprimer la table `temp_course`
+                DB::statement('DROP TABLE IF EXISTS temp_course');
+                
+                return view('chauffeur/chauffeur-main');
+            } else {
+                return view('chauffeur/chauffeur-main');
+            }
+        } catch (\Exception $e) {
+            return view('chauffeur/chauffeur-main');
+        }
+        /*
         $course = Course::findOrFail($id);
         $acceptee = "true";
         echo "<script>console.log(".$course.")</script>";
@@ -113,10 +140,19 @@ class CourseController extends Controller
 
         return $chauffeurController
             ->AfficherPropositions($chauffeurId)
-            ->with("success", "Course acceptée");
+            ->with("success", "Course acceptée");*/
     }
 
     public function refuser($id) {
+
+
+        \DB::table('temp_course')
+        ->where('id_chauffeur', 7)
+        ->delete();
+
+
+        return view('chauffeur/chauffeur-main');
+/*
         $course = Course::findOrFail($id);
         $acceptee = "false";
         echo "<script>console.log(".$course.")</script>";
@@ -138,9 +174,12 @@ class CourseController extends Controller
 
         $chauffeurController = new ChauffeurController();
 
+
         return $chauffeurController
             ->AfficherPropositions($chauffeurId)
             ->with("success", "Course acceptée");
+
+            */
     }
 
     public function update(Request $request, $id) {

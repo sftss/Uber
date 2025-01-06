@@ -5,8 +5,7 @@
     <div>
         <div>
             <div class="card-header">Connexion chauffeur</div>
-            <div class="card" style="transform: translateX(-2%);">
-
+            <div class="card nimp">
                 <div class="card-body">
                     <div id=formLogin>
                         <form method="POST" action="{{ route('loginch') }}">
@@ -15,13 +14,14 @@
                             <div class="form-group">
                                 <label for="mail_chauffeur">Email</label>
                                 <input type="email" id="mail_chauffeur" name="mail_chauffeur" class="form-control"
-                                    value="{{ old('mail_chauffeur') }}" required autofocus>
+                                    placeholder="Entrez votre email" value="{{ old('mail_chauffeur') }}" required
+                                    autofocus>
                             </div>
 
                             <div class="form-group">
                                 <label for="mdp_chauffeur">Mot de passe</label>
-                                <input type="password" id="mdp_chauffeur" name="mdp_chauffeur" class="form-control"
-                                    required>
+                                <input placeholder="Entrez votre mot de passe" type="password" id="mdp_chauffeur"
+                                    name="mdp_chauffeur" class="form-control" required>
                             </div>
 
                             <div class="button-container">
@@ -30,8 +30,7 @@
                         </form>
                     </div>
                     <div class="mt-3">
-                        <a class="CreerCompte" style="transform: translateX(10%);"
-                            href="{{ route('registerch') }}">S'inscrire en tant que chauffeur ici</a>
+                        <a class="CreerCompte" href="{{ route('registerch') }}">S'inscrire en tant que chauffeur ici</a>
                     </div>
                 </div>
             </div>

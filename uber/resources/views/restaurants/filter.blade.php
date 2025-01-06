@@ -1,11 +1,17 @@
-@extends('layouts.header')
-
+@if (Auth::guard('clients')->check())
+@extends('layouts.client-header')
+@elseif (Auth::guard('chauffeurs')->check())
+@extends('layouts.professionnel-header')
+@endif
 <link href="{{ asset('assets/style/app.css') }}" rel="stylesheet">
 <link rel="icon" href="{{ URL::asset('assets/svg/uber-logo.svg') }}" type="image/svg+xml">
 
-<div class="txtFilter">Une envie soudaine&nbsp;?<br>Régalez-vous de suite 🍔</div>
+<div id="fond" style="background-image: url('https://www.comeindubai.com/wp-content/uploads/2021/04/fast-food-dubai-scaled.jpeg'); background-size: cover; background-position: center center;">
+
+
 
 <form action="{{ route('restaurants.search') }}" method="GET" class="filter-form">
+<div class="txtFilter">Une envie soudaine&nbsp;?<br>Régalez-vous de suite 🍔</div>
     <div class="form-group-restau">
         <label for="lieu" class="form-label">Rechercher par ville ou par nom :</label>
         <input type="text" id="lieu" name="lieu" class="form-input" placeholder="Lyon, Annecy, Quick, ..."
@@ -13,7 +19,7 @@
     </div>
 
     <div class="form-group-restau checkboxes">
-        <p style="font: weight 300px;">Mode de livraison :</p>
+        <p class="txt">Mode de livraison :</p>
         <div class="checkBoxSearchRestau">
             <input type="checkbox" id="livre" name="livre" {{ request('livre') ? 'checked' : '' }}>
             <label for="livre">Livraison</label>
@@ -88,4 +94,6 @@
     {{ $restaurants->appends(request()->query())->links('pagination::default') }}
     <a href="{{ url('/panier') }}" id="panier">🛒</a>
 </div>
+</div>
+
 <script src="{{ asset('js/main.js') }}"></script>

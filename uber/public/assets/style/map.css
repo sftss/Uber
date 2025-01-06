@@ -49,11 +49,12 @@ body {
   text-decoration: none;
   display: flex;
   flex-wrap: nowrap;
+  transition: all 0.3s ease;
 }
 
 .navbar-nav .nav-link:hover {
-  background-color: #06c167;
-  color: #000;
+  background-color: #4e4e4e;
+  color: white;
 }
 
 .navbar-connect {
@@ -209,4 +210,35 @@ h3 {
 
 .btn-submitmap:hover {
   background-color: #e67e22;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #181a1b;
+    color: whitesmoke;
+  }
+  h3 {
+    color: white;
+  }
+  .btn-submitmap {
+    color: #000;
+    background-color: whitesmoke;
+  }
+  .btn-submitmap:hover {
+    background-color: #999;
+  }
+
+  input {
+    background-color: #181a1b;
+    color: #999;
+  }
+  input:focus {
+    color: #999;
+    border-color: #ccc;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    border-width: 2px;
+  }
+  #propositionsList {
+    color: black;
+  }
 }

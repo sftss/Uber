@@ -15,8 +15,7 @@
     <div>
         <div>
             <div class="card-header">Connexion client</div>
-            <div class="card">
-
+            <div class="card nimp">
                 <div class="card-body">
                     <div id=formLogin>
                         <form method="POST" action="{{ route('login') }}">
@@ -36,12 +35,14 @@
                             <div class="form-group">
                                 <label for="mail_client">Email</label>
                                 <input type="email" id="mail_client" name="mail_client" class="form-control"
-                                    value="{{ old('mail_client') }}" required autofocus>
+                                    placeholder="Entrez votre email" value="{{ old('mail_client') }}" required
+                                    autofocus>
                             </div>
 
                             <div class="form-group">
                                 <label for="mdp_client">Mot de passe</label>
-                                <input type="password" id="mdp_client" name="mdp_client" class="form-control" required>
+                                <input placeholder="Entrez votre mot de passe" type="password" id="mdp_client"
+                                    name="mdp_client" class="form-control" required>
                             </div>
 
                             <div class="button-container">

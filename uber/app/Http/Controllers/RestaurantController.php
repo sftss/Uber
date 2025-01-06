@@ -64,6 +64,55 @@ class RestaurantController extends Controller
             return view('restaurants.filter', compact('restaurants', 'recherche', 'categories', 'horaireOuverture', 'horaireFermeture'));
     }
 
+
+
+    public function filtermoi(Request $request) {
+        $recherche = $request->input('lieu');
+        $livre = $request->has('livre');
+        $emporter = $request->has('emporter');
+        $categorie = $request->input('categorie');
+        $horraire = $request->input('horaire-selected');
+        
+        $horaireOuverture = null;
+        $horaireFermeture = null;
+
+        if ($horraire) {
+            [$horaireOuverture, $horaireFermeture] = array_map(
+                fn($time) => date('H:i:s', strtotime(trim($time))),
+                explode(' - ', $horraire)
+            );
+        }
+
+        $restaurants = DB::table('restaurant')
+            ->join('adresse', 'restaurant.id_adresse', '=', 'adresse.id_adresse')
+            ->leftJoin('a_pour_categorie', 'restaurant.id_restaurant', '=', 'a_pour_categorie.id_restaurant')
+            ->leftJoin('categorie_restaurant', 'a_pour_categorie.id_categorie', '=', 'categorie_restaurant.id_categorie')
+            ->leftJoin('horaires_restaurant', function ($join) {
+                $join->on('restaurant.id_restaurant', '=', 'horaires_restaurant.id_restaurant')
+                    ->where('horaires_restaurant.id_jour', '=', DB::raw('EXTRACT(DOW FROM CURRENT_DATE)')); // Récupérer les horaires du jour actuel
+            })
+        ->select('restaurant.*', 'adresse.*', 'categorie_restaurant.*', 'horaires_restaurant.horaires_ouverture', 'horaires_restaurant.horaires_fermeture')
+        ->where('restaurant.id_proprietaire', auth()->user()->id_client)
+            ->when($recherche, function ($query, $recherche) {
+                return $query->where(function ($q) use ($recherche) {
+                    $q->whereRaw('LOWER(adresse.ville) LIKE LOWER(?)', ['%' . $recherche . '%'])
+                    ->orWhereRaw('LOWER(restaurant.nom_etablissement) LIKE LOWER(?)', ['%' . $recherche . '%']);
+                });
+            })
+            ->when($livre || $emporter, function ($query) use ($livre, $emporter) {
+                $query->where(function ($q) use ($livre, $emporter) {
+                    if ($livre) $q->where('restaurant.propose_livraison', 1);
+                    if ($emporter) $q->where('restaurant.propose_retrait', 1);
+                });
+            })
+            ->distinct()
+            ->paginate(10);
+            $categories = DB::table('categorie_restaurant')->get();
+ 
+
+            return view('restaurants.filter', compact('restaurants', 'recherche', 'categories', 'horaireOuverture', 'horaireFermeture'));
+    }
+
     public function show($id, Request $request) {
         $restaurant = DB::table('restaurant')
             ->join('adresse', 'restaurant.id_adresse', '=', 'adresse.id_adresse')
@@ -158,6 +207,7 @@ class RestaurantController extends Controller
     }
 
     public function store(Request $request) {
+        
         DB::transaction(function () use ($request) {
             $validatedData = $request->validate([
                 'rue' => 'required|string|max:255',
@@ -326,36 +376,4 @@ class RestaurantController extends Controller
         return redirect()->route('restaurants.affichercommandes', $id)
                         ->with('success', 'Chauffeur attribué avec succès.');
     }
-
-
-
-
 }
-
-
-
-
-/* set search_path to s_uber;
-
-SELECT 
-    c.id_commande_repas,
-    r.nom_etablissement AS restaurant,
-    STRING_AGG(DISTINCT p.nom_produit, ', ') AS produits,
-    STRING_AGG(DISTINCT pt.libelle_plat, ', ') AS plats,
-    STRING_AGG(DISTINCT m.libelle_menu, ', ') AS menus
-FROM
-    commande_repas c
-LEFT JOIN est_contenu_dans ecd ON ecd.id_commande_repas = c.id_commande_repas
-LEFT JOIN produit p ON ecd.id_produit = p.id_produit
-LEFT JOIN est_contenu_dans_menu ecdm ON ecdm.id_commande_repas = c.id_commande_repas
-LEFT JOIN menu m ON ecdm.id_menu = m.id_menu
-LEFT JOIN est_contenu_dans_plat ecdp ON ecdp.id_commande_repas = c.id_commande_repas
-LEFT JOIN plat pt ON ecdp.id_plat = pt.id_plat
-LEFT JOIN vends v ON p.id_produit = v.id_produit
-LEFT JOIN propose pr ON ecdp.id_plat = pr.id_plat
-LEFT JOIN propose_menu pm ON m.id_menu = pm.id_menu
-LEFT JOIN restaurant r ON v.id_restaurant = r.id_restaurant
-                        OR pr.id_restaurant = r.id_restaurant
-                        OR pm.id_restaurant = r.id_restaurant
-WHERE r.id_restaurant = 2
-GROUP BY c.id_commande_repas, r.nom_etablissement;*/

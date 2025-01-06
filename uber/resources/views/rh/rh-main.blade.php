@@ -1,4 +1,4 @@
-@extends('layouts.service-course-header')
+@extends('layouts.rh-header')
 <link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
 
 <body>
@@ -9,11 +9,11 @@
         <div class="card">
             <img src="{{ asset('assets/img/voiture.webp') }}" loading="lazy" alt="Course" class="icon" />
             <div class="content">
-                <h3>Course</h3>
+                <h3>Chauffeur</h3>
                 <p>
-                    Envoyé les demandes de course aux chauffeurs
+                    Proposé des rendez-vous aux chauffeurs et accepter leur candidature
                 </p>
-                <a href="{{ url('/voircourse') }}" class="details">Détails</a>
+                <a href="{{ url('/voirchauffeur') }}" class="details">Détails</a>
             </div>
         </div>
     </section>

@@ -17,18 +17,18 @@
     <div class="account-info">
 
         <div class="info-item">
-            <strong>Email :</strong>
-            <p>{{ $client->first()->mail_client }}</p>
+            <p><strong>Email :</strong>
+                {{ $client->first()->mail_client }}</p>
         </div>
 
         <div class="info-item">
-            <strong>Prénom et nom :</strong>
-            <p>{{ $client->first()->prenom_cp }} {{ $client->first()->nom_cp }}</p>
+            <p><strong>Prénom et nom :</strong>
+                {{ $client->first()->prenom_cp }} {{ $client->first()->nom_cp }}</p>
         </div>
 
-        <div class="info-item">
-            <strong>Numéro de téléphone :</strong>
-            <p>{{ $client->first()->tel_client }}</p>
+        <div class="info-item" style="margin: 0 0 2% 0;">
+            <p><strong>Numéro de téléphone :</strong>
+                {{ $client->first()->tel_client }}</p>
         </div>
 
         @if ($client->isEmpty() || $client->first()->num_cb === null)

@@ -27,13 +27,13 @@
         <h3>Informations de l'établissement</h3>
         <hr>
         <div class="form-group">
-            <label for="nom_etablissement" class="form-label">Nom de l'établissement :</label>
+            <label for="nom_etablissement">Nom de l'établissement :</label>
             <input type="text" placeholder="Entrez le nom" name="nom_etablissement" id="nom_etablissement"
                 class="form-control" maxlength="50">
         </div>
 
         <div class="form-group">
-            <label for="description_etablissement" class="form-label">Description :</label>
+            <label for="description_etablissement">Description :</label>
             <textarea style="font-family: Arial, sans-serif;" name="description_etablissement" id="description_etablissement"
                 class="form-control" placeholder="Entrez la description" maxlength="300" required></textarea>
         </div>
@@ -53,7 +53,7 @@
         @endforeach
 
         <div class="form-group">
-            <label for="propose_livraison" class="form-label">Propose livraison :</label>
+            <label for="propose_livraison">Propose livraison :</label>
             <select name="propose_livraison" id="propose_livraison" class="form-select">
                 <option value="1">Oui</option>
                 <option value="0">Non</option>
@@ -64,7 +64,7 @@
             <label for="photo_lieu">Photo :</label>
             <input
                 style="font-family: Arial, sans-serif; border: 1px solid #ccc; border-radius: 5px; padding: 0.5rem; font-size: 1rem; outline: none; transition: border-color 0.3s;"
-                placeholder="Entrer une URL" type="text" id="photo_lieu" name="photo_lieu" class="form-control">
+                placeholder="Entrez une URL" type="text" id="photo_lieu" name="photo_lieu" class="form-control">
         </div>
 
         <button type="submit" class="btn btn-primary">Enregistrer</button>
