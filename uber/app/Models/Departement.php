@@ -12,6 +12,11 @@ class Departement extends Model
     protected $table = "departement";
     protected $primaryKey = "id_departement";
     public $timestamps = false;
+    protected $fillable = [
+        'id_departement',
+        'code_departement',
+        'libelle_departement',
+    ];
 
     public function adresses()
     {

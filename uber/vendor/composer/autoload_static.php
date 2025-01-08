@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitdb4d6b8fd70713457f3ba04b835838c5
+class ComposerStaticInit3e65f7180e172142c8a82a5de340baea
 {
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
@@ -229,8 +229,8 @@ class ComposerStaticInitdb4d6b8fd70713457f3ba04b835838c5
         ),
         'Vonage\\' => 
         array (
-            0 => __DIR__ . '/..' . '/vonage/client-core/src',
-            1 => __DIR__ . '/..' . '/vonage/jwt/src',
+            0 => __DIR__ . '/..' . '/vonage/jwt/src',
+            1 => __DIR__ . '/..' . '/vonage/client-core/src',
         ),
         'Twilio\\' => 
         array (
@@ -436,8 +436,8 @@ class ComposerStaticInitdb4d6b8fd70713457f3ba04b835838c5
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -10055,9 +10055,9 @@ class ComposerStaticInitdb4d6b8fd70713457f3ba04b835838c5
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitdb4d6b8fd70713457f3ba04b835838c5::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitdb4d6b8fd70713457f3ba04b835838c5::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitdb4d6b8fd70713457f3ba04b835838c5::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit3e65f7180e172142c8a82a5de340baea::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit3e65f7180e172142c8a82a5de340baea::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit3e65f7180e172142c8a82a5de340baea::$classMap;
 
         }, null, ClassLoader::class);
     }

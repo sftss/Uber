@@ -30,6 +30,14 @@ Route::get('/', function () {
     return view('main');
 })->name('home');
 
+Route::post('/modifier-course', [CourseController::class, 'modifierCourse']);
+
+Route::post('/creercat-course', [CourseController::class, 'creercatCourse']);
+
+Route::post('/reserver-course', [CourseController::class, 'reserverCourse']);
+
+
+
 Route::post('/planifier-rdv/{chauffeur_id}', [ChauffeurController::class, 'planifierRdv'])->name('planifier-rdv');
 
 Route::post('/changer-statuts-rdv/{chauffeur_id}', [ChauffeurController::class, 'changerStatutRdv'])->name('changer-statuts-rdv');
