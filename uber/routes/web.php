@@ -22,6 +22,9 @@ use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PlatController;
 use App\Http\Controllers\SmsController;
+use App\Http\Controllers\VehiculeController;
+use App\Http\Controllers\PayPalController;
+use App\Http\Controllers\ServiceFacturationController;
 
 Route::get('/', function () {
     return view('main');
@@ -30,6 +33,10 @@ Route::get('/', function () {
 Route::post('/planifier-rdv/{chauffeur_id}', [ChauffeurController::class, 'planifierRdv'])->name('planifier-rdv');
 
 Route::post('/changer-statuts-rdv/{chauffeur_id}', [ChauffeurController::class, 'changerStatutRdv'])->name('changer-statuts-rdv');
+
+Route::post('/changer-statuts-vehicule/{vehicule_id}', [ChauffeurController::class, 'changerStatutVeh'])->name('changer-statuts-vehicule');
+
+Route::post('/ajouter-amenagement/{vehicule_id}', [ChauffeurController::class, 'ajoutAmenagement'])->name('ajouter-amenagement');
 
 Route::get('/test-mail', [MailController::class, 'sendMail']);
 
@@ -134,6 +141,16 @@ Route::get('/service-rh', function() {
 Route::get('/voirchauffeur', function() {
     return view('rh/voirchauffeur');
 });
+
+Route::get('/service-lgt', function() {
+    return view('service-lgt/main-logistique');
+});
+
+Route::get('/voirvehicule', function() {
+    return view('service-lgt/voirvehicule');
+});
+
+Route::match(['GET', 'POST'], '/voirvehicule', [VehiculeController::class, 'VehiculeValider'])->name('VehiculeValider');
 
 Route::get('/chauffeurs-a-valider', [ChauffeurController::class, 'AfficherChauffeurAValider'])->name('afficher-chauffeur-a-valider');
 
@@ -242,3 +259,22 @@ Route::get('/envoi-sms', [SmsController::class, 'sendSms']);
 Route::get('/help', function () {
     return view('help.aide');
 })->name('help');
+Route::get('/service-facturation-visualisation', function () {
+    return view('service-facturation/visualisation');
+});
+
+Route::get('paypal/payment', [PayPalController::class, 'createPayment'])->name('paypal.payment');
+Route::get('paypal/success', [PayPalController::class, 'handleSuccess'])->name('paypal.success');
+Route::get('paypal/cancel', [PayPalController::class, 'handleCancel'])->name('paypal.cancel');
+
+Route::get('/facturation', function () {
+    return view('service-facturation/service-facturation-main');
+});
+
+Route::get('/service-facturation-visualisation', function () {
+    return view('service-facturation/visualisation');
+});
+
+Route::get('service-facturation-courses/{id}', [ServiceFacturationController::class, 'afficherCoursesChauffeur']);
+Route::get('/courses/chauffeur/{id}/periode', [FactureController::class, 'afficherCoursesChauffeurPeriode'])->name('courses-chauffeur');
+Route::post('/courses/facture', [FactureController::class, 'genererFactures'])->name('courses.Factures');

@@ -1,4 +1,4 @@
-/* App.css - Style inspiré d'Uber */
+/* App.css - Style moderne et fluide */
 
 h1 {
   font-size: 2rem;
@@ -7,64 +7,36 @@ h1 {
   text-align: center;
 }
 
-form {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  max-width: 400px;
-  width: 100%;
-  margin: 0 auto;
+.container {
+  margin: 3% 3%;
 }
 
-label {
-  font-weight: bold;
-  margin-bottom: 8px;
-  text-align: center;
-  margin-bottom: 2%;
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
-}
-
-button {
-  background-color: #000;
-  color: #fff;
-  border: none;
-  padding: 12px 20px;
-  font-size: 1rem;
-  border-radius: 25px;
-  cursor: pointer;
-  width: 100%;
-}
-
-button:hover {
-  background-color: #333;
-}
-
+/* Container pour les informations des véhicules */
 .course_container {
   background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin: 20px auto;
-  max-width: 600px;
+  border-radius: 10px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  margin: 25px auto;
+  max-width: 700px;
   width: 100%;
   text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.course_container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Titre du véhicule */
 .course_title {
-  font-size: 1.5rem;
-  color: #000;
+  font-size: 1.75rem;
+  color: #333;
   margin-bottom: 15px;
 }
 
+/* Liste des détails du véhicule */
 .course_details {
   list-style: none;
   padding: 0;
@@ -72,45 +44,176 @@ button:hover {
 }
 
 .course_details li {
-  margin-bottom: 10px;
-  font-size: 1rem;
-}
-.no_courses_message {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  text-align: center;
+  margin-bottom: 12px;
   font-size: 1rem;
   color: #555;
-  max-width: 400px;
-  margin: 20px auto;
 }
+
+/* Boutons Accepter / Refuser */
 #formButAccept {
   display: flex;
   flex-direction: row-reverse;
   box-shadow: none;
+  gap: 10px;
+  justify-content: flex-start;
 }
+
+button {
+  padding: 12px 20px;
+  font-size: 1rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+  background-color: #333;
+  transform: scale(1.05);
+}
+
+.btn-success {
+  background-color: #28a745;
+  border: 1px solid #28a745;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border: 1px solid #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+/* Formulaire d'ajout d'aménagement */
+/* Formulaire d'ajout d'aménagement */
+form {
+  margin-top: 20px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  width: 100%; /* Le formulaire prend toute la largeur */
+  box-sizing: border-box; /* Inclut les paddings et bordures dans la largeur */
+}
+
+form label {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  display: block;
+}
+
+select,
+input,
+textarea {
+  width: 90%; /* S'assurer que tous les éléments prennent toute la largeur disponible */
+  max-width: 100%; /* Ajout d'un max-width pour éviter que l'élément dépasse */
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  margin-bottom: 20px;
+  background-color: #fff;
+  transition: border 0.3s ease;
+  box-sizing: border-box; /* Assurer que padding et bordures sont inclus dans la largeur */
+  overflow: hidden; /* Empêcher le débordement */
+}
+
+select:focus,
+input:focus,
+textarea:focus {
+  border: 1px solid #007bff;
+  outline: none;
+}
+
+form button {
+  width: 100%; /* Le bouton prend toute la largeur du formulaire */
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-size: 1rem;
+}
+
+form button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+
+/* Message d'absence de véhicules */
+.no_courses_message {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  text-align: center;
+  font-size: 1.1rem;
+  color: #555;
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+.no_courses_message p {
+  color: #888;
+}
+
+/* Mobile responsive */
 @media (max-width: 768px) {
-  form,
   .course_container,
-  .no_courses_message {
+  .no_courses_message,
+  form {
     padding: 15px;
   }
 
   h1 {
+    font-size: 1.6rem;
+  }
+
+  .course_title {
     font-size: 1.5rem;
   }
 
   button {
     font-size: 0.9rem;
   }
-}
-@media (prefers-color-scheme: dark) {
-  h1 {
-    color: white;
+
+  select,
+  input,
+  textarea {
+    padding: 10px;
   }
-  label {
-    color: #000;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #121212;
+    color: #e0e0e0;
+  }
+
+  .course_container,
+  .no_courses_message {
+    background-color: #1f1f1f;
+    color: #e0e0e0;
+  }
+
+  button {
+    background-color: #333;
+    color: #fff;
+  }
+
+  button:hover {
+    background-color: #444;
+  }
+
+  select {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #444;
   }
 }

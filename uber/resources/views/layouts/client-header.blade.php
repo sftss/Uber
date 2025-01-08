@@ -33,7 +33,7 @@
                 @auth('clients')
                     <!-- Si un client est connecté -->
                     <span class="navbar-text">Bonjour, <a
-                            href="{{ url('/profil/' . auth('web')->user()->id_client) }}">{{ auth('web')->user()->prenom_cp }}</a>
+                            href="{{ url('/profil/' . auth('clients')->user()->id_client) }}">{{ auth('clients')->user()->prenom_cp }}</a>
                         !</span>
 
                     
