@@ -17,6 +17,7 @@ class Departement extends Model
         'code_departement',
         'libelle_departement',
     ];
+
     public function adresses()
     {
         return $this->hasMany(Adresse::class, 'id_departement', 'id_departement');

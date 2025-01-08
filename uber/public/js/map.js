@@ -490,7 +490,7 @@ var prixcourse;
 let courseDejaReservee = false;
 //méthode pour afficher les méthodes des chauffeurs en html
 function AfficheAdresse(chauffeur, tempsDeTrajet) {
-  if (chauffeur != "null") {
+  if (chauffeur !== "null") {
     const div = document.createElement("div");
     div.className = "proposition"; // Utilisez une classe, pas un ID
     let multiplicateurcourse = 1;
@@ -606,8 +606,8 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
         vehiculeInfo.appendChild(breakElement);
         vehiculeInfo.appendChild(
           document.createTextNode(
-            `Couleur: ${chauffeur.vehicule.couleur.lib_couleur}`,
-          ),
+            `Couleur: ${chauffeur.vehicule.couleur.lib_couleur}`
+          )
         );
 
         const chauffeurInfo = document.createElement("p");
@@ -630,8 +630,83 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
 
         reserverBtn.addEventListener("click", function () {
           // Créer la course
-          creerCourse(chauffeur);
 
+          const departCoords = {
+            lat: markerDepart.getLatLng().lat,
+            lng: markerDepart.getLatLng().lng,
+          };
+        
+          const arriveeCoords = {
+            lat: markerArrivee.getLatLng().lat,
+            lng: markerArrivee.getLatLng().lng,
+          };
+          Promise.all([
+            getLieuDetails(departCoords.lat, departCoords.lng),
+            getLieuDetails(arriveeCoords.lat, arriveeCoords.lng),
+          ]).then(([lieuDepart, lieuArrivee]) => {
+            // Construire la course avec les données enrichies
+            const course = {
+              id_chauffeur: chauffeur.id_chauffeur,
+              chauffeur_nom: chauffeur.nom_chauffeur,
+              chauffeur_prenom: chauffeur.prenom_chauffeur,
+              lieu_depart_rue: lieuDepart.rue,
+              lieu_depart_ville: lieuDepart.ville,
+              lieu_depart_cp: lieuDepart.code_postal,
+              lieu_arrivee_rue: lieuArrivee.rue,
+              lieu_arrivee_ville: lieuArrivee.ville,
+              lieu_arrivee_cp: lieuArrivee.code_postal,
+              prix_reservation: prixcourse,
+              tempscourse: durationInSeconds,
+              date_trajet: dateDepart,
+              id_course: coursePourModification
+                ? coursePourModification.id_course
+                : null,
+              id_client: id,
+            };
+          
+
+          if (coursePourModification) {
+            fetch("/modifier-course", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": csrfToken
+              },
+              body: JSON.stringify(course),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.status === "success") {
+                  console.log("Course réservée avec succès", data);
+                } else {
+                  console.error("Erreur lors de la réservation", data);
+                }
+              })
+              .catch((error) => {
+                console.error("Erreur de communication avec le serveur", error);
+              });
+          } else {
+            fetch("/reserver-course", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": csrfToken
+              },
+              body: JSON.stringify(course),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.status === "success") {
+                  console.log("Course réservée avec succès", data);
+                } else {
+                  console.error("Erreur lors de la réservation", data);
+                }
+              })
+              .catch((error) => {
+                console.error("Erreur de communication avec le serveur", error);
+              });
+          }
+        });
           courseDejaReservee = true;
           reserverBtn.textContent = "Course deja réservée";
           reserverBtn.disabled = true;
@@ -653,6 +728,7 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
     isProcessing = false;
   }
 }
+
 
 function AfficheCategorie(categorie) {
   const div = document.createElement("div");
@@ -729,7 +805,80 @@ function AfficheCategorie(categorie) {
 
   reserverBtn.addEventListener("click", function () {
     // Créer la course
-    creerCourseCategorie(categorie, this.dataset.prix);
+    const departCoords = {
+      lat: markerDepart.getLatLng().lat,
+      lng: markerDepart.getLatLng().lng,
+    };
+  
+    const arriveeCoords = {
+      lat: markerArrivee.getLatLng().lat,
+      lng: markerArrivee.getLatLng().lng,
+    };
+    Promise.all([
+      getLieuDetails(departCoords.lat, departCoords.lng),
+      getLieuDetails(arriveeCoords.lat, arriveeCoords.lng),
+    ]).then(([lieuDepart, lieuArrivee]) => {
+      // Construire la course avec les données enrichies
+      const coursecat = {
+        categorie: categorie.lib_categorie_vehicule, 
+      lieu_depart_rue: lieuDepart.rue,
+      lieu_depart_ville: lieuDepart.ville,
+      lieu_depart_cp: lieuDepart.code_postal,
+      lieu_arrivee_rue: lieuArrivee.rue,
+      lieu_arrivee_ville: lieuArrivee.ville,
+      lieu_arrivee_cp: lieuArrivee.code_postal,
+      prix_reservation: prix,
+      tempscourse: durationInSeconds,
+      date_trajet: dateDepart,
+      id_course: coursePourModification
+        ? coursePourModification.id_course
+        : null,
+        id_client: id,
+      };
+    
+    if (coursePourModification) {
+      fetch("/modifier-course", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": csrfToken
+        },
+        body: JSON.stringify(coursecat),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "success") {
+            console.log("Course réservée avec succès", data);
+          } else {
+            console.error("Erreur lors de la réservation", data);
+          }
+        })
+        .catch((error) => {
+          console.error("Erreur de communication avec le serveur", error);
+        });
+    } else {
+      fetch("/creercat-course", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": csrfToken
+        },
+        body: JSON.stringify(coursecat),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "success") {
+            console.log("Course réservée avec succès", data);
+          } else {
+            console.error("Erreur lors de la réservation", data);
+          }
+        })
+        .catch((error) => {
+          console.error("Erreur de communication avec le serveur", error);
+        });
+    }
+  });
+    //creerCourseCategorie(categorie, this.dataset.prix);
     reserverBtn.classList.replace("reserver-btn", "courseclique");
 
     // Mettre à jour le bouton pour afficher "Course réservée"
@@ -765,7 +914,9 @@ function roundToDecimals(number, decimals) {
   return Math.round(number * factor) / factor;
 }
 
-function creerCourse(chauffeur) {
+
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+/*function creerCourse(chauffeur) {
   // Vérifier si une course est déjà réservée
   if (courseDejaReservee) {
     alert("Vous avez déjà réservé une course.");
@@ -780,7 +931,7 @@ function creerCourse(chauffeur) {
   const arriveeCoords = {
     lat: markerArrivee.getLatLng().lat,
     lng: markerArrivee.getLatLng().lng,
-  };
+  };*/
 
   function getLieuDetails(lat, lng) {
     const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
@@ -806,7 +957,7 @@ function creerCourse(chauffeur) {
           ville: "Erreur",
         };
       });
-  }
+  }/*
 
   // Obtenir les détails des lieux de départ et d'arrivée
   Promise.all([
@@ -963,7 +1114,7 @@ function creerCourseCategorie(categorie, prix) {
     getLieuDetails(arriveeCoords.lat, arriveeCoords.lng),
   ]).then(([lieuDepart, lieuArrivee]) => {
     const course = {
-      categorie: categorie.lib_categorie_vehicule, // Utilisez le nom de la catégorie
+      categorie: categorie.lib_categorie_vehicule, 
       lieu_depart_rue: lieuDepart.rue,
       lieu_depart_ville: lieuDepart.ville,
       lieu_depart_cp: lieuDepart.code_postal,
@@ -1056,4 +1207,4 @@ function creerCourseCategorie(categorie, prix) {
         });
     }
   });
-}
+}*/

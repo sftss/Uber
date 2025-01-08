@@ -6,7 +6,7 @@
     crossorigin="" />
 
 <body>
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ URL::asset('assets/style/map.css') }}" />
 
     <div class="container">
