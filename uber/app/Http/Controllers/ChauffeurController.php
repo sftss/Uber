@@ -20,11 +20,13 @@ class ChauffeurController extends Controller
         if ($id) {
             $coursePourModification = Course::with(['lieuDepart', 'lieuArrivee'])->findOrFail($id);
         }
+        $id = auth()->check() ? auth()->user()->id_client : 1;
 
         return view("course/map", [
             'chauffeurs' => $chauffeurs,
             'categories' => $categories,
-            'coursePourModification' => $coursePourModification
+            'coursePourModification' => $coursePourModification,
+            'id' => $id
         ]);
     }
 

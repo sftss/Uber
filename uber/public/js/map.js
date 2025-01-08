@@ -831,6 +831,7 @@ function creerCourse(chauffeur) {
         ? coursePourModification.id_course
         : null,
       operation: "insert",
+      id_client: id,
     };
 
     if (coursePourModification) {
@@ -975,6 +976,7 @@ function creerCourseCategorie(categorie, prix) {
       id_course: coursePourModification
         ? coursePourModification.id_course
         : null,
+        id_client: id,
     };
     if (coursePourModification) {
       fetch("/php/modifiercourse.php", {

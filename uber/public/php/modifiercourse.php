@@ -48,7 +48,7 @@ try {
     $tempscourse = $data['tempscourse'] ?? null;
     $date_depart = $data['date_trajet'] ?? null;
     $id_course = $data['id_course'] ?? null;
-
+    $id_client = $data['id_client'] ?? null;
     // Calculer les codes des départements et la durée de la course
     $code_departement_depart = substr($lieu_depart_cp, 0, 2);
     $code_departement_arrivee = substr($lieu_arrivee_cp, 0, 2);
@@ -124,7 +124,7 @@ try {
         ':id_velo' => null,
         ':id_lieu_depart' => $id_adresse_depart,
         ':id_lieu_arrivee' => $id_adresse_arrivee,
-        ':id_client' => 1,
+        ':id_client' => $id_client,
         ':prix_reservation' => $prix_reservation,
         ':date_prise_en_charge' => substr($date_depart, 0, 10),
         ':duree_course' => $duree_course,

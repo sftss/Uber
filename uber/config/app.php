@@ -183,7 +183,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        // 'Example' => App\Facades\Example::class,
+        // 'Example' => App\Facades\Example::class,mù:ùs
         'PDF' => Barryvdh\DomPDF\Facade\Pdf::class,
         'PayPal' => Srmklive\PayPal\Facades\PayPal::class,
     ])->toArray(),

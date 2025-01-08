@@ -30,6 +30,12 @@ Route::get('/', function () {
     return view('main');
 })->name('home');
 
+Route::post('/modifier-course', [CourseController::class, 'modifierCourse']);
+
+Route::post('/creercat-course', [CourseController::class, 'creercatCourse']);
+
+Route::post('/reserver-course', [CourseController::class, 'reserverCourse']);
+
 Route::post('/planifier-rdv/{chauffeur_id}', [ChauffeurController::class, 'planifierRdv'])->name('planifier-rdv');
 
 Route::post('/changer-statuts-rdv/{chauffeur_id}', [ChauffeurController::class, 'changerStatutRdv'])->name('changer-statuts-rdv');
@@ -276,5 +282,5 @@ Route::get('/service-facturation-visualisation', function () {
 });
 
 Route::get('service-facturation-courses/{id}', [ServiceFacturationController::class, 'afficherCoursesChauffeur']);
-Route::get('/courses/chauffeur/{id}/periode', [FactureController::class, 'afficherCoursesChauffeurPeriode'])->name('courses-chauffeur');
+Route::get('/courses/chauffeur/{id}/periode', [ServiceFacturationController::class, 'afficherCoursesChauffeurPeriode'])->name('courses-chauffeur');
 Route::post('/courses/facture', [FactureController::class, 'genererFactures'])->name('courses.Factures');

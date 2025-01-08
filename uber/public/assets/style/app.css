@@ -1532,7 +1532,24 @@ select {
   display: block;
 }
 
+#nouveau {
+  display: flex;
+  justify-content: space-between; /* Espace égal entre les sections */
+  gap: 20px; /* Espacement entre les colonnes */
+  padding: 20px; /* Espacement intérieur pour le conteneur */
+}
 
+#nouveau_plat_fields, #nouveau_produit_fields {
+  flex: 1; /* Les deux sections prennent une part égale de l'espace disponible */
+  max-width: 45%; /* Limite la largeur pour éviter un trop grand étirement */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Ajout d'une ombre pour un meilleur visuel */
+  padding: 20px; /* Espacement intérieur */
+  border-radius: 8px; /* Coins arrondis */
+}
+
+#produit_prix, #plat_prix{
+  width: 100%;
+}
 
 @media (prefers-color-scheme: dark) {
   body,

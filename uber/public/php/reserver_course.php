@@ -35,7 +35,7 @@ try {
     $prix_reservation = $data['prix_reservation'] ?? null;
     $tempscourse = $data['tempscourse'] ?? null;
     $date_depart = $data['date_trajet'] ?? null;
-
+    $id_client = $data['id_client'] ?? null;
     $chauffeurstableau=$data['chauffeurtab'] ?? null;
 
 
@@ -143,7 +143,7 @@ try {
         ':id_velo' => null, // ou un id vélo valide si applicable
         ':id_lieu_depart' => $id_adresse_depart,
         ':id_lieu_arrivee' => $id_adresse_arrivee,
-        ':id_client' => 1, // Assurez-vous que l'ID du client est valide
+        ':id_client' => $id_client, // Assurez-vous que l'ID du client est valide
         ':prix_reservation' => $prix_reservation,
         ':date_prise_en_charge' => substr($date_depart, 0, 10),
         ':duree_course' => $duree_course,

@@ -34,6 +34,7 @@
         // On récupère les chauffeurs en JS depuis PHP
         const chauffeurs = @json($chauffeurs);
         const categories = @json($categories);
+        const id = @json($id);
 
         @if (isset($coursePourModification))
             const coursePourModification = @json($coursePourModification);

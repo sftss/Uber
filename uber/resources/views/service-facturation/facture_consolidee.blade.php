@@ -1,11 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
-
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="{{ csrf_token() }}" name="csrf-token">
-    <title>{{ __('facture.invoice_title') }}</title>
+    <title>{{ __('Facture consolidée') }}</title>
     <style>
         /* Global */
         body {
@@ -130,76 +128,45 @@
         }
     </style>
 </head>
-
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="container-img-logo">
-                <img alt="Logo Uber" src="{{ public_path('assets/img/Uber-Logo.webp') }}" width="200">
-            </div>
-            <div id="heading">
-                <h1 id="ADroite">{{ __('facture.invoice_title') }}</h1>
-                <h1 id="AGauche">{{ __('facture.id_title') }} : {{ $facture->id }}</h1>
-            </div>
-        </div>
+    
+    <h1>{{ __('Facture pour les courses de la période') }}</h1>
+    
+    <p>{{ __('Chauffeur') }} : {{ $chauffeur->nom_chauffeur }} {{ $chauffeur->prenom_chauffeur }}</p>
 
-        <div class="client-info">
-            <div class="section">
-                <h3>{{ __('facture.client_info') }}</h3>
-                <p><strong>{{ __('facture.client_name') }}:</strong> {{ $client->prenom_cp }} {{ $client->nom_cp }}</p>
-                <p><strong>Email:</strong> {{ $client->mail_client }}</p>
-                <p><strong>{{ __('facture.clientTel') }}:</strong> +33 {{ $client->tel_client }}</p>
-            </div>
-            @if (isset($chauffeur))
-                <div class="section">
-                    <h3>{{ __('facture.driver_info') }}</h3>
-                    <p><strong>{{ __('facture.client_name') }}:</strong> {{ $chauffeur->nom_chauffeur }} {{ $chauffeur->prenom_chauffeur }}</p>
-                    <p><strong>Email:</strong> {{ $chauffeur->mail_chauffeur }}</p>
-                    <p><strong>{{ __('facture.driverTel') }}:</strong> +33 {{ $chauffeur->tel_chauffeur }}</p>
-                    <p><strong>{{ __('facture.nameEnt') }} :</strong> {{ $chauffeur->nom_entreprise }}</p>
-                </div>
-            @endif
-        </div>
-
-        <div class="course-info">
-            <div class="section">
-                <h3>{{ __('facture.course_info') }}</h3>
-                <p><strong>{{ __('facture.departure_address') }}:</strong> {{ $lieu_depart->rue }} {{ $lieu_depart->cp }} {{ $lieu_depart->ville }}</p>
-                <p><strong>{{ __('facture.arrival_address') }}:</strong> {{ $lieu_arrivee->rue }} {{ $lieu_arrivee->cp }} {{ $lieu_arrivee->ville }}</p>
-                <p><strong>{{ __('facture.pickup_date') }}:</strong> {{ $date_prise_en_charge }}</p>
-                <p><strong>{{ __('facture.duration') }}:</strong> {{ $duree_course }}</p>
-            </div>
-        </div>
-
-        <!-- Tableau des produits -->
-        <table class="products">
-            <thead>
+    <!-- Tableau des items (détails des courses et pourboires) -->
+    <table border="1" cellspacing="0" cellpadding="5">
+        <thead>
+            <tr>
+                <th>{{ __('Description') }}</th>
+                <th>{{ __('Montant HT') }}</th>
+                <th>{{ __('TVA') }}</th>
+                <th>{{ __('Pourboire') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($items as $item)
                 <tr>
-                    <th>{{ __('facture.product') }}</th>
-                    <th>{{ __('facture.unit_price') }}</th>
-                    <th>{{ __('facture.vat') }}</th>
-                    <th>{{ __('facture.tip') }}</th>
+                    <td>{{ $item['name'] }}</td>
+                    <td>{{ number_format($item['price'], 2, ',', ' ') }} €</td>
+                    <td>{{ $item['tva'] }}</td>
+                    <td>
+                        <!-- Affichage du pourboire dans la même ligne -->
+                        @if ($item['tip'] !== null)
+                            {{ number_format($item['tip'], 2, ',', ' ') }} €
+                        @else
+                            -
+                        @endif
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach ($items as $item)
-                    <tr class="items">
-                        <td>{{ $item['name'] }}</td>
-                        <td>{{ number_format($item['price'], 2, ',', ' ') }} €</td>
-                        <td>{{ $item['tva'] == '0%' ? '' : $item['tva'] }}</td>
-                        <td>{{ $item['tip'] !== null ? number_format($item['tip'], 2, ',', ' ') . ' €' : '-' }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+            @endforeach
+        </tbody>
+    </table>
 
-        <!-- Totaux -->
-        <div class="footer">
-            <p id="totalTxt">{{ __('facture.total_ht') }} : <strong>{{ number_format($totalHT, 2, ',', ' ') }} €</strong></p>
-            <p id="totalTxt">{{ __('facture.total_ttc') }} : <strong>{{ number_format($totalTTC, 2, ',', ' ') }} €</strong></p>
-            <p>{{ __('facture.thank_you') }} - © Uber</p>
-        </div>
-    </div>
+    <!-- Totaux -->
+    <p><strong>{{ __('Total HT') }} : {{ number_format($totalHT, 2, ',', ' ') }} €</strong></p>
+    <p><strong>{{ __('TVA (20%)') }} : {{ number_format($tva, 2, ',', ' ') }} €</strong></p>
+    <p><strong>{{ __('Total TTC') }} : {{ number_format($totalTTC, 2, ',', ' ') }} €</strong></p>
+    <p><strong>{{ __('Pourboire total') }} : {{ number_format($pourboire, 2, ',', ' ') }} €</strong></p>
 </body>
-
 </html>

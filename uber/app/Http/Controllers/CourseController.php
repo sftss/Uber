@@ -146,7 +146,7 @@ class CourseController extends Controller
     public function refuser($id) {
 
 
-        \DB::table('temp_course')
+        DB::table('temp_course')
         ->where('id_chauffeur', 7)
         ->delete();
 
