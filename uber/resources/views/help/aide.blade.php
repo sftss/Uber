@@ -14,11 +14,11 @@
     <div class="help-section">
         <h2>1. Les étapes préliminaires</h2>
         <ul>
-            <li><i class="icon-user-plus"></i><strong>Créez un compte : </strong> Cliquez sur "S'inscrire", remplissez
+            <li><i class="icon-user-plus"></i><strong>Création de compte : </strong> Cliquez sur "S'inscrire", remplissez
                 le
                 formulaire et
                 validez via email.</li>
-            <li><i class="icon-login"></i><strong>Connectez-vous : </strong> Utilisez vos identifiants pour accéder à
+            <li><i class="icon-login"></i><strong>Connexion : </strong> Utilisez vos identifiants pour accéder à
                 votre compte.</li>
         </ul>
         <div class="help-illustration">
@@ -45,10 +45,40 @@
             </li>
 
             <li class="guide-item">
-                <strong>Passer une commande : </strong>
+                <strong>Choix de la quantité des plats : </strong>
+                <p>Vous pouvez indiquer la quantité souhaitée pour chaque plat lors de votre commande.</p>
+                <div class="help-illustration">
+                    <img src="{{ asset('assets/img/aideMajPanier.png') }}" alt="Exemple de recherche de restaurant"
+                        class="help-image">
+                </div>
+            </li>
+
+
+            <li class="guide-item">
+                <strong>Passation d'une commande : </strong>
                 <p>Passez une commande en sélectionnant vos plats et choisissez un mode de paiement adapté.</p>
                 <div class="help-illustration">
                     <img src="{{ asset('assets/img/aidePasserCommande.webp') }}" alt="Passage de commande Uber Eats"
+                        class="help-image">
+                </div>
+            </li>
+
+            <li class="guide-item">
+                <i class="icon-history"></i><strong>Consultation de l'historique de vos commandes : </strong>
+                <p>Revisitez vos commandes passées Uber Eats, avec les détails des plats et paiements, et recommandez-les facilement.</p>
+                <div class="help-illustration">
+                    <img src="{{ asset('assets/img/aideVoirCommande.webp') }}" alt="Exemple de gestion des paiements"
+                        class="help-image">
+                        <img src="{{ asset('assets/img/aideAncienneCommande.png') }}" alt="Exemple de gestion des paiements"
+                        class="help-image">
+                </div>
+            </li>
+
+            <li class="guide-item">
+                <i class="icon-history"></i><strong>Accès direct au panier : </strong>
+                <p>Vous pouvez également utiliser le bouton dédié sur le site pour accéder directement à votre panier et ajuster votre commande.</p>
+                <div class="help-illustration">
+                    <img src="{{ asset('assets/img/aideBoutonPanier.png') }}" alt="Exemple de gestion des paiements"
                         class="help-image">
                 </div>
             </li>
@@ -93,7 +123,7 @@
             </li>
 
             <li class="guide-item">
-            <strong>Gérer votre Réservation : </strong>
+            <strong>Gestion de votre Réservation : </strong>
                 <p>Vous pourrez ensuite modifier ou annuler la réservation selon votre choix.</p>
                 <div class="help-illustration">
                     <img src="{{ asset('assets/img/aideCourseBouttonpng.png') }}" alt="Récapitulatif de la réservation"
@@ -136,17 +166,10 @@
         <h2>3. Gestion des paiements et commandes</h2>
         <ul class="guide-list">
             <li class="guide-item">
-                <i class="icon-credit-card"></i><strong>Ajoutez un mode de paiement depuis votre profil : </strong>
+                <i class="icon-credit-card"></i><strong>Ajout un mode de paiement depuis votre profil : </strong>
                 <div class="help-illustration">
                 <img src="{{ asset('assets/img/aideAjouterCB.webp') }}" alt="Page de facture"
                 class="help-image">
-                </div>
-            </li>
-            <li class="guide-item">
-                <i class="icon-history"></i><strong>Consultez l'historique de vos commandes : </strong>
-                <div class="help-illustration">
-                    <img src="{{ asset('assets/img/aideVoirCommande.webp') }}" alt="Exemple de gestion des paiements"
-                        class="help-image">
                 </div>
             </li>
         </ul>
@@ -164,7 +187,7 @@
                 </div>
             </li>
             <li class="guide-item">
-                <i class="icon-question-circle"></i>Vous pouvez aussi poser vos questions à l'assitant virtuel :
+                <i class="icon-question-circle"></i>Vous pouvez aussi poser vos questions à l'assistant virtuel :
                 <div class="help-illustration">
                     <img src="{{ asset('assets/images/support.png') }}" alt=""
                         class="help-image">

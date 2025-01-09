@@ -102,11 +102,11 @@ class CartController extends Controller
 
                 // Supprimer l'élément de la base de données
                 if ($type === 'produit') {
-                    \DB::table('contient')->where('id_panier', $idPanier)->where('id_produit', $idElement)->delete();
+                    DB::table('contient')->where('id_panier', $idPanier)->where('id_produit', $idElement)->delete();
                 } elseif ($type === 'menu') {
-                    \DB::table('contient_menu')->where('id_panier', $idPanier)->where('id_menu', $idElement)->delete();
+                    DB::table('contient_menu')->where('id_panier', $idPanier)->where('id_menu', $idElement)->delete();
                 } elseif ($type === 'plat') {
-                    \DB::table('contient_plat')->where('id_panier', $idPanier)->where('id_plat', $idElement)->delete();
+                    DB::table('contient_plat')->where('id_panier', $idPanier)->where('id_plat', $idElement)->delete();
                 }
 
                 $this->updateMontantPanier($idPanier);
@@ -123,7 +123,7 @@ class CartController extends Controller
             $totalAmount += $item['total'];  // Utiliser le montant total de chaque élément
         }
 
-        \DB::table('panier')
+        DB::table('panier')
         ->where('id_panier', $idPanier)
         ->update([
             'montant' => $totalAmount
@@ -132,42 +132,42 @@ class CartController extends Controller
 
     private function saveToDatabase($type, $id, $idPanier, $cartItem) {
         if ($type === 'produit') {
-            $existing = \DB::table('contient')->where('id_panier', $idPanier)->where('id_produit', $id)->first();
+            $existing = DB::table('contient')->where('id_panier', $idPanier)->where('id_produit', $id)->first();
 
             if ($existing) {
-                \DB::table('contient')->where('id_panier', $idPanier)->where('id_produit', $id)->update([
+                DB::table('contient')->where('id_panier', $idPanier)->where('id_produit', $id)->update([
                     'quantite' => $existing->quantite + $cartItem['quantity']
                 ]);
             } else {
-                \DB::table('contient')->insert([
+                DB::table('contient')->insert([
                     'id_panier' => $idPanier,
                     'id_produit' => $id,
                     'quantite' => $cartItem['quantity']
                 ]);
             }
         } elseif ($type === 'menu') {
-            $existing = \DB::table('contient_menu')->where('id_panier', $idPanier)->where('id_menu', $id)->first();
+            $existing = DB::table('contient_menu')->where('id_panier', $idPanier)->where('id_menu', $id)->first();
 
             if ($existing) {
-                \DB::table('contient_menu')->where('id_panier', $idPanier)->where('id_menu', $id)->update([
+                DB::table('contient_menu')->where('id_panier', $idPanier)->where('id_menu', $id)->update([
                     'quantite' => $existing->quantite + $cartItem['quantity']
                 ]);
             } else {
-                \DB::table('contient_menu')->insert([
+                DB::table('contient_menu')->insert([
                     'id_panier' => $idPanier,
                     'id_menu' => $id,
                     'quantite' => $cartItem['quantity']
                 ]);
             }
         } elseif ($type === 'plat') {
-            $existing = \DB::table('contient_plat')->where('id_panier', $idPanier)->where('id_plat', $id)->first();
+            $existing = DB::table('contient_plat')->where('id_panier', $idPanier)->where('id_plat', $id)->first();
 
             if ($existing) {
-                \DB::table('contient_plat')->where('id_panier', $idPanier)->where('id_plat', $id)->update([
+                DB::table('contient_plat')->where('id_panier', $idPanier)->where('id_plat', $id)->update([
                     'quantite' => $existing->quantite + $cartItem['quantity']
                 ]);
             } else {
-                \DB::table('contient_plat')->insert([
+                DB::table('contient_plat')->insert([
                     'id_panier' => $idPanier,
                     'id_plat' => $id,
                     'quantite' => $cartItem['quantity']
@@ -210,15 +210,15 @@ class CartController extends Controller
                 $idPanier = $this->getPanierId($idClient);
 
                 if ($type === 'produit') {
-                    \DB::table('contient')->where('id_panier', $idPanier)->where('id_produit', $id)->update([
+                    DB::table('contient')->where('id_panier', $idPanier)->where('id_produit', $id)->update([
                         'quantite' => $quantity
                     ]);
                 } elseif ($type === 'menu') {
-                    \DB::table('contient_menu')->where('id_panier', $idPanier)->where('id_menu', $id)->update([
+                    DB::table('contient_menu')->where('id_panier', $idPanier)->where('id_menu', $id)->update([
                         'quantite' => $quantity
                     ]);
                 } elseif ($type === 'plat') {
-                    \DB::table('contient_plat')->where('id_panier', $idPanier)->where('id_plat', $id)->update([
+                    DB::table('contient_plat')->where('id_panier', $idPanier)->where('id_plat', $id)->update([
                         'quantite' => $quantity
                     ]);
                 }

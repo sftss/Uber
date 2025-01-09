@@ -130,8 +130,19 @@
                     <h3>{{ $plat->libelle_plat }}</h3>
                     <p>Catégorie : {{ $plat->categorie_plat }} </p>
                     <p>Prix : {{ $plat->prix_plat }} €</p>
-                    <p>Note : {{ $plat->note_plat }}</p>
-                    <p>{{ $plat->nb_avis }} avis</p>
+                    
+                    @if($plat->note_plat)
+                        <p>Note : {{ $plat->note_plat }}</p>
+                    @else
+                        <p>Note : Aucune note disponible</p>
+                    @endif
+
+                    @if($plat->nb_avis)
+                        <p>{{ $plat->nb_avis }} avis</p>
+                    @else
+                        <p>Aucun avis disponible</p>
+                    @endif
+
                     <form action="{{ route('cart.add', ['type' => 'plat', 'id' => $plat->id_plat]) }}" method="POST">
                         @csrf
                         <button type="submit" class="btn-primary ajtpanier">Ajouter au panier</button>

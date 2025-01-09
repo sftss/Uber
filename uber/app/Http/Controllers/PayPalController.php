@@ -66,14 +66,14 @@ public function handleSuccess(Request $request)
             $response = $paypal->capturePaymentOrder($request['token']);
 
             if (isset($response['status']) && $response['status'] == 'COMPLETED') {
-                return redirect()->route('home-up')->with('success', 'Paiement réussi.');
+                return redirect()->route('cart.confirm')->with('success', 'Paiement réussi.');
             }
 
-            return redirect()->route('home-up')->with('error', 'Le paiement a échoué.');
+            return redirect()->route('cart.confirm')->with('error', 'Le paiement a échoué.');
         }
 
         public function handleCancel()
         {
-            return redirect()->route('home-up')->with('error', 'Le paiement a été annulé.');
+            return redirect()->route('cart.confirm')->with('error', 'Le paiement a été annulé.');
         }
 }

@@ -302,9 +302,6 @@ class ClientController extends Controller
         $this->transfererContenuPanier($idPanier, $idCommandeRepas);
 
         return redirect()->route('mailpaiement')->with('success', 'Paiement validé ,');
-        
-
-
     }
 
     private function transfererContenuPanier($idPanier, $idCommandeRepas) {
@@ -365,14 +362,14 @@ class ClientController extends Controller
             ->where("id_course", $course->id_course)
             ->value("validationchauffeur");
 
-        \DB::table("course")
+        DB::table("course")
             ->where("id_course", $course->id_course)
             ->update([
                 "validationclient" => $terminee,
             ]);
 
         if (json_encode($validationChauffeur) == "true") {
-            \DB::table("course")
+            DB::table("course")
                 ->where("id_course", $course->id_course)
                 ->update([
                     "terminee" => $terminee,
@@ -473,13 +470,14 @@ class ClientController extends Controller
         }
 
         $path = $request->file('pp_img')->store('profile_photos', 'public');
+        //$client->photo = $path;
         $client->update(['photo' => $path]);
 
         return back()->with('success', 'Votre photo de profil a été mise à jour.');
     }
 
     public function editPassword() {
-    return view('client.edit-password');
+        return view('client.edit-password');
     }
 
     public function updatePassword(Request $request) {

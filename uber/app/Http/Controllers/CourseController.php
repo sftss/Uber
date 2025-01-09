@@ -128,7 +128,7 @@ class CourseController extends Controller
 
         
         //$course->update(["acceptee" => $acceptee]);
-        \DB::table('course')
+        DB::table('course')
         ->where('id_course', $course->id_course)
         ->update([
             'acceptee' => $acceptee
@@ -162,7 +162,7 @@ class CourseController extends Controller
 
         
         //$course->update(["acceptee" => $acceptee]);
-        \DB::table('course')
+        DB::table('course')
         ->where('id_course', $course->id_course)
         ->update([
             'acceptee' => $acceptee
@@ -273,6 +273,7 @@ class CourseController extends Controller
             'prix_reservation' => 'required|numeric',
             'tempscourse' => 'required|numeric',
             'date_trajet' => 'required|date',
+            'id_client' => 'required|integer',
         ]);
 
         try {
@@ -308,7 +309,7 @@ class CourseController extends Controller
             $minutescourse = floor(($data['tempscourse'] % 3600) / 60);
             $secondescourse = $data['tempscourse'] % 60;
             $duree_course = "{$heurescourse}:{$minutescourse}:{$secondescourse}";
-
+            
             // Insérer la course dans la table course
             $course = Course::create([
                 'chauffeur_nom' => $data['chauffeur_nom'],
@@ -316,15 +317,16 @@ class CourseController extends Controller
                 'id_lieu_depart' => $adresseDepart->id_adresse,
                 'id_lieu_arrivee' => $adresseArrivee->id_adresse,
                 'prix_reservation' => $data['prix_reservation'],
-                'date_trajet' => $data['date_trajet'],
+                'date_prise_en_charge' => substr($data['date_trajet'], 0, 10),
                 'duree_course' => $duree_course,
                 'terminee' => false,
-                'id_client' => 1,
+                'id_client' => $data['id_client'],
             ]);
 
             // Retourner la réponse au client
             return response()->json([
                 'status' => 'success',
+                'date' => substr($data['date_trajet'], 0, 10),
                 'message' => 'Course réservée avec succès',
                 'course' => $course,
             ]);
@@ -350,6 +352,7 @@ class CourseController extends Controller
             'prix_reservation' => 'nullable|numeric',
             'tempscourse' => 'nullable|integer',
             'date_trajet' => 'required|date',
+            'id_client' => 'required|integer',
         ]);
 
         try {
@@ -399,9 +402,9 @@ class CourseController extends Controller
                 'id_velo' => null,
                 'id_lieu_depart' => $adresse_depart->id,
                 'id_lieu_arrivee' => $adresse_arrivee->id,
-                'id_client' => 1, // ID client exemple
+                'id_client' => $validated['id_client'], // ID client exemple
                 'prix_reservation' => $validated['prix_reservation'],
-                'date_prise_en_charge' => $validated['date_trajet'],
+                'date_prise_en_charge' => substr($validated['date_trajet'], 0, 10),
                 'duree_course' => $duree_course,
                 'terminee' => false,
                 'id_client' => 1,
@@ -438,6 +441,7 @@ class CourseController extends Controller
                 'tempscourse' => 'nullable|integer',
                 'date_trajet' => 'required|date',
                 'id_course' => 'required|integer',
+                'id_client' => 'required|integer',
             ]);
 
             // Extraire les données validées
@@ -512,9 +516,9 @@ class CourseController extends Controller
                     'ID_VELO' => null,
                     'ID_LIEU_DEPART' => $id_adresse_depart,
                     'ID_LIEU_ARRIVEE' => $id_adresse_arrivee,
-                    'ID_CLIENT' => 1,
+                    'ID_CLIENT' => $validatedData['id_client'],
                     'PRIX_RESERVATION' => $prix_reservation,
-                    'DATE_PRISE_EN_CHARGE' => $date_trajet,
+                    'date_prise_en_charge' => substr($date_trajet['date_trajet'], 0, 10),
                     'DUREE_COURSE' => $duree_course,
                     'heure_arrivee' => null,
                     'TERMINEE' => false,

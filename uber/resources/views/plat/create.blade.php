@@ -18,7 +18,7 @@
 
         <div class="form-group">
             <label for="prix_plat">Prix du plat :</label>
-            <input type="number" style="width:15%" step="1" value=0 min=0 class="form-control" id="prix_plat"
+            <input type="number" style="width:15%" step="0.1" value=0 min=0 class="form-control" id="prix_plat"
                 name="prix_plat" value="{{ old('prix_plat') }}" required>
         </div>
 

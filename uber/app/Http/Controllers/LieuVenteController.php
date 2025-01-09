@@ -74,7 +74,13 @@ public function filter(Request $request) {
         $categorieRecherche = $request->input('categorie');
         $produits = DB::table('est_vendu')->join('produit', 'est_vendu.id_produit', '=', 'produit.id_produit')
                                         ->join('categorie_produit', 'produit.id_categorie_produit', '=', 'categorie_produit.id_categorie_produit')
-                                        ->select('produit.id_produit', 'produit.nom_produit', 'produit.prix_produit', 'produit.photo_produit', 'categorie_produit.libelle_categorie')
+                                        ->select('produit.id_produit', 
+                                        'produit.nom_produit',
+                                         'produit.prix_produit',
+                                          'produit.photo_produit',
+                                           'categorie_produit.libelle_categorie',
+                                           'note_produit',
+                                           'nb_avis')
                                         ->where('est_vendu.id_lieu_de_vente_pf', $id_lieu_de_vente_pf);
 
         if ($produitRecherche) {

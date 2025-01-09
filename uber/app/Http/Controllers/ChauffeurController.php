@@ -177,6 +177,8 @@ class ChauffeurController extends Controller
         return view('rh/voirchauffeur', compact('chauffeurs'));
     }
 
+
+
     public function planifierRdv(Request $request,$chauffeur_id)
     {
         $chauffeur = Chauffeur::findOrFail($chauffeur_id);
@@ -202,5 +204,93 @@ class ChauffeurController extends Controller
         
         // Rediriger vers la page précédente avec un message de succès
         return redirect()->back()->with('success', $request->input('statut') == 'accepter' ? 'Rendez-vous accepté.' : 'Chauffeur supprimé.');
+    }
+
+    public function createTempCourses(Request $request)
+    {
+        try {
+            // Récupérer les données envoyées
+            $data = $request->all();
+
+            // Vérifier si l'opération demandée est "read_temp"
+            if (isset($data['operation']) && $data['operation'] == 'read_temp') {
+                // Lire les données de la table temporaire
+                $courses = DB::table('temp_course')->get();
+
+                return response()->json([
+                    'status' => 'success',
+                    'data' => $courses,
+                ]);
+            }
+
+            // Vérifier si le tableau de chauffeurs est présent
+            if (!isset($data['chauffeurtab']) || !is_array($data['chauffeurtab'])) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Aucun chauffeur fourni.',
+                ], 400);
+            }
+
+            // Créer la table temporaire si elle n'existe pas encore
+            DB::statement("DROP TABLE IF EXISTS temp_course");
+
+            DB::statement("
+                CREATE TABLE temp_course (
+                    id_course SERIAL PRIMARY KEY,
+                    id_chauffeur INT,
+                    id_velo INT,
+                    id_lieu_depart INT,
+                    id_lieu_arrivee INT,
+                    id_client INT,
+                    prix_reservation NUMERIC(6,2),
+                    date_prise_en_charge DATE,
+                    duree_course TIME,
+                    heure_arrivee TIME,
+                    terminee BOOL,
+                    acceptee BOOL,
+                    validation_client BOOL,
+                    validation_chauffeur BOOL,
+                    pourboire NUMERIC(6,2),
+                    est_facture BOOL,
+                    numcourse INT
+                )
+            ");
+
+            // Parcourir chaque chauffeur et créer une course
+            foreach ($data['chauffeurtab'] as $chauffeur) {
+                $id_chauffeur = $chauffeur['id_chauffeur'] ?? null;
+
+                if (!$id_chauffeur) {
+                    // Si l'id du chauffeur est manquant, passer au suivant
+                    continue;
+                }
+
+                DB::table('temp_course')->insert([
+                    'id_chauffeur' => $id_chauffeur,
+                    'id_velo' => $data['id_velo'] ?? null,
+                    'id_lieu_depart' => $data['id_lieu_depart'] ?? null,
+                    'id_lieu_arrivee' => $data['id_lieu_arrivee'] ?? null,
+                    'id_client' => $data['id_client'] ?? 1, // Par défaut, client ID = 1
+                    'prix_reservation' => $data['prix_reservation'] ?? null,
+                    'date_prise_en_charge' => $data['date_prise_en_charge'] ?? null,
+                    'duree_course' => $data['duree_course'] ?? null,
+                    'heure_arrivee' => null,
+                    'terminee' => false,
+                    'numcourse' => $data['id_course'] ?? null,
+                ]);
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Courses créées avec succès pour tous les chauffeurs.',
+            ]);
+        } catch (\Exception $e) {
+            // Gestion des erreurs
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Une erreur est survenue: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 }

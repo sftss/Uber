@@ -84,6 +84,17 @@
                     <h4>{{ $produit->nom_produit }}</h4>
                     <p><strong>Catégorie :</strong> {{ $produit->libelle_categorie }} </p>
                     <p><strong>Prix :</strong> {{ $produit->prix_produit }} €</p>
+                    @if($produit->note_produit)
+                        <p>Note : {{ $produit->note_produit }}</p>
+                    @else
+                        <p>Note : Aucune note disponible</p>
+                    @endif
+
+                    @if($produit->nb_avis)
+                        <p>{{ $produit->nb_avis }} avis</p>
+                    @else
+                        <p>Aucun avis disponible</p>
+                    @endif
                     <form action="{{ route('cart.add', ['type' => 'produit', 'id' => $produit->id_produit]) }}"
                         method="POST">
                         @csrf

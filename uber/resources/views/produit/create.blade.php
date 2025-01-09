@@ -19,7 +19,7 @@
 
         <div class="form-group">
             <label for="prix_produit">Prix du produit (€) :</label>
-            <input style="width:15%" min=0 value=0 type="number" step="1" class="form-control" id="prix_produit"
+            <input style="width:15%" min=0 value=0 type="number" step="0.1" class="form-control" id="prix_produit"
                 name="prix_produit" value="{{ old('prix_produit') }}" required>
         </div>
 

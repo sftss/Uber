@@ -25,10 +25,14 @@ use App\Http\Controllers\SmsController;
 use App\Http\Controllers\VehiculeController;
 use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\ServiceFacturationController;
+use App\Http\Controllers\BotManController;
 
 Route::get('/', function () {
     return view('main');
 })->name('home');
+
+Route::match(['get', 'post'], '/botman',
+'App\Http\Controllers\BotManController@handle');
 
 Route::post('/modifier-course', [CourseController::class, 'modifierCourse']);
 
@@ -36,7 +40,7 @@ Route::post('/creercat-course', [CourseController::class, 'creercatCourse']);
 
 Route::post('/reserver-course', [CourseController::class, 'reserverCourse']);
 
-
+Route::post('/create-temp-courses', [ChauffeurController::class, 'createTempCourses']);
 
 Route::post('/planifier-rdv/{chauffeur_id}', [ChauffeurController::class, 'planifierRdv'])->name('planifier-rdv');
 
@@ -184,6 +188,8 @@ Route::patch('update/{id}', [CartController::class, 'update'])->name('update');
 Route::get('/panierclient', [ClientController::class, 'panierclient']);
 Route::get('/panier/confirm', [CartController::class, 'passercomande'])->name('cart.confirm');
 Route::post('/panier/valider', [ClientController::class, 'validerAvecAdresse'])->name('valider.panier');
+// Define a new route for success redirection
+Route::get('/panier/valider/success', [PayPalController::class, 'handlePaymentSuccess'])->name('valider.panier.success');
 
 Route::get('/ajoutercarte',[ClientController::class ,'ajtcarte'])->name('ajtcarte');
 
@@ -286,3 +292,5 @@ Route::get('/service-facturation-visualisation', function () {
 Route::get('service-facturation-courses/{id}', [ServiceFacturationController::class, 'afficherCoursesChauffeur']);
 Route::get('/courses/chauffeur/{id}/periode', [ServiceFacturationController::class, 'afficherCoursesChauffeurPeriode'])->name('courses-chauffeur');
 Route::post('/courses/facture', [FactureController::class, 'genererFactures'])->name('courses.Factures');
+
+Route::post('/send-notifications', [MailController::class, 'SendNotifChauffeur']);

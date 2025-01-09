@@ -285,8 +285,7 @@ class RestaurantController extends Controller
     
     public function affichercommandes(Request $request, $id)
 {
-    // Récupérer les commandes pour un restaurant donné
-    $commandes = DB::table('commande_repas as c')
+    $query = DB::table('commande_repas as c')
         ->select(
             'c.id_commande_repas',
             'r.nom_etablissement as restaurant',
@@ -295,9 +294,10 @@ class RestaurantController extends Controller
             'c.id_chauffeur',
             'cha.nom_chauffeur',
             'r.id_restaurant',
-            DB::raw("STRING_AGG(DISTINCT p.nom_produit, ', ') as produits"),
-            DB::raw("STRING_AGG(DISTINCT pt.libelle_plat, ', ') as plats"),
-            DB::raw("STRING_AGG(DISTINCT m.libelle_menu, ', ') as menus")
+            DB::raw("STRING_AGG(DISTINCT CONCAT(p.nom_produit, ' (x', ecd.quantite, ')'), ', ') as produits"),
+            DB::raw("STRING_AGG(DISTINCT CONCAT(pt.libelle_plat, ' (x', ecdp.quantite, ')'), ', ') as plats"),
+            DB::raw("STRING_AGG(DISTINCT CONCAT(m.libelle_menu, ' (x', ecdm.quantite, ')'), ', ') as menus"),
+            DB::raw("TO_CHAR((c.horaire_livraison::time + INTERVAL '1 hour 15 minutes'), 'HH24:MI') as horaire_livraison_estimee")
         )
         ->leftJoin('est_contenu_dans as ecd', 'ecd.id_commande_repas', '=', 'c.id_commande_repas')
         ->leftJoin('produit as p', 'ecd.id_produit', '=', 'p.id_produit')
@@ -308,17 +308,24 @@ class RestaurantController extends Controller
         ->leftJoin('vends as v', 'p.id_produit', '=', 'v.id_produit')
         ->leftJoin('propose as pr', 'ecdp.id_plat', '=', 'pr.id_plat')
         ->leftJoin('propose_menu as pm', 'm.id_menu', '=', 'pm.id_menu')
-        ->leftJoin('chauffeur as cha','cha.id_chauffeur','=','c.id_chauffeur')
+        ->leftJoin('chauffeur as cha', 'cha.id_chauffeur', '=', 'c.id_chauffeur')
         ->leftJoin('restaurant as r', function ($join) {
             $join->on('v.id_restaurant', '=', 'r.id_restaurant')
                 ->orOn('pr.id_restaurant', '=', 'r.id_restaurant')
                 ->orOn('pm.id_restaurant', '=', 'r.id_restaurant');
         })
         ->where('r.id_restaurant', '=', $id)
-        ->groupBy('c.id_commande_repas', 'r.nom_etablissement','r.id_restaurant','cha.nom_chauffeur')
-        ->get();
+        ->groupBy('c.id_commande_repas', 'r.nom_etablissement', 'r.id_restaurant', 'cha.nom_chauffeur');
 
-    // Récupérer les chauffeurs pour ce restaurant
+    // Filtrer les commandes si le filtre est activé
+    if ($request->get('filter') === 'urgent') {
+        $now = now()->format('H:i');
+        $query->havingRaw("TO_CHAR((c.horaire_livraison::time + INTERVAL '1 hour 15 minutes'), 'HH24:MI') <= ?", [$now]);
+    }
+
+    $commandes = $query->get();
+
+    // Récupérer les chauffeurs
     $livreurs = DB::table('restaurant as r')
         ->select('c.*')
         ->leftJoin('relie_a as ra', 'ra.id_restaurant', '=', 'r.id_restaurant')
@@ -327,18 +334,9 @@ class RestaurantController extends Controller
         ->where('c.type_chauffeur', 'Livreur')
         ->get();
 
-    // Si le formulaire a été soumis pour attribuer un chauffeur, mise à jour de la commande
-    if ($request->has('id_chauffeur')) {
-        $commande = CommandeRepas::findOrFail($request->id_commande_repas);
-        $commande->id_chauffeur = $request->id_chauffeur;
-        $commande->save();
-
-        return redirect()->route('restaurants.affichercommandes', $id)
-                         ->with('success', 'Chauffeur attribué avec succès.');
-    }
-
     return view('restaurants.affichercommandes', compact('commandes', 'livreurs', 'id'));
 }
+
 
     public function attribuerChauffeur(Request $request, $id)
     {

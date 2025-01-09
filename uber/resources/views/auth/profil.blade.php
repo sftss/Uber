@@ -6,9 +6,9 @@
 
     <div id="img-cont">
         <img alt="Photo de profil" class="pp" src="{{ Auth::user()->photo }}">
-        <form action="{{ route('client.updatePhoto') }}" method="POST">
+        <form action="{{ route('client.updatePhoto') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <label class="lk_img" for="pp_img" style="cursor: pointer;">Modifier votre photode profil</label>
+            <label class="lk_img" for="pp_img" style="cursor: pointer;">Modifier votre photo de profil</label>
             <input name="pp_img" type="file" accept="image/*" id="pp_img" onchange="this.form.submit()"
                 style="display: none;">
         </form>
@@ -45,7 +45,8 @@
                         <div class="modal-body">
                             @foreach ($client as $card)
                                 <div class="card-info affichageCB">
-                                    <p><strong>Numéro de la carte :</strong> {{ $card->num_cb ?? 'Non renseigné' }}
+                                    <p><strong>Numéro de la carte :</strong> {{ substr($card->num_cb, 0, 4) }} **** ****
+                                        {{ substr($card->num_cb, -4) ?? 'Non renseigné' }}
                                     </p>
                                     <p><strong>Nom du titulaire :</strong> {{ $card->nom_cb ?? 'Non renseigné' }}
                                     </p>

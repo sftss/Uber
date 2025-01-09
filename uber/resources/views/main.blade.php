@@ -3,6 +3,8 @@
 <link rel="icon" href="{{ URL::asset('assets/svg/uber-logo.svg') }}" type="image/svg+xml">
 <link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
 
+
+
 <body>
 
     @auth('clients')
@@ -150,6 +152,16 @@
     <a href="{{ url('/panier') }}" id="panier">🛒</a>
 
     <script src="{{ asset('js/main.js') }}" defer></script>
+
+
+ 
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger
+  intent="WELCOME"
+  chat-title="HelperBot"
+  agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745"
+  language-code="fr"
+></df-messenger>
 
 </body>
 
