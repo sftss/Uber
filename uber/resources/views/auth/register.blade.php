@@ -14,6 +14,9 @@
                                 <label for="prenom_cp">Prénom</label>
                                 <input type="text" name="prenom_cp" value="{{ old('prenom_cp') }}"
                                     placeholder="Entrer votre prénom" required>
+                                @error('prenom_cp')
+                                    <span class="error-message">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                         <div>
@@ -21,6 +24,9 @@
                                 <label for="nom_cp">Nom</label>
                                 <input type="text" name="nom_cp" value="{{ old('nom_cp') }}"
                                     placeholder="Entrer votre nom" required>
+                                @error('nom_cp')
+                                    <span class="error-message">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
 
@@ -29,6 +35,9 @@
                                 <label for="mail_client">Email</label>
                                 <input type="email" name="mail_client" value="{{ old('mail_client') }}"
                                     placeholder="Entrer votre email" required>
+                                @error('mail_client')
+                                    <span class="error-message">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                         <div>
@@ -36,6 +45,9 @@
                                 <label for="mdp_client">Mot de passe</label>
                                 <input type="password" name="mdp_client" placeholder="Entrer votre mot de passe"
                                     required>
+                                @error('mdp_client')
+                                    <span class="error-message">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
 
@@ -44,6 +56,9 @@
                                 <label for="mdp_client_confirmation">Confirmer le mot de passe</label>
                                 <input type="password" name="mdp_client_confirmation"
                                     placeholder="Confirmer votre mot de passe" required>
+                                @error('mdp_client_confirmation')
+                                    <span class="error-message">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                         <div>
@@ -51,6 +66,9 @@
                                 <label for="tel_client">Téléphone</label>
                                 <input type="text" name="tel_client" value="{{ old('tel_client') }}"
                                     placeholder="Entrer votre numéro de téléphone">
+                                @error('tel_client')
+                                    <span class="error-message">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                         <div>
@@ -63,6 +81,9 @@
                                     <option value="0" {{ old('est_particulier') == '0' ? 'selected' : '' }}>
                                         Professionnel</option>
                                 </select>
+                                @error('est_particulier')
+                                    <span class="error-message">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
 
@@ -72,6 +93,9 @@
                                     <label for="num_siret">Numéro SIRET</label>
                                     <input type="text" name="num_siret" id="num_siret"
                                         value="{{ old('num_siret') }}">
+                                    @error('num_siret')
+                                        <span class="error-message">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
                             <div>
@@ -86,6 +110,9 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                    @error('secteur_activite')
+                                        <span class="error-message">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -102,10 +129,16 @@
                                     <option value="A" {{ old('sexe_cp') == 'A' ? 'selected' : '' }}>Autre
                                     </option>
                                 </select>
+                                @error('sexe_cp')
+                                    <span class="error-message">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <label for="date_naissance_cp">Date de naissance</label>
                                 <input type="date" name="date_naissance_cp" value="{{ old('date_naissance_cp') }}">
+                                @error('date_naissance_cp')
+                                    <span class="error-message">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
 
@@ -120,7 +153,8 @@
                             <input type="checkbox" name="politique_confidentialite" id="politique_confidentialite"
                                 required>
                             <label for="politique_confidentialite">
-                                J'ai lu et j'accepte la <a class="txtPolConf" href="{{ route('politique') }}">politique
+                                J'ai lu et j'accepte la <a class="txtPolConf"
+                                    href="{{ route('politique') }}">politique
                                     de confidentialité (voir ici)</a>
                             </label>
                         </div>

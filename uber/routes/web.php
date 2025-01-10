@@ -26,6 +26,12 @@ use App\Http\Controllers\VehiculeController;
 use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\ServiceFacturationController;
 use App\Http\Controllers\BotManController;
+use App\Http\Controllers\MetricsController;
+
+Route::get('/metrics', [MetricsController::class, 'index']);
+
+Route::get('/system-metrics', [MetricsController::class, 'getMetrics']);
+
 
 Route::get('/', function () {
     return view('main');

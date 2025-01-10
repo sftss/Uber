@@ -3,7 +3,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif; /* Utilisation de la police moderne */
+  font-family: "Poppins", sans-serif; /* Utilisation de la police moderne */
 }
 
 body {
@@ -11,7 +11,7 @@ body {
   color: #333;
   line-height: 1.8;
   padding: 20px;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 /* Conteneur principal */
@@ -23,10 +23,6 @@ body {
   background-color: #fff;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
-}
-
-.container1:hover {
-  transform: scale(1.02); /* Effet de survol */
 }
 
 /* En-tête */
@@ -60,12 +56,14 @@ body {
   border-radius: 10px;
   background: #f9fafb;
   border-left: 6px solid #048f4c;
-  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .help-section:hover {
   background-color: #eef3f9;
-  transform: scale(1.02);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
@@ -131,10 +129,6 @@ body {
   transition: transform 0.3s ease;
 }
 
-.help-image:hover {
-  transform: scale(1.05); /* Effet de zoom au survol */
-}
-
 /* Items du guide */
 .guide-item {
   background-color: #f9f9f9;
@@ -184,11 +178,15 @@ body {
 }
 
 /* Liens et boutons */
-a, button {
-  transition: background-color 0.3s ease, color 0.3s ease;
+a,
+button {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
-a:hover, button:hover {
+a:hover,
+button:hover {
   color: #048f4c;
   background-color: #fff;
 }

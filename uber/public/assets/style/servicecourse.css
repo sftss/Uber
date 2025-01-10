@@ -21,7 +21,9 @@ h1 {
   max-width: 700px;
   width: 100%;
   text-align: left;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .course_container:hover {
@@ -63,12 +65,14 @@ button {
   font-size: 1rem;
   border-radius: 25px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease;
 }
 
 button:hover {
   background-color: #333;
-  transform: scale(1.05);
+  color: white;
 }
 
 .btn-success {
@@ -132,19 +136,13 @@ textarea:focus {
 
 form button {
   width: 100%; /* Le bouton prend toute la largeur du formulaire */
-  background-color: #007bff;
+  background-color: black;
   color: #fff;
   border: none;
   border-radius: 25px;
   padding: 10px 20px;
   font-size: 1rem;
 }
-
-form button:hover {
-  background-color: #0056b3;
-  transform: scale(1.05);
-}
-
 
 /* Message d'absence de véhicules */
 .no_courses_message {
