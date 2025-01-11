@@ -10,188 +10,198 @@
         <input type="hidden" name="id_restaurant" value="{{ $restaurant_id }}">
 
         <!-- Libellé du menu -->
-        <div class="form-group">
+        <div class="mb-3">
             <label for="libelle_menu">Libellé du menu</label>
             <input type="text" placeholder="Entrer le nom de votre menu" class="form-control" id="libelle_menu"
                 name="libelle_menu" value="{{ old('libelle_menu') }}" required>
-                @error('libelle_menu')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-
+            @error('libelle_menu')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
         </div>
 
         <!-- Prix du menu -->
-        <div class="form-group">
+        <div class="mb-3">
             <label for="prix_menu">Prix du menu</label>
             <input style="width:15%" type="number" value="0" step="0.01" min="0" class="form-control" id="prix_menu"
                 name="prix_menu" value="{{ old('prix_menu') }}" required>
-                @error('prix_menu')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-
+            @error('prix_menu')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
         </div>
 
         <!-- Photo du menu -->
-        <div class="form-group">
+        <div class="mb-3">
             <label for="photo_menu">URL de la photo du menu</label>
-            <input
-                style="font-family: Arial, sans-serif; border: 1px solid #ccc; border-radius: 5px; padding: 0.5rem; font-size: 1rem; outline: none; transition: border-color 0.3s;"
-                type="text" class="form-control" id="photo_menu" name="photo_menu" value="{{ old('photo_menu') }}"
+            <input type="text" class="form-control" id="photo_menu" name="photo_menu" value="{{ old('photo_menu') }}"
                 placeholder="Entrer une URL" required>
-                @error('photo_menu')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
+            @error('photo_menu')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
         </div>
 
         <h2 style="text-align: center; margin: 3% 0; border:none;">Composition</h2>
 
-       
+        <div class="row">
+            <!-- Colonne Plat -->
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="plat_selection">Pour le plat :</label>
+                    <select id="plat_selection" name="plat_selection" class="form-control" onchange="togglePlatFields(this)">
+                        <option value="nouveau">Créer un nouveau plat</option>
+                        <option value="existant">Choisir un plat existant</option>
+                    </select>
+                    @error('plat_selection')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
 
-        <!-- Choisir ou créer un plat -->
-        <div class="form-group">
-            <label for="plat_selection">Choisir ou créer une composition :</label>
-            <select id="plat_selection" name="plat_selection" class="form-control" onchange="togglePlatFields(this)">
-                <option value="nouveau">Créer une nouvelle composition</option>
-                <option value="existant">Choisir une composition existante</option>
-            </select>
-            @error('plat_selection')
-                    <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
+                <!-- Conteneur pour les champs de plat -->
+                <div class="plat-fields-container">
+                    <!-- Champs pour un nouveau plat -->
+                    <div id="nouveau_plat_fields" class="mb-3" style="display: none;">
+                        <div class="mb-3">
+                            <label for="plat_nom">Nom du plat</label>
+                            <input type="text" name="plat_nom" id="plat_nom" class="form-control" placeholder="Entrer le nom du plat">
+                            @error('plat_nom')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-        
+                        <div class="mb-3">
+                            <label for="plat_prix">Prix du plat</label>
+                            <input type="number" name="plat_prix" id="plat_prix" class="form-control" placeholder="Entrer le prix du plat" step="0.01" min="0">
+                            @error('plat_prix')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
 
+                        <div class="mb-3">
+                            <label for="categorie_id">Catégorie du plat :</label>
+                            <select name="categorie_id" id="categorie_id" class="form-control">
+                                <option value="">-- Sélectionnez une catégorie --</option>
+                                @foreach($categories as $categorie)
+                                    <option value="{{ $categorie->id_categorie_produit }}">
+                                        {{ $categorie->libelle_categorie }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('categorie_id')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-        <div id="nouveau">
+                        <div class="mb-3">
+                            <label for="plat_photo">Photo du plat (URL)</label>
+                            <input type="text" name="plat_photo" id="plat_photo" class="form-control" placeholder="Entrer une URL de la photo">
+                            @error('plat_photo')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
 
-
-        <!-- Champs pour un nouveau plat -->
-        <div id="nouveau_plat_fields" style="display: block;">
-            <div class="form-group">
-                <label for="plat_nom">Nom du plat</label>
-                <input type="text" name="plat_nom" id="plat_nom" class="form-control" placeholder="Entrer le nom du plat">
-                @error('plat_nom')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
+                    <!-- Sélection d'un plat existant -->
+                    <div id="plat_existant_fields" class="mb-3" style="display: none;">
+                        <div class="mb-3">
+                            <label for="plat_existant">Plat existant :</label>
+                            <select name="plat_existant" id="plat_existant" class="form-control">
+                                <option value="">Choisir un plat existant</option>
+                                @foreach ($plats as $plat)
+                                    <option value="{{ $plat->id_plat }}">{{ $plat->libelle_plat }}</option>
+                                @endforeach
+                            </select>
+                            @error('plat_existant')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="plat_prix">Prix du plat</label>
-                <input type="number" name="plat_prix" id="plat_prix" class="form-control" placeholder="Entrer le prix du plat" step="0.01" min="0" >
-                @error('plat_prix')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
+            <!-- Colonne Produit -->
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="produit_selection">Pour le produit :</label>
+                    <select id="produit_selection" name="produit_selection" class="form-control" onchange="toggleProduitFields(this)">
+                        <option value="nouveau">Créer un nouveau produit</option>
+                        <option value="existant">Choisir un produit existant</option>
+                    </select>
+                    @error('produit_selection')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
 
-             <!-- Catégorie du menu -->
-            <div class="form-group">
-                <label for="categorie_id">Catégorie :</label>
-                <select name="categorie_id" id="categorie_id" class="form-control">
-                    <option value="">-- Sélectionnez une catégorie --</option>
-                    @foreach($categories as $categorie)
-                        <option value="{{ $categorie->id_categorie_produit }}">
-                            {{ $categorie->libelle_categorie }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('categorie_id')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
+                <!-- Conteneur pour les champs de produit -->
+                <div class="produit-fields-container">
+                    <!-- Champs pour un nouveau produit -->
+                    <div id="nouveau_produit_fields" class="mb-3" style="display: none;">
+                        <div class="mb-3">
+                            <label for="produit_nom">Nom du produit</label>
+                            <input type="text" name="produit_nom" id="produit_nom" class="form-control" placeholder="Entrer le nom du produit">
+                            @error('produit_nom')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-            <div class="form-group">
-                <label for="plat_photo">Photo du plat (URL)</label>
-                <input type="text" name="plat_photo" id="plat_photo" class="form-control" placeholder="Entrer une URL de la photo" >
-                @error('plat_photo')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
-        </div>
+                        <div class="mb-3">
+                            <label for="produit_prix">Prix du produit</label>
+                            <input type="number" name="produit_prix" id="produit_prix" class="form-control" placeholder="Entrer le prix du produit" step="0.01" min="0">
+                            @error('produit_prix')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-        <!-- Champs pour un nouveau produit -->
-        <div id="nouveau_produit_fields" style="display: block;">
-            <div class="form-group">
-                <label for="produit_nom">Nom du produit</label>
-                <input type="text" name="produit_nom" id="produit_nom" class="form-control" placeholder="Entrer le nom du produit">
-                @error('produit_nom')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
+                        <div class="mb-3">
+                            <label for="categorie_id2">Catégorie du produit :</label>
+                            <select id="categorie_id2" name="categorie_id2" class="form-control">
+                                <option value="">Choisir une catégorie</option>
+                                @foreach ($categories as $categorie)
+                                    <option value="{{ $categorie->id_categorie_produit }}">{{ $categorie->libelle_categorie }}</option>
+                                @endforeach
+                            </select>
+                            @error('categorie_id2')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-            <div class="form-group">
-                <label for="produit_prix">Prix du produit</label>
-                <input type="number" name="produit_prix" id="produit_prix" class="form-control" placeholder="Entrer le prix du produit" step="0.01" min="0">
-                @error('produit_prix')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
+                        <div class="mb-3">
+                            <label for="produit_photo">Photo du produit (URL)</label>
+                            <input type="text" name="produit_photo" id="produit_photo" class="form-control" placeholder="Entrer une URL de la photo">
+                            @error('produit_photo')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
 
-             <!-- Catégorie du menu -->
-            <div class="form-group">
-                <label for="categorie_id2">Catégorie :</label>
-                <select id="categorie_id2" name="categorie_id2" >
-                    <option value="">Choisir une catégorie</option>
-                    @foreach ($categories as $categorie)
-                        <option value="{{ $categorie->id_categorie_produit }}">{{ $categorie->libelle_categorie }}</option>
-                    @endforeach
-                </select>
-                @error('categorie_id2')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
+                    <!-- Sélection d'un produit existant -->
+                    <div id="produit_existant_fields" class="mb-3" style="display: none;">
+                        <div class="mb-3">
+                            <label for="produit_existant">Produit existant :</label>
+                            <select name="produit_existant" id="produit_existant" class="form-control">
+                                <option value="">Choisir un produit existant</option>
+                                @foreach ($produits as $produit)
+                                    <option value="{{ $produit->id_produit }}">{{ $produit->nom_produit }}</option>
+                                @endforeach
+                            </select>
+                            @error('produit_existant')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label for="produit_photo">Photo du produit (URL)</label>
-                <input type="text" name="produit_photo" id="produit_photo" class="form-control" placeholder="Entrer une URL de la photo">
-                @error('produit_photo')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
-        </div>
-        
-
-        <!-- Sélection d'un plat existant -->
-        <div id="plat_existant_fields" style="display: none;">
-            <div class="form-group">
-                <label for="plat_existant">Plat existant :</label>
-                <select name="plat_existant" id="plat_existant" class="form-control">
-                    <option value="">Choisir un plat existant</option>
-                    @foreach ($plats as $plat)
-                        <option value="{{ $plat->id_plat }}">{{ $plat->libelle_plat }}</option>
-                    @endforeach
-                </select>
-                @error('plat_existant')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
-        </div>
-
-        <!-- Sélection d'un plat existant -->
-        <div id="produit_existant_fields" style="display: none;">
-            <div class="form-group">
-                <label for="produit_existant">Produit existant :</label>
-                <select name="produit_existant" id="produit_existant" class="form-control">
-                    <option value="">Choisir un produit existant</option>
-                    @foreach ($produits as $produit)
-                        <option value="{{ $produit->id_produit }}">{{ $produit->nom_produit }}</option>
-                    @endforeach
-                </select>
-                @error('produit_existant')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
-        </div>
         </div>
 
         <!-- Bouton de soumission -->
-        <button style="font-weight:bold" type="submit" class="btn btn-primary">Créer le menu</button>
+        <button style="font-weight:bold" type="submit" class="btn btn-primary mt-3">Créer le menu</button>
     </form>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('formCreateProduit');
     const platSelection = document.getElementById('plat_selection');
+    const produitSelection = document.getElementById('produit_selection');
+    
     const nouveauPlatFields = document.getElementById('nouveau_plat_fields');
     const nouveauProduitFields = document.getElementById('nouveau_produit_fields');
     const platExistantFields = document.getElementById('plat_existant_fields');
@@ -204,65 +214,43 @@
                 input.setAttribute('required', 'required');
             } else {
                 input.removeAttribute('required');
-                input.value = ''; // Reset values when not required
+                input.value = '';
             }
         });
     }
 
-    function handleSelectionChange() {
-        const isNouveau = platSelection.value === 'nouveau';
+    function updateFields() {
+        // Plat fields
+        const isPlatNouveau = platSelection.value === 'nouveau';
+        nouveauPlatFields.style.display = isPlatNouveau ? 'block' : 'none';
+        platExistantFields.style.display = isPlatNouveau ? 'none' : 'block';
+        toggleFieldsRequired(nouveauPlatFields, isPlatNouveau);
+        toggleFieldsRequired(platExistantFields, !isPlatNouveau);
 
-        // Toggle visibility
-        nouveauPlatFields.style.display = isNouveau ? 'block' : 'none';
-        nouveauProduitFields.style.display = isNouveau ? 'block' : 'none';
-        platExistantFields.style.display = isNouveau ? 'none' : 'block';
-        produitExistantFields.style.display = isNouveau ? 'none' : 'block';
-
-        // Toggle required fields
-        toggleFieldsRequired(nouveauPlatFields, isNouveau);
-        toggleFieldsRequired(nouveauProduitFields, isNouveau);
-        
-        const platExistantSelect = platExistantFields.querySelector('select');
-        const produitExistantSelect = produitExistantFields.querySelector('select');
-        
-        if (platExistantSelect) {
-            if (!isNouveau) {
-                platExistantSelect.setAttribute('required', 'required');
-            } else {
-                platExistantSelect.removeAttribute('required');
-                platExistantSelect.value = '';
-            }
-        }
-        
-        if (produitExistantSelect) {
-            if (!isNouveau) {
-                produitExistantSelect.setAttribute('required', 'required');
-            } else {
-                produitExistantSelect.removeAttribute('required');
-                produitExistantSelect.value = '';
-            }
-        }
+        // Produit fields
+        const isProduitNouveau = produitSelection.value === 'nouveau';
+        nouveauProduitFields.style.display = isProduitNouveau ? 'block' : 'none';
+        produitExistantFields.style.display = isProduitNouveau ? 'none' : 'block';
+        toggleFieldsRequired(nouveauProduitFields, isProduitNouveau);
+        toggleFieldsRequired(produitExistantFields, !isProduitNouveau);
     }
 
     // Initial setup
-    handleSelectionChange();
+    updateFields();
 
     // Listen for changes
-    platSelection.addEventListener('change', handleSelectionChange);
+    platSelection.addEventListener('change', updateFields);
+    produitSelection.addEventListener('change', updateFields);
 
     // Form validation
     form.addEventListener('submit', function(event) {
-        const isNouveau = platSelection.value === 'nouveau';
+        const isPlatNouveau = platSelection.value === 'nouveau';
+        const isProduitNouveau = produitSelection.value === 'nouveau';
         let isValid = true;
 
-        if (isNouveau) {
-            // Validate new plat/produit fields
-            const requiredFields = [
-                'plat_nom', 'plat_prix', 'categorie_id',
-                'produit_nom', 'produit_prix', 'categorie_id2'
-            ];
-
-            requiredFields.forEach(fieldId => {
+        if (isPlatNouveau) {
+            const platFields = ['plat_nom', 'plat_prix', 'categorie_id', 'plat_photo'];
+            platFields.forEach(fieldId => {
                 const field = document.getElementById(fieldId);
                 if (!field.value) {
                     isValid = false;
@@ -272,15 +260,26 @@
                 }
             });
         } else {
-            // Validate existing plat/produit selection
             const platExistant = document.getElementById('plat_existant');
-            const produitExistant = document.getElementById('produit_existant');
-
             if (!platExistant.value) {
                 isValid = false;
                 platExistant.classList.add('is-invalid');
             }
+        }
 
+        if (isProduitNouveau) {
+            const produitFields = ['produit_nom', 'produit_prix', 'categorie_id2', 'produit_photo'];
+            produitFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value) {
+                    isValid = false;
+                    field.classList.add('is-invalid');
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+        } else {
+            const produitExistant = document.getElementById('produit_existant');
             if (!produitExistant.value) {
                 isValid = false;
                 produitExistant.classList.add('is-invalid');
@@ -293,75 +292,4 @@
         }
     });
 });
-
-</script>
-
-<script>
-
-        const urlInput = document.getElementById('photo_menu');
-        const urlInput2 = document.getElementById('plat_photo');
-        const urlInput3 = document.getElementById('produit_photo');
-
-        function handleValidation(element, errorMsg) {
-            const isValid = !errorMsg;
-            if (isValid && !element.classList.contains('is-valid')) {
-                element.setCustomValidity('');
-                element.classList.remove('is-invalid');
-                element.classList.add('is-valid');
-            } else if (!isValid && !element.classList.contains('is-invalid')) {
-                element.setCustomValidity(errorMsg);
-                element.classList.remove('is-valid');
-                element.classList.add('is-invalid');
-            }
-        }
-
-        function validateURL(url) {
-            try {
-                new URL(url);
-                return "";
-            } catch (error) {
-                return "URL invalide";
-            }
-        }
-
-        if (urlInput || urlInput2 || urlInput3) {
-            urlInput.setAttribute('type', 'url');
-            urlInput.setAttribute('required', 'true');
-
-            urlInput2.setAttribute('type', 'url');
-            urlInput2.setAttribute('required', 'true');
-
-            urlInput3.setAttribute('type', 'url');
-            urlInput3.setAttribute('required', 'true');
-
-            let timeout;
-            urlInput.addEventListener('input', function() {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    const value = this.value.trim();
-                    const errorMsg = value ? validateURL(value) : '';
-                    handleValidation(this, errorMsg);
-                }, 300);
-            });
-        }
-
-    const style = document.createElement('style');
-    style.textContent = `
-    .form-control.is-invalid {
-        border-color: #dc3545;
-        padding-right: calc(1.5em + 0.75rem);
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right calc(0.375em + 0.1875rem) center;
-        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-    }
-    .form-control.is-valid {
-        border-color: #198754;
-        padding-right: calc(1.5em + 0.75rem);
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right calc(0.375em + 0.1875rem) center;
-        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-    }`;
-    document.head.appendChild(style);
 </script>

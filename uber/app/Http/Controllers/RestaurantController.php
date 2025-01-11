@@ -147,6 +147,8 @@ class RestaurantController extends Controller
             ->leftjoin('compose_de', 'menu.id_menu', '=', 'compose_de.id_menu')
             ->leftjoin('plat', 'compose_de.id_plat', '=', 'plat.id_plat')
             ->leftJoin('categorie_produit', 'plat.id_categorie_produit', '=', 'categorie_produit.id_categorie_produit')
+            ->leftjoin('compose', 'menu.id_menu', '=', 'compose.id_menu')
+            ->leftjoin('produit', 'compose.id_produit', '=', 'produit.id_produit')
             ->leftJoin('propose_menu', 'menu.id_menu', '=', 'propose_menu.id_menu')
             ->leftJoin('restaurant', 'propose_menu.id_restaurant', '=', 'restaurant.id_restaurant')  
           
@@ -160,7 +162,7 @@ class RestaurantController extends Controller
             ->when($categorie, function ($query, $categorie) {
                 return $query->where('plat.id_categorie_produit', $categorie);
             })
-            ->select('menu.*', 'plat.libelle_plat', 'categorie_produit.libelle_categorie as categorie_produit')
+            ->select('menu.*', 'plat.libelle_plat', 'categorie_produit.libelle_categorie as categorie_produit','produit.*')
             ->get();
         // $menus = DB::table('menu');
 
@@ -297,7 +299,7 @@ class RestaurantController extends Controller
             DB::raw("STRING_AGG(DISTINCT CONCAT(p.nom_produit, ' (x', ecd.quantite, ')'), ', ') as produits"),
             DB::raw("STRING_AGG(DISTINCT CONCAT(pt.libelle_plat, ' (x', ecdp.quantite, ')'), ', ') as plats"),
             DB::raw("STRING_AGG(DISTINCT CONCAT(m.libelle_menu, ' (x', ecdm.quantite, ')'), ', ') as menus"),
-            DB::raw("TO_CHAR((c.horaire_livraison::time + INTERVAL '1 hour 15 minutes'), 'HH24:MI') as horaire_livraison_estimee")
+            DB::raw("TO_CHAR((c.horaire_livraison::time + INTERVAL '1 hour'), 'HH24:MI') as horaire_livraison_estimee")
         )
         ->leftJoin('est_contenu_dans as ecd', 'ecd.id_commande_repas', '=', 'c.id_commande_repas')
         ->leftJoin('produit as p', 'ecd.id_produit', '=', 'p.id_produit')
@@ -320,58 +322,73 @@ class RestaurantController extends Controller
     // Filtrer les commandes si le filtre est activé
     if ($request->get('filter') === 'urgent') {
         $now = now()->format('H:i');
-        $query->havingRaw("TO_CHAR((c.horaire_livraison::time + INTERVAL '1 hour 15 minutes'), 'HH24:MI') <= ?", [$now]);
+        $query->havingRaw("TO_CHAR((c.horaire_livraison::time + INTERVAL '1 hour'), 'HH24:MI') >= ?", [$now]);
     }
 
     $commandes = $query->get();
 
+    $restaurant = DB::table('restaurant as r')
+    ->select('r.nom_etablissement','r.propose_livraison')
+    ->where('r.id_restaurant','=',$id)
+    ->first();
+
     // Récupérer les chauffeurs
     $livreurs = DB::table('restaurant as r')
-        ->select('c.*')
-        ->leftJoin('relie_a as ra', 'ra.id_restaurant', '=', 'r.id_restaurant')
-        ->leftJoin('chauffeur as c', 'ra.id_chauffeur', '=', 'c.id_chauffeur')
-        ->where('r.id_restaurant', $id)
-        ->where('c.type_chauffeur', 'Livreur')
-        ->get();
+    ->select('c.*')
+    ->leftJoin('relie_a as ra', 'ra.id_restaurant', '=', 'r.id_restaurant')
+    ->leftJoin('chauffeur as c', 'ra.id_chauffeur', '=', 'c.id_chauffeur')
+    ->where('r.id_restaurant', $id)
+    ->where('c.type_chauffeur', 'Livreur')
+    ->get();
 
-    return view('restaurants.affichercommandes', compact('commandes', 'livreurs', 'id'));
+
+
+    return view('restaurants.affichercommandes', compact('commandes', 'livreurs', 'id','restaurant'));
 }
 
 
-    public function attribuerChauffeur(Request $request, $id)
-    {
-        $commande = CommandeRepas::findOrFail($request->id_commande_repas);
-
-        // Si aucun chauffeur n'est attribué
-        if ($request->id_chauffeur === 'null') {
-            // Si un chauffeur était déjà attribué, on le remet disponible
-            if ($commande->id_chauffeur !== null) {
-                $chauffeur = Chauffeur::findOrFail($commande->id_chauffeur);
-                $chauffeur->est_dispo = 'true'; // Remettre à disponible
-                $chauffeur->save();
-            }
-
-            $commande->id_chauffeur = null; // Désattribution du chauffeur
-        } else {
-            // Si un chauffeur est sélectionné
-            // Si un chauffeur était déjà attribué, on le remet disponible
-            if ($commande->id_chauffeur !== null) {
-                $chauffeur = Chauffeur::findOrFail($commande->id_chauffeur);
-                $chauffeur->est_dispo = 'true'; // Remettre à disponible
-                $chauffeur->save();
-            }
-
-            // Attribution du nouveau chauffeur
-            $commande->id_chauffeur = $request->id_chauffeur;
-            $chauffeur = Chauffeur::findOrFail($request->id_chauffeur);
-            $chauffeur->est_dispo = 'false'; // Marquer comme non disponible
-            $chauffeur->save();
+public function attribuerChauffeur(Request $request, $id)
+{
+    $commande = CommandeRepas::findOrFail($request->id_commande_repas);
+    
+    if ($request->id_chauffeur !== 'null') {
+        $nouveauChauffeur = Chauffeur::select('chauffeur.*')
+        ->leftJoin('relie_a as ra', 'ra.id_chauffeur', '=', 'chauffeur.id_chauffeur')
+        ->where('chauffeur.id_chauffeur', $request->id_chauffeur)
+        ->where('ra.id_restaurant', $id) // Vérifie que le chauffeur est relié au restaurant
+        ->where('chauffeur.est_dispo', 'true') // Vérifie si le chauffeur est disponible
+        ->first();
+    
+    
+        if (!$nouveauChauffeur) {
+            return redirect()->back()->with('error', 'Ce chauffeur est déjà assigné ou indisponible.');
         }
-
-        // Sauvegarder la commande avec l'attribution du chauffeur
-        $commande->save();
-
-        return redirect()->route('restaurants.affichercommandes', $id)
-                        ->with('success', 'Chauffeur attribué avec succès.');
+    
+        // Libérer l'ancien chauffeur si nécessaire
+        if ($commande->id_chauffeur !== null) {
+            $ancienChauffeur = Chauffeur::findOrFail($commande->id_chauffeur);
+            $ancienChauffeur->est_dispo = 'true';
+            $ancienChauffeur->save();
+        }
+    
+        // Assigner le nouveau chauffeur
+        $commande->id_chauffeur = $nouveauChauffeur->id_chauffeur;
+        $nouveauChauffeur->est_dispo = 'false';
+        $nouveauChauffeur->save();
+    } else {
+        // Désattribution du chauffeur
+        if ($commande->id_chauffeur !== null) {
+            $ancienChauffeur = Chauffeur::findOrFail($commande->id_chauffeur);
+            $ancienChauffeur->est_dispo = 'true';
+            $ancienChauffeur->save();
+        }
+        $commande->id_chauffeur = null;
     }
+    
+    $commande->save();
+    
+
+    return redirect()->route('restaurants.affichercommandes', $id)
+        ->with('success', 'Chauffeur attribué avec succès.');
+}
 }

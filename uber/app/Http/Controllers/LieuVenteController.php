@@ -186,7 +186,7 @@ public function filter(Request $request) {
         ->first();
 
     // Récupérer les commandes pour un restaurant donnée
-    $commandes = DB::table('commande_repas as c')
+    $query = DB::table('commande_repas as c')
     ->select(
         'c.id_commande_repas',
         'lv.nom_etablissement as lieu_de_vente',
@@ -208,8 +208,13 @@ public function filter(Request $request) {
         'c.temps_de_livraison',
         'c.id_chauffeur',
         'lv.id_lieu_de_vente_pf'
-    )
-    ->get();
+    );
+    // Filtrer les commandes si le filtre est activé
+    if ($request->get('filter') === 'urgent') {
+        $now = now()->format('H:i');
+        $query->havingRaw("TO_CHAR((c.horaire_livraison::time + INTERVAL '1 hour'), 'HH24:MI') >= ?", [$now]);
+    }
+    $commandes = $query->get();
 
 
 

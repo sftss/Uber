@@ -71,7 +71,7 @@ class CourseController extends Controller
 
         $clientId = Auth::user()->id_client;
         $courses = Course::with('chauffeur', 'lieuDepart', 'lieuArrivee')
-            // ->where('id_client', $clientId) 
+            ->where('id_client', $clientId) 
             ->orderBy('id_course', 'desc')
             ->paginate(5);
 
@@ -147,42 +147,40 @@ class CourseController extends Controller
     }
 
     public function refuser($id) {
-
-
         DB::table('temp_course')
         ->where('id_chauffeur', 7)
         ->delete();
 
+        /*
+                $course = Course::findOrFail($id);
+                $acceptee = "false";
+                echo "<script>console.log(".$course.")</script>";
+
+                
+                //$course->update(["acceptee" => $acceptee]);
+                DB::table('course')
+                ->where('id_course', $course->id_course)
+                ->update([
+                    'acceptee' => $acceptee
+                ]);
+                
+                
+                
+                echo "<script>console.log(".$course.")</script>";
+                $chauffeurId = $course->id_chauffeur;
+
+                echo $chauffeurId;
+
+                $chauffeurController = new ChauffeurController();
+
+
+                return $chauffeurController
+                    ->AfficherPropositions($chauffeurId)
+                    ->with("success", "Course acceptée");
+
+        */
 
         return view('chauffeur/chauffeur-main');
-/*
-        $course = Course::findOrFail($id);
-        $acceptee = "false";
-        echo "<script>console.log(".$course.")</script>";
-
-        
-        //$course->update(["acceptee" => $acceptee]);
-        DB::table('course')
-        ->where('id_course', $course->id_course)
-        ->update([
-            'acceptee' => $acceptee
-        ]);
-        
-        
-        
-        echo "<script>console.log(".$course.")</script>";
-        $chauffeurId = $course->id_chauffeur;
-
-        echo $chauffeurId;
-
-        $chauffeurController = new ChauffeurController();
-
-
-        return $chauffeurController
-            ->AfficherPropositions($chauffeurId)
-            ->with("success", "Course acceptée");
-
-            */
     }
 
     public function update(Request $request, $id) {
@@ -258,8 +256,7 @@ class CourseController extends Controller
     }
 
 
-    public function reserverCourse(Request $request)
-    {
+    public function reserverCourse(Request $request) {
         // Validation des données envoyées par le frontend
         $data = $request->validate([
             'chauffeur_nom' => 'required|string',
@@ -339,8 +336,7 @@ class CourseController extends Controller
         }
     }
 
-    public function creercatCourse(Request $request)
-    {
+    public function creercatCourse(Request $request) {
         $validated = $request->validate([
             'categorie' => 'required|string',
             'lieu_depart_rue' => 'required|string',
@@ -425,8 +421,7 @@ class CourseController extends Controller
         }
     }
 
-    public function modifierCourse(Request $request)
-    {
+    public function modifierCourse(Request $request) {
         try {
             // Valider les données entrantes
             $validatedData = $request->validate([
@@ -546,5 +541,4 @@ class CourseController extends Controller
             ], 500);
         }
     }
-
 }

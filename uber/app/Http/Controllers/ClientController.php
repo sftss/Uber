@@ -283,7 +283,7 @@ class ClientController extends Controller
         $commande->id_chauffeur = null; //////id_chauffeur = $chauffeurId sefer
         $commande->id_client = Auth::user()->id_client;
         $commande->type_livraison = "commande";
-        $commande->horaire_livraison = null;
+        $commande->horaire_livraison = now();
         $commande->temps_de_livraison = null;
         $commande->save();
 

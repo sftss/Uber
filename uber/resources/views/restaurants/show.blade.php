@@ -67,7 +67,6 @@
 @if (session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
-        <a href="{{ route('cart.index') }}" class="btn btn-outline-light">Voir mon panier</a>
     </div>
 @endif
 
@@ -107,6 +106,9 @@
                     <h3>{{ $menu->libelle_menu }}</h3>
                     <p>Catégorie : {{ $menu->categorie_produit }} </p>
                     <p>Prix : {{ $menu->prix_menu }} €</p>
+                    <p>---Composition---</p>
+                    <p>Plat : {{$menu->libelle_plat}}</p>
+                    <p>Produit : {{$menu->nom_produit}}</p>
                     <form action="{{ route('cart.add', ['type' => 'menu', 'id' => $menu->id_menu]) }}" method="POST">
                         @csrf
                         <button type="submit" class="btn-primary ajtpanier">Ajouter au panier</button>

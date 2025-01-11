@@ -44,100 +44,126 @@ class MenuController extends Controller
 
     public function store(Request $request)
 {
-
+    // Règles de validation de base pour le menu
     $rules = [
         'libelle_menu' => 'required|string|max:255',
         'prix_menu' => 'required|numeric|min:0',
         'photo_menu' => 'required|url',
         'plat_selection' => 'required|string|in:nouveau,existant',
+        'produit_selection' => 'required|string|in:nouveau,existant',
     ];
 
-    // Add conditional validation rules based on plat_selection
+    // Validation conditionnelle pour le plat
     if ($request->plat_selection === 'nouveau') {
         $rules += [
             'plat_nom' => 'required|string|max:255',
             'plat_prix' => 'required|numeric|min:0',
             'categorie_id' => 'required|exists:categorie_produit,id_categorie_produit',
             'plat_photo' => 'required|url',
+        ];
+    } else {
+        $rules['plat_existant'] = 'required|exists:plat,id_plat';
+    }
+
+    // Validation conditionnelle pour le produit
+    if ($request->produit_selection === 'nouveau') {
+        $rules += [
             'produit_nom' => 'required|string|max:255',
             'produit_prix' => 'required|numeric|min:0',
             'categorie_id2' => 'required|exists:categorie_produit,id_categorie_produit',
             'produit_photo' => 'required|url',
         ];
     } else {
-        $rules += [
-            'plat_existant' => 'required|exists:plat,id_plat',
-            'produit_existant' => 'required|exists:produit,id_produit',
-        ];
+        $rules['produit_existant'] = 'required|exists:produit,id_produit';
     }
 
     $validated = $request->validate($rules);
-    
 
+    try {
+        DB::beginTransaction();
 
-    
-    // Création du menu
-    $menu = Menu::create([
-        'libelle_menu' => $validated['libelle_menu'],
-        'prix_menu' => $validated['prix_menu'],
-        'photo_menu' => $validated['photo_menu'] ?? null,
-    ]);
-
-    // Association au restaurant
-    ProposeMenu::create([
-        'id_menu' => $menu->id_menu,
-        'id_restaurant' => $request->id_restaurant,
-    ]);
-
-    if ($validated['plat_selection'] === 'nouveau') {
-        // Création du plat
-        $plat = Plat::create([
-            'libelle_plat' => $validated['plat_nom'],
-            'prix_plat' => $validated['plat_prix'],
-            'id_categorie_produit' => $validated['categorie_id'],
-            'photo_plat' => $validated['plat_photo'] ?? null,
+        // Création du menu
+        $menu = Menu::create([
+            'libelle_menu' => $validated['libelle_menu'],
+            'prix_menu' => $validated['prix_menu'],
+            'photo_menu' => $validated['photo_menu'],
         ]);
 
-        // Création du produit
-        $produit = Produit::create([
-            'nom_produit' => $validated['produit_nom'],
-            'prix_produit' => $validated['produit_prix'],
-            'photo_produit' => $validated['produit_photo'] ?? null,
-            'id_categorie_produit' => $validated['categorie_id2'],
-
-        ]);
-
-        // Association avec le restaurant
-        Vends::create([
+        // Association du menu au restaurant
+        ProposeMenu::create([
+            'id_menu' => $menu->id_menu,
             'id_restaurant' => $request->id_restaurant,
-            'id_produit' => $produit->id_produit,
         ]);
 
-        Propose::create([
-            'id_restaurant' => $request->id_restaurant,
-            'id_plat' => $plat->id_plat,
-        ]);
+        // Gestion du plat
+        $plat_id = null;
+        if ($request->plat_selection === 'nouveau') {
+            // Création d'un nouveau plat
+            $plat = Plat::create([
+                'libelle_plat' => $validated['plat_nom'],
+                'prix_plat' => $validated['plat_prix'],
+                'id_categorie_produit' => $validated['categorie_id'],
+                'photo_plat' => $validated['plat_photo'],
+            ]);
+            $plat_id = $plat->id_plat;
 
+            // Association du nouveau plat au restaurant
+            Propose::create([
+                'id_restaurant' => $request->id_restaurant,
+                'id_plat' => $plat_id,
+            ]);
+        } else {
+            // Utilisation d'un plat existant
+            $plat_id = $validated['plat_existant'];
+        }
+
+        // Association du plat au menu
         ComposeDe::create([
             'id_menu' => $menu->id_menu,
-            'id_plat' => $plat->id_plat,
-        ]);
-    } else {
-        // Plat et produit existants
-        ComposeDe::create([
-            'id_menu' => $menu->id_menu,
-            'id_plat' => $validated['plat_existant'],
+            'id_plat' => $plat_id,
         ]);
 
-        Compose::create([
-            'id_menu' => $menu->id_menu,
-            'id_produit' => $validated['produit_existant'],
-        ]);
+        // Gestion du produit
+        if ($request->produit_selection === 'nouveau') {
+            // Création d'un nouveau produit
+            $produit = Produit::create([
+                'nom_produit' => $validated['produit_nom'],
+                'prix_produit' => $validated['produit_prix'],
+                'photo_produit' => $validated['produit_photo'],
+                'id_categorie_produit' => $validated['categorie_id2'],
+            ]);
+
+            // Association du nouveau produit au restaurant
+            Vends::create([
+                'id_restaurant' => $request->id_restaurant,
+                'id_produit' => $produit->id_produit,
+            ]);
+
+            // Association du nouveau produit au menu
+            Compose::create([
+                'id_menu' => $menu->id_menu,
+                'id_produit' => $produit->id_produit,
+            ]);
+        } else {
+            // Association du produit existant au menu
+            Compose::create([
+                'id_menu' => $menu->id_menu,
+                'id_produit' => $validated['produit_existant'],
+            ]);
+        }
+
+        DB::commit();
+
+        return redirect()
+            ->action([RestaurantController::class, 'show'], ['id' => $request->id_restaurant])
+            ->with('success', 'Menu créé avec succès');
+
+    } catch (\Exception $e) {
+        DB::rollback();
+        return back()
+            ->withInput()
+            ->with('error', 'Une erreur est survenue lors de la création du menu. ' . $e->getMessage());
     }
-
-    return redirect()
-        ->action([RestaurantController::class, 'show'], ['id' => $request->id_restaurant])
-        ->with('success', 'Menu créé avec succès');
 }
 
 }

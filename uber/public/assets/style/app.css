@@ -1541,9 +1541,8 @@ select {
 #nouveau_plat_fields,
 #nouveau_produit_fields {
   flex: 1; /* Les deux sections prennent une part égale de l'espace disponible */
-  max-width: 45%; /* Limite la largeur pour éviter un trop grand étirement */
+  max-width: 100%; /* Limite la largeur pour éviter un trop grand étirement */
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Ajout d'une ombre pour un meilleur visuel */
-  padding: 20px; /* Espacement intérieur */
   border-radius: 8px; /* Coins arrondis */
 }
 
@@ -1603,4 +1602,8 @@ select {
   table td {
     color: #000;
   }
+}
+.row {
+  display: flex;
+  gap: 20px; /* Espacement entre les colonnes */
 }

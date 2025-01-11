@@ -47,14 +47,15 @@
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PT3GRQ9T"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
-    @php
+{{-- 
+@php
         $role = auth()->check() ? auth()->user()->role->lib_role : null;
     @endphp
 
     @if ($role === 'Client particulier')
         @include('layouts.client')
     @elseif ($role === 'Client professionnel')
-        @include('layouts.professionnel-header') {{-- c le responsable d'enseigne --}}
+        @include('layouts.professionnel-header') 
     @elseif ($role === 'Chauffeur')
         @include('layouts.chauffeur-header')
     @elseif ($role === 'Livreur')
@@ -70,8 +71,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     @elseif ($role === 'Course')
         @include('layouts.service-course-header')
     @else
-        @include('layouts.header') {{-- header défaut --}}
+        @include('layouts.header')
     @endif
+    --}}
     <div id="app">
 
         <main class="py-4">
