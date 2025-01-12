@@ -3,7 +3,7 @@
 
 <div class="container">
     <div class="card-header">S'inscrire</div>
-    <div class="row justify-content-center">
+    <div class="row"style="display:inherit">
         <div class="col-md-8">
             <div class="card nimp">
                 <div class="card-body">
