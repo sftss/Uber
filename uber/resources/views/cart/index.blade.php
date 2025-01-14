@@ -32,7 +32,7 @@
                                     <form action="{{ route('cart.update', $key) }}" method="POST">
                                         @csrf
                                         @method('PATCH')
-                                        <input type="number" name="quantity" value="{{ $item['quantity'] }}"
+                                        <input max=10 type="number" name="quantity" value="{{ $item['quantity'] }}"
                                             min="1" />
                                         <button class="btn-submit" type="submit">Mettre à jour</button>
                                     </form>
@@ -153,7 +153,7 @@
             <p class="panierTotal">Il n'y a pas de produits dans votre panier.</p>
         @endif
 
-        <p class="panierTotal">Total : {{ number_format($total, 2) }} €</p>
+        <p style="font-size: 1.7rem;" class="panierTotal">Total : {{ number_format($total, 2) }} €</p>
         <div class="commande">
             <a id="PasserCommandeTxt" href="{{ route('cart.confirm') }}">Passer commande</a>
         </div>
@@ -169,6 +169,6 @@
         return confirm("Êtes-vous sûr de vouloir supprimer cet article du panier ?");
     }
 </script>
-<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-<df-messenger style="z-index: 999;" intent="WELCOME" chat-title="Uber Bot"
-    agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger style="z-index: 999;"  chat-title="Chatbot" chat-icon="{{ asset('assets/img/chat.png') }}"
+        agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>

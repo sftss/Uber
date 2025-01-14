@@ -132,19 +132,6 @@
                     <h3>{{ $plat->libelle_plat }}</h3>
                     <p>Catégorie : {{ $plat->categorie_plat }} </p>
                     <p>Prix : {{ $plat->prix_plat }} €</p>
-
-                    @if ($plat->note_plat)
-                        <p>Note : {{ $plat->note_plat }}</p>
-                    @else
-                        <p>Note : Aucune note disponible</p>
-                    @endif
-
-                    @if ($plat->nb_avis)
-                        <p>{{ $plat->nb_avis }} avis</p>
-                    @else
-                        <p>Aucun avis disponible</p>
-                    @endif
-
                     <form action="{{ route('cart.add', ['type' => 'plat', 'id' => $plat->id_plat]) }}" method="POST">
                         @csrf
                         <button type="submit" class="btn-primary ajtpanier">Ajouter au panier</button>
@@ -192,6 +179,6 @@
         }
     });
 </script>
-<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-<df-messenger style="z-index: 999;" intent="WELCOME" chat-title="Uber Bot"
-    agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger style="z-index: 999;"  chat-title="Chatbot" chat-icon="{{ asset('assets/img/chat.png') }}"
+        agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>

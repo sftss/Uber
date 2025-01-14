@@ -166,9 +166,7 @@
                 <h4>Produits</h4>
                 <ul>
                     <li><a href="{{ route('map') }}">Déplacez-vous avec Uber</a></li>
-                    <li><a href="{{ url('/chauffeur-archives') }}">Conduire</a></li>
-                    <li><a href="#">Livrez</a></li>
-                    <li><a href="#">Commandez un repas</a></li>
+                    <li><a href="{{url('eats/choix-type')}}">Commandez un repas</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -181,10 +179,10 @@
 
         <div class="footer-bottom">
             <div class="app-links">
-                <a href="#"><img
+                <a href="https://play.google.com/store/apps/details?id=com.ubercab&hl=fr"><img
                         src="https://d1a3f4spazzrp4.cloudfront.net/uber-com/1.3.8/d1a3f4spazzrp4.cloudfront.net/illustrations/app-store-google-4d63c31a3e.svg"
                         alt="Google Play"></a>
-                <a href="#"><img
+                <a href="https://apps.apple.com/fr/app/uber-commandez-un-trajet/id368677368"><img
                         src="https://d1a3f4spazzrp4.cloudfront.net/uber-com/1.3.8/d1a3f4spazzrp4.cloudfront.net/illustrations/app-store-apple-f1f919205b.svg"
                         alt="App Store"></a>
             </div>

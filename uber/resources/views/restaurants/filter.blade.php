@@ -1,8 +1,6 @@
-@if (Auth::guard('clients')->check())
-    @extends('layouts.client-header')
-@elseif (Auth::guard('chauffeurs')->check())
-    @extends('layouts.professionnel-header')
-@endif
+
+    @extends('layouts.header')
+
 <link href="{{ asset('assets/style/app.css') }}" rel="stylesheet">
 <link rel="icon" href="{{ URL::asset('assets/svg/uber-logo.svg') }}" type="image/svg+xml">
 
@@ -97,6 +95,6 @@
 </div>
 
 <script src="{{ asset('js/main.js') }}"></script>
-<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-<df-messenger style="z-index: 999;" intent="WELCOME" chat-title="Uber Bot"
-    agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger style="z-index: 999;"  chat-title="Chatbot" chat-icon="{{ asset('assets/img/chat.png') }}"
+        agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>

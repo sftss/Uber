@@ -48,7 +48,7 @@
             <div class="card">
                 <img src="{{ asset('assets/img/course.webp') }}" loading="lazy" alt="Courses" class="icon" />
                 <div class="content">
-                    <h3>Courses</h3>
+                    <h3>Commander une livraison</h3>
                     <p>Faites livrer vos courses à votre porte avec Uber Eats.</p>
                     <a href="{{ route('lieux.search') }}" class="details">Détails</a>
                 </div>
@@ -136,7 +136,7 @@
     <a href="{{ url('/panier') }}" id="panier">🛒</a>
     <script src="{{ asset('js/main.js') }}" defer></script>
     <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-    <df-messenger style="z-index: 999;"  chat-title="Chatbot"
+    <df-messenger style="z-index: 999;" chat-title="Chatbot" chat-icon="{{ asset('assets/img/chat.png') }}"
         agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>
 </body>
 

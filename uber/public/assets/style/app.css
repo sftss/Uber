@@ -1310,7 +1310,12 @@ input[type="number"] {
   justify-content: center;
   margin: 3% 5%;
 }
+.commande{
+  display: flex;
+  justify-content: flex-end;
+}
 #PasserCommandeTxt {
+background-color: #c4c4c4;
   font-weight: bold;
   font-size: 1.5rem;
   margin: 0 0 0 2.5%;
@@ -1327,7 +1332,6 @@ input[type="number"] {
 }
 
 #PasserCommandeTxt::after {
-  content: " 👉";
   opacity: 0;
   transition: opacity 0.3s ease;
 }

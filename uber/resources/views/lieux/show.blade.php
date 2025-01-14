@@ -84,17 +84,6 @@
                     <h4>{{ $produit->nom_produit }}</h4>
                     <p><strong>Catégorie :</strong> {{ $produit->libelle_categorie }} </p>
                     <p><strong>Prix :</strong> {{ $produit->prix_produit }} €</p>
-                    @if ($produit->note_produit)
-                        <p>Note : {{ $produit->note_produit }}</p>
-                    @else
-                        <p>Note : Aucune note disponible</p>
-                    @endif
-
-                    @if ($produit->nb_avis)
-                        <p>{{ $produit->nb_avis }} avis</p>
-                    @else
-                        <p>Aucun avis disponible</p>
-                    @endif
                     <form action="{{ route('cart.add', ['type' => 'produit', 'id' => $produit->id_produit]) }}"
                         method="POST">
                         @csrf
@@ -120,6 +109,6 @@
         }
     });
 </script>
-<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-<df-messenger style="z-index: 999;" intent="WELCOME" chat-title="Uber Bot"
-    agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger style="z-index: 999;"  chat-title="Chatbot" chat-icon="{{ asset('assets/img/chat.png') }}"
+        agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>
