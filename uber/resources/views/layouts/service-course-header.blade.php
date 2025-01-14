@@ -33,7 +33,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>Uber</title>
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link rel="icon" href="{{ URL::asset('assets/img/Uber-logo.webp') }}" type="image/svg+xml">
@@ -64,8 +64,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <span class="navbar-text">Bonjour, <a
                             href="{{ url('/profil/' . auth()->user()->id_client) }}">{{ auth()->user()->prenom_cp }}</a>
                         !</span>
-
-                    <a href="{{ url('/info-compte') }}" class="btn btn-outline-light">Informations du compte</a>
 
                     <!-- Lien de déconnexion avec JavaScript -->
                     <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
@@ -128,6 +126,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
         </div>
     </footer>
+    <script src="{{ URL::asset('js/bulleinformation.js') }}" defer></script>
 
 </body>
 

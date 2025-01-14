@@ -47,7 +47,7 @@ class MenuController extends Controller
     // Règles de validation de base pour le menu
     $rules = [
         'libelle_menu' => 'required|string|max:255',
-        'prix_menu' => 'required|numeric|min:0',
+        'prix_menu' => 'required|numeric|min:3',
         'photo_menu' => 'required|url',
         'plat_selection' => 'required|string|in:nouveau,existant',
         'produit_selection' => 'required|string|in:nouveau,existant',

@@ -647,6 +647,22 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
         reserverBtn.style.top = "50px";
         reserverBtn.style.right = "10px";
 
+        const infoBubble = document.createElement("div");
+        infoBubble.className = "info-bubble";
+        infoBubble.textContent = "?";
+
+    // Créer le contenu d'information
+      const infoContent = document.createElement("div");
+      infoContent.className = "info-content";
+      infoContent.textContent = "Vous ne serez débité que si le chauffeur accepte la course. En cas de refus aucun prélèvement ne sera effectué.";
+
+    // Ajouter le contenu à la bulle
+    infoBubble.appendChild(infoContent);
+    
+    infoBubble.addEventListener("click", function () {
+      toggleInfo(infoBubble);
+  });
+
         reserverBtn.addEventListener("click", function () {
           // Créer la course
           console.log(dateDepart);
@@ -728,15 +744,29 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
           }
         });
           courseDejaReservee = true;
-          reserverBtn.textContent = "Course deja réservée";
+          reserverBtn.textContent = "Course réservée";
           reserverBtn.disabled = true;
         });
+
+
+        var paypalUrl = `${paypalBaseRoute}?prix=${prixcourse}`;
+
+        // Créer le bouton PayPal
+        var paypalBtn = document.createElement('a');
+        paypalBtn.href = paypalUrl;
+        paypalBtn.textContent = "Payer avec PayPal";
+        paypalBtn.classList.add('paypal-button');
 
         // Ajouter ces informations et le bouton à la div
         div.appendChild(vehiculeInfo);
         div.appendChild(chauffeurInfo);
         div.appendChild(reserverBtn);
         voirDetailsBtn.textContent = "Fermer les détails";
+
+        
+        // Ajouter le bouton au DOM
+        div.appendChild(paypalBtn);
+        div.appendChild(infoBubble);
       }
 
       detailsAffiches = !detailsAffiches;
@@ -924,9 +954,24 @@ function AfficheCategorie(categorie) {
       boutonclique.disabled = true;
     }
   });
+  const infoBubble = document.createElement("div");
+        infoBubble.className = "info-bubble";
+        infoBubble.textContent = "?";
+
+    // Créer le contenu d'information
+      const infoContent = document.createElement("div");
+      infoContent.className = "info-content";
+      infoContent.textContent = "Vous ne serez débité que si le chauffeur accepte la course. En cas de refus aucun prélèvement ne sera effectué.";
+
+    // Ajouter le contenu à la bulle
+    infoBubble.appendChild(infoContent);
+    
+    infoBubble.addEventListener("click", function () {
+      toggleInfo(infoBubble);
+  });
 
   div.appendChild(reserverBtn);
-
+  div.appendChild(infoBubble);
   isProcessing = false;
 }
 
@@ -962,3 +1007,28 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute
         };
       });
   }
+
+
+  function toggleInfo(element) {
+    // Ferme toutes les bulles actives
+    document.querySelectorAll('.info-bubble.active').forEach(bubble => {
+        if (bubble !== element) {
+            bubble.classList.remove('active');
+        }
+    });
+    
+    // Toggle la bulle cliquée
+    element.classList.toggle('active');
+    
+    // Empêche la propagation du clic
+    event.stopPropagation();
+}
+
+// Ferme la bulle si on clique en dehors
+document.addEventListener('click', function(event) {
+    if (!event.target.closest('.info-bubble')) {
+        document.querySelectorAll('.info-bubble.active').forEach(bubble => {
+            bubble.classList.remove('active');
+        });
+    }
+});

@@ -659,7 +659,7 @@ button[disabled]:hover {
   cursor: not-allowed;
 }
 .pageClient {
-  height: 50%;
+  height: 60%;
 }
 .butMpageClient {
   transform: scale(1.3) translate(140%, -10%);

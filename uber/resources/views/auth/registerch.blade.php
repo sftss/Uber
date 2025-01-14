@@ -41,7 +41,15 @@
                         </div>
                         <div>
                             <div class="form-group">
-                                <label for="mdp_chauffeur">Mot de passe</label>
+                                <div style="display: flex;align-items:baseline;gap:5px">
+                                    <label for="mdp_chauffeur">Mot de passe</label>
+                                    <div class="info-bubble" onclick="toggleInfo(this)">
+                                        ?
+                                        <div class="info-content">
+                                            Le mot de passe doit contenir au moins 8 caractères.
+                                        </div>
+                                    </div>
+                                </div>
                                 <input type="password" placeholder="Entrer votre mot de passe" name="mdp_chauffeur"
                                     required>
                                 @error('mdp_chauffeur')
@@ -62,7 +70,15 @@
                         </div>
                         <div>
                             <div class="form-group">
-                                <label for="tel_chauffeur">Téléphone</label>
+                                <div style="display: flex;align-items:baseline;gap:5px">
+                                    <label for="tel_chauffeur">Téléphone</label>
+                                    <div class="info-bubble" onclick="toggleInfo(this)">
+                                        ?
+                                        <div class="info-content">
+                                            Le téléphone doit commencer par 06 ou 07 et doit comporter 10 caractères.
+                                        </div>
+                                    </div>
+                                </div>
                                 <input placeholder="Entrer votre numéro de téléphone" type="text"
                                     name="tel_chauffeur" value="{{ old('tel_chauffeur') }}">
                                 @error('tel_chauffeur')
@@ -104,7 +120,18 @@
                         <div id="professionnel_fields">
                             <div id="num_siret_field">
                                 <div class="form-group">
-                                    <label for="num_siret">Numéro SIRET</label>
+                                    <div style="display: flex;align-items:baseline;gap:5px">
+                                        <label for="num_siret">Numéro SIRET</label>
+                                        <div class="info-bubble" onclick="toggleInfo(this)">
+                                            ?
+                                            <div class="info-content">
+                                                Le numéro de SIRET doit comporter 14 chiffres. Il est constitué du
+                                                numéro
+                                                SIREN (9 chiffres) suivi du code NIC (5 chiffres) pour identifier
+                                                précisément l'établissement.
+                                            </div>
+                                        </div>
+                                    </div>
                                     <input placeholder="Entrer votre numéro de SIRET" type="text" name="num_siret"
                                         id="num_siret" value="{{ old('num_siret') }}">
                                     @error('num_siret')
@@ -130,13 +157,27 @@
                                 </div>
                                 <div>
                                     <div class="form-group">
-                                        <label for="rib">Relevé d'Identité Bancaire (RIB)</label>
+                                        <div style="display: flex;align-items:baseline;gap:5px">
+                                            <label for="rib">Relevé d'Identité Bancaire (RIB)</label>
+                                            <div class="info-bubble" onclick="toggleInfo(this)">
+                                                ?
+                                                <div class="info-content">
+                                                    Le RIB (Relevé d'Identité Bancaire) doit comporter 23 caractères. Il
+                                                    inclut le code banque, le code guichet, le numéro de compte et la
+                                                    clé
+                                                    RIB. Le format est spécifique et permet d'identifier de manière
+                                                    unique
+                                                    votre compte bancaire.
+                                                </div>
+                                            </div>
+                                        </div>
                                         <input placeholder="Entrer votre RIB" type="text" name="rib"
                                             id="rib" value="{{ old('rib') }}" required>
+
+                                        @error('rib')
+                                            <span class="error-message">{{ $message }}</span>
+                                        @enderror
                                     </div>
-                                    @error('rib')
-                                        <span class="error-message">{{ $message }}</span>
-                                    @enderror
                                 </div>
                             </div>
                             <div>
@@ -229,3 +270,6 @@
         }
     });
 </script>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger style="z-index: 999;" intent="WELCOME" chat-title="Uber Bot"
+    agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>

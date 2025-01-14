@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Chauffeur;
 use Illuminate\Support\Collection;
 
+use function Laravel\Prompts\form;
+
 class AdresseController extends Controller
 {
     public function show($id)
@@ -69,9 +71,27 @@ class AdresseController extends Controller
     
         // Récupération des chauffeurs avec leurs adresses
         $chauffeurs = Chauffeur::with('adresse')->get();
+
+
     
         // Filtrage des chauffeurs à moins de 30 km
         $filteredChauffeurs = new Collection();
+
+
+        foreach ($chauffeurs as $chauffeur) {
+            // Accéder à l'id_departement à partir de l'adresse liée
+            $idDepartement = $chauffeur->adresse->id_departement;
+            // Vous pouvez maintenant utiliser l'id_departement comme nécessaire
+            if($idDepartement == (int)$resultat)
+            {
+                $filteredChauffeurs->push($chauffeur);
+            }
+        }
+
+
+        
+
+/*
         foreach ($courses as $course) {
             $courseCoordinates = $this->getCoordinatesFromAddress($course->ville_depart);
     
@@ -94,7 +114,7 @@ class AdresseController extends Controller
                     }
                 }
             }
-        }
+        }*/
     
         return view('servicecourse/voircourse', compact('courses', 'chauffeurs', 'filteredChauffeurs'));
     }

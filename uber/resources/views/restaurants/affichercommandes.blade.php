@@ -5,10 +5,10 @@
 <h1 class="title">Commandes de {{ $restaurant->nom_etablissement ?? 'Non spécifié' }}</h1>
 
 <p><strong>Total des commandes :</strong> {{ $commandes->count() }}</p>
-<p><strong>Commandes en cours :</strong> 
-    {{ $commandes->filter(function($commande) {
-        return is_null($commande->temps_de_livraison);
-    })->count() }}
+<p><strong>Commandes en cours :</strong>
+    {{ $commandes->filter(function ($commande) {
+            return is_null($commande->temps_de_livraison);
+        })->count() }}
 </p>
 
 <!-- Formulaire de filtrage -->
@@ -29,28 +29,26 @@
         @if (is_null($commande->temps_de_livraison))
             <div class="restaurant-card">
                 <h3 class="restaurant-title">Commande #{{ $commande->id_commande_repas }}</h3>
-                
-                @if(!empty($commande->menus))
+
+                @if (!empty($commande->menus))
                     <p class="restaurant-detail">
                         Produits : {{ $commande->menus }}
                     </p>
                 @endif
-                @if(!empty($commande->plats))
+                @if (!empty($commande->plats))
                     <p class="restaurant-detail">
                         Produits : {{ $commande->plats }}
                     </p>
                 @endif
-                @if(!empty($commande->produits))
+                @if (!empty($commande->produits))
                     <p class="restaurant-detail">
                         Produits : {{ $commande->produits }}
                     </p>
                 @endif
-                
-                
 
+                <p>Horaire de livraison estimée : {{ $commande->horaire_livraison_estimee }}</p>
 
-
-                @if($restaurant->propose_livraison=='True')
+                @if ($restaurant->propose_livraison == 'True')
                     <p>Attribuer un chauffeur</p>
 
                     <form method="POST" action="{{ route('restaurants.attribuerChauffeur', $id) }}">
@@ -61,25 +59,25 @@
                             <select name="id_chauffeur" id="id_chauffeur" required>
                                 <option value="null">Aucun chauffeur</option>
                                 @foreach ($livreurs as $livreur)
-                                   @if($livreur->est_dispo == 'true') 
-                                    <option value="{{ $livreur->id_chauffeur }}"
-                                        @if ($commande->id_chauffeur == $livreur->id_chauffeur) selected @endif>
-                                        {{ $livreur->prenom_chauffeur }} {{ $livreur->nom_chauffeur }} 
-                                    </option>
+                                    @if ($livreur->est_dispo == 'true')
+                                        <option value="{{ $livreur->id_chauffeur }}"
+                                            @if ($commande->id_chauffeur == $livreur->id_chauffeur) selected @endif>
+                                            {{ $livreur->prenom_chauffeur }} {{ $livreur->nom_chauffeur }}
+                                        </option>
                                     @endif
                                 @endforeach
                             </select>
                         @else
-                            <p>Chauffeur actuel : {{$commande->nom_chauffeur}}</p>
+                            <p>Chauffeur actuel : {{ $commande->nom_chauffeur }}</p>
                             <p>Modifier le chauffeur</p>
                             <select name="id_chauffeur" id="id_chauffeur" required>
                                 <option value="null">Aucun chauffeur</option>
                                 @foreach ($livreurs as $livreur)
-                                   @if($livreur->est_dispo == 'true') 
-                                    <option value="{{ $livreur->id_chauffeur }}"
-                                        @if ($commande->id_chauffeur == $livreur->id_chauffeur) selected @endif>
-                                        {{ $livreur->prenom_chauffeur }} {{ $livreur->nom_chauffeur }} 
-                                    </option>
+                                    @if ($livreur->est_dispo == 'true')
+                                        <option value="{{ $livreur->id_chauffeur }}"
+                                            @if ($commande->id_chauffeur == $livreur->id_chauffeur) selected @endif>
+                                            {{ $livreur->prenom_chauffeur }} {{ $livreur->nom_chauffeur }}
+                                        </option>
                                     @endif
                                 @endforeach
                             </select>
@@ -92,3 +90,6 @@
         @endif
     @endforeach
 </div>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger style="z-index: 999;" intent="WELCOME" chat-title="Uber Bot"
+    agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>

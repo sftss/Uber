@@ -40,7 +40,7 @@ class MetricsController extends Controller
     }
 
     // Fonction pour récupérer les métriques système
-    private function getSystemMetrics()
+    /*private function getSystemMetrics()
     {
         // Charge CPU
         $cpuLoad = sys_getloadavg();
@@ -68,5 +68,5 @@ class MetricsController extends Controller
             'disk_total' => $diskTotal,
             'network_rx_packets' => $rxPackets[1] ?? 0,
         ];
-    }
+    }*/
 }

@@ -60,7 +60,7 @@
                 class="btn btn-primary">Ajouter un menu</a>
         </div>
         <a href="{{ route('restaurants.affichercommandes', ['id' => $restaurant->id_restaurant]) }}"
-                class="btn btn-primary">Afficher les commandes en cours</a>
+            class="btn btn-primary">Afficher les commandes en cours</a>
     @endif
 </div>
 
@@ -107,8 +107,8 @@
                     <p>Catégorie : {{ $menu->categorie_produit }} </p>
                     <p>Prix : {{ $menu->prix_menu }} €</p>
                     <p>---Composition---</p>
-                    <p>Plat : {{$menu->libelle_plat}}</p>
-                    <p>Produit : {{$menu->nom_produit}}</p>
+                    <p>Plat : {{ $menu->libelle_plat }}</p>
+                    <p>Produit : {{ $menu->nom_produit }}</p>
                     <form action="{{ route('cart.add', ['type' => 'menu', 'id' => $menu->id_menu]) }}" method="POST">
                         @csrf
                         <button type="submit" class="btn-primary ajtpanier">Ajouter au panier</button>
@@ -132,14 +132,14 @@
                     <h3>{{ $plat->libelle_plat }}</h3>
                     <p>Catégorie : {{ $plat->categorie_plat }} </p>
                     <p>Prix : {{ $plat->prix_plat }} €</p>
-                    
-                    @if($plat->note_plat)
+
+                    @if ($plat->note_plat)
                         <p>Note : {{ $plat->note_plat }}</p>
                     @else
                         <p>Note : Aucune note disponible</p>
                     @endif
 
-                    @if($plat->nb_avis)
+                    @if ($plat->nb_avis)
                         <p>{{ $plat->nb_avis }} avis</p>
                     @else
                         <p>Aucun avis disponible</p>
@@ -192,3 +192,6 @@
         }
     });
 </script>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger style="z-index: 999;" intent="WELCOME" chat-title="Uber Bot"
+    agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>

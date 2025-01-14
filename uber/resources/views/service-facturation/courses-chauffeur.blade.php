@@ -1,40 +1,42 @@
 @extends('layouts.service-facturation-header')
 
 <link rel="stylesheet" href="{{ URL::asset('assets/style/course-facturation.css') }}" />
-<link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" /> 
+<link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
 
-<form action="{{ route('courses-chauffeur', ['id' => $id]) }}" method="get" class="date-filter-form">
-    <label for="start_date">Date de début :</label>
-    <input type="date" name="start_date" id="start_date" value="{{ request()->get('start_date') }}">
+<div style="display: flex;flex-direction: column;align-items: center; margin: 5% auto;">
+    <form style="margin: auto auto;" action="{{ route('courses-chauffeur', ['id' => $id]) }}" method="get"
+        class="date-filter-form">
+        <label for="start_date">Date de début :</label>
+        <input type="date" name="start_date" id="start_date" value="{{ request()->get('start_date') }}">
 
-    <label for="end_date">Date de fin :</label>
-    <input type="date" name="end_date" id="end_date" value="{{ request()->get('end_date') }}">
+        <label for="end_date">Date de fin :</label>
+        <input type="date" name="end_date" id="end_date" value="{{ request()->get('end_date') }}">
 
-    <button type="submit">Filtrer</button>
-</form>
+        <button type="submit" style="margin: 2% 2%;" class="btn filter-but-eat">Filtrer</button>
+    </form>
 
-<form action="{{ route('courses.Factures')}}" method="POST"
-                                    style="display:inline" class="formGenereInvoice">
-                                    @csrf
-                                    @foreach ($courses as $course)
-                                        <input type="hidden" name="id_courses[]" value="{{ $course->id_course }}">
-                                    @endforeach
-                                    <button class="generateInvoiceButton" type="submit" target="_blank">Générer la
-                                        facture</button>
-                                </form>
+    <form action="{{ route('courses.Factures') }}" method="POST" class="formGenereInvoice">
+        @csrf
+        @foreach ($courses as $course)
+            <input type="hidden" name="id_courses[]" value="{{ $course->id_course }}">
+        @endforeach
+        <button class="generateInvoiceButton" type="submit" target="_blank">Générer la
+            facture</button>
+    </form>
+</div>
 
 @if ($courses->isEmpty())
-    <div class="no-courses-message">
+    <div style="font-weight: bold;font-size: 1.3rem;" class="no-courses-message">
         <p>Vous n'avez aucune course pour le moment.</p>
     </div>
 @else
-<div class="courses-count">
-        <p>Nombre de courses affichées : {{ $courses->count() }}</p>
+    <div class="courses-count">
+        <p style="margin-left: 7%;font-weight: bold;">Nombre de courses affichées : {{ $courses->count() }}</p>
     </div>
     <div style="margin: 5% 5%">
         <ul>
             @foreach ($courses as $course)
-                <div class="course_container">
+                <div class="course_container" style="height: 45%;">
                     <h3 class="course_title">Course numéro : {{ $course->id_course }}</h3>
                     <ul class="course_details">
                         <li class="chauffeur">
@@ -62,7 +64,6 @@
                     <div class="course">
                     </div>
 
-                
                 </div>
             @endforeach
         </ul>

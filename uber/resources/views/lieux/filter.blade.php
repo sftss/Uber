@@ -1,4 +1,4 @@
-@extends('layouts.professionnel-header')
+@extends('layouts.header')
 
 <link href="{{ asset('assets/style/app.css') }}" rel="stylesheet">
 <link rel="icon" href="{{ URL::asset('assets/svg/uber-logo.svg') }}" type="image/svg+xml">
@@ -70,3 +70,6 @@
 
 <a href="{{ url('/panier') }}" id="panier">🛒</a>
 <script src="{{ asset('js/main.js') }}"></script>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger style="z-index: 999;" intent="WELCOME" chat-title="Uber Bot"
+    agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>

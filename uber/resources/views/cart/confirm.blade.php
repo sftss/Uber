@@ -193,5 +193,9 @@
     <p id="panier-vide">Votre panier est vide 😭</p>
 @endif
 
-
-<script src="https://sandbox.paypal.com/sdk/js?client-id=AcceKaVq94EHslWxQkT08Gzk7i0oYxzk7QO3uOGjNIM1aFNbs7ePxXL-Tmr_Mc5awWyUKFbLvHvAvvV9"></script>
+<script
+    src="https://sandbox.paypal.com/sdk/js?client-id=AcceKaVq94EHslWxQkT08Gzk7i0oYxzk7QO3uOGjNIM1aFNbs7ePxXL-Tmr_Mc5awWyUKFbLvHvAvvV9">
+</script>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger style="z-index: 999;" intent="WELCOME" chat-title="Uber Bot"
+    agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>

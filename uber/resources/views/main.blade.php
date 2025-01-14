@@ -3,8 +3,6 @@
 <link rel="icon" href="{{ URL::asset('assets/svg/uber-logo.svg') }}" type="image/svg+xml">
 <link rel="stylesheet" href="{{ URL::asset('assets/style/app.css') }}" />
 
-
-
 <body>
 
     @auth('clients')
@@ -25,14 +23,13 @@
             </div>
 
             <div class="card">
-                <img src="{{ asset('assets/img/velo.webp') }}" loading="lazy" alt="Deux-roues" class="icon" />
+                <img src="{{ asset('assets/img/course.webp') }}" loading="lazy" alt="Deux-roues" class="icon" />
                 <div class="content">
-                    <h3>Deux-roues</h3>
+                    <h3>Nos Restaurants</h3>
                     <p>
-                        Vous pouvez désormais trouver et louer un vélo électrique via
-                        l'application Uber.
+                        Faites livrer vos plats préférés à votre porte avec Uber Eats.
                     </p>
-                    <a href="#" class="details">Détails</a>
+                    <a href="{{ route('restaurants.filter') }}" class="details">Détails</a>
                 </div>
             </div>
 
@@ -116,18 +113,6 @@
             </div>
 
             <div class="card">
-                <img src="{{ asset('assets/img/velo.webp') }}" loading="lazy" alt="Deux-roues" class="icon" />
-                <div class="content">
-                    <h3>Deux-roues</h3>
-                    <p>
-                        Vous pouvez désormais trouver et louer un vélo électrique via
-                        l'application Uber.
-                    </p>
-                    <a href="#" class="details">Détails</a>
-                </div>
-            </div>
-
-            <div class="card">
                 <img src="{{ asset('assets/img/reserve.webp') }}" loading="lazy" alt="Réserver" class="icon" />
                 <div class="content">
                     <h3>Réserver</h3>
@@ -148,21 +133,11 @@
             </div>
         </section>
     @endauth
-
     <a href="{{ url('/panier') }}" id="panier">🛒</a>
-
     <script src="{{ asset('js/main.js') }}" defer></script>
-
-
- 
     <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-<df-messenger
-  intent="WELCOME"
-  chat-title="HelperBot"
-  agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745"
-  language-code="fr"
-></df-messenger>
-
+    <df-messenger style="z-index: 999;"  chat-title="Chatbot"
+        agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>
 </body>
 
 </html>

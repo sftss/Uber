@@ -45,8 +45,18 @@ class CBController extends Controller
             $possede->id_cb = $card->id_cb;
             $possede->save();
 
-            return redirect()->route('profil', ['id_client' => $id_client])
+            $from = $request->input('from', 'profil'); // Par défaut : profil
+
+        // Redirection selon la valeur de 'from'
+        if ($from === 'cart') {
+            return redirect()->route('cart.confirm') // Nom de la route de la page panier
                 ->with('success', 'Carte bancaire ajoutée avec succès.');
+        }
+
+        return redirect()->route('profil', ['id_client' => $id_client])
+            ->with('success', 'Carte bancaire ajoutée avec succès.');
+
+
         } catch (\Exception $e) {
             \Log::error('Erreur lors de l\'ajout de la carte : ' . $e->getMessage());
             return redirect()->back()->with('error', $e->getMessage());

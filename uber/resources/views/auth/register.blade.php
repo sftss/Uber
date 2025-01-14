@@ -42,7 +42,15 @@
                         </div>
                         <div>
                             <div class="form-group">
-                                <label for="mdp_client">Mot de passe</label>
+                                <div style="display: flex;align-items:baseline;gap:5px">
+                                    <label for="mdp_client">Mot de passe</label>
+                                    <div class="info-bubble" onclick="toggleInfo(this)">
+                                        ?
+                                        <div class="info-content">
+                                            Le mot de passe doit contenir au moins 8 caractères.
+                                        </div>
+                                    </div>
+                                </div>
                                 <input type="password" name="mdp_client" placeholder="Entrer votre mot de passe"
                                     required>
                                 @error('mdp_client')
@@ -63,7 +71,15 @@
                         </div>
                         <div>
                             <div class="form-group">
-                                <label for="tel_client">Téléphone</label>
+                                <div style="display: flex;align-items:baseline;gap:5px">
+                                    <label for="tel_client">Téléphone</label>
+                                    <div class="info-bubble" onclick="toggleInfo(this)">
+                                        ?
+                                        <div class="info-content">
+                                            Le téléphone doit commencer par 06 ou 07 et doit comporter 10 caractères.
+                                        </div>
+                                    </div>
+                                </div>
                                 <input type="text" name="tel_client" value="{{ old('tel_client') }}"
                                     placeholder="Entrer votre numéro de téléphone">
                                 @error('tel_client')
@@ -73,7 +89,17 @@
                         </div>
                         <div>
                             <div class="form-group">
-                                <label for="est_particulier">Type de client</label>
+                                <div style="display: flex;align-items:baseline;gap:5px">
+                                    <label for="est_particulier">Type de client</label>
+                                    <div class="info-bubble" onclick="toggleInfo(this)">
+                                        ?
+                                        <div class="info-content">
+                                            Si vous souhaitez créer votre établissement au sein de notre service,
+                                            veuillez
+                                            sélectionner 'Professionnel'.
+                                        </div>
+                                    </div>
+                                </div>
                                 <select name="est_particulier" id="est_particulier" required
                                     onchange="toggleProfessionnelFields()">
                                     <option value="1" {{ old('est_particulier') == '1' ? 'selected' : '' }}>
@@ -81,6 +107,7 @@
                                     <option value="0" {{ old('est_particulier') == '0' ? 'selected' : '' }}>
                                         Professionnel</option>
                                 </select>
+
                                 @error('est_particulier')
                                     <span class="error-message">{{ $message }}</span>
                                 @enderror
@@ -90,7 +117,18 @@
                         <div id="professionnel_fields" style="display: none;">
                             <div id="num_siret_field">
                                 <div class="form-group">
-                                    <label for="num_siret">Numéro SIRET</label>
+                                    <div style="display: flex;align-items:baseline;gap:5px">
+                                        <label for="num_siret">Numéro SIRET</label>
+                                        <div class="info-bubble" onclick="toggleInfo(this)">
+                                            ?
+                                            <div class="info-content">
+                                                Le numéro de SIRET doit comporter 14 chiffres. Il est constitué du
+                                                numéro
+                                                SIREN (9 chiffres) suivi du code NIC (5 chiffres) pour identifier
+                                                précisément l'établissement.
+                                            </div>
+                                        </div>
+                                    </div>
                                     <input type="text" name="num_siret" id="num_siret"
                                         value="{{ old('num_siret') }}">
                                     @error('num_siret')
@@ -135,7 +173,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="date_naissance_cp">Date de naissance</label>
-                                <input type="date" name="date_naissance_cp" value="{{ old('date_naissance_cp') }}">
+                                <input type="date" name="date_naissance_cp"
+                                    value="{{ old('date_naissance_cp') }}">
                                 @error('date_naissance_cp')
                                     <span class="error-message">{{ $message }}</span>
                                 @enderror
@@ -192,3 +231,6 @@
         toggleProfessionnelFields();
     });
 </script>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger style="z-index: 999;" intent="WELCOME" chat-title="Uber Bot"
+    agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>

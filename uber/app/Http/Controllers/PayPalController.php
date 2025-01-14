@@ -76,4 +76,72 @@ public function handleSuccess(Request $request)
         {
             return redirect()->route('cart.confirm')->with('error', 'Le paiement a été annulé.');
         }
+
+
+
+
+
+        public function createPaymentC(Request $request)
+{
+
+    
+    $paypal = new PayPalClient;
+            $paypal->setApiCredentials(config('paypal'));
+            $token = $paypal->getAccessToken();
+            $paypal->setAccessToken($token);
+
+            // Utilisation du montant total calculé
+            $response = $paypal->createOrder([
+                "intent" => "CAPTURE",
+                "purchase_units" => [
+                    0 => [
+                        "amount" => [
+                            "currency_code" => "EUR", 
+                            "value" =>  $prix = $request->query('prix')// Formatage correct sans séparateur de milliers
+                        ]
+                    ]
+                ],
+                "application_context" => [
+                    "cancel_url" => route('paypal.cancelc'),
+                    "return_url" => route('paypal.successc')
+                ]
+            ]);
+
+
+
+
+
+
+            // Redirection vers PayPal si la commande est créée avec succès
+            if (isset($response['id']) && $response['status'] == "CREATED") {
+                foreach ($response['links'] as $link) {
+                    if ($link['rel'] === 'approve') {
+                        return redirect()->away($link['href']);
+                    }
+                }
+            }
+
+            // Redirection en cas d'erreur
+            return redirect()->route('paypal.cancelC')->with('error', 'Une erreur est survenue.');
+}
+
+        public function handleSuccessC(Request $request)
+        {
+            $paypal = new PayPalClient;
+            $paypal->setApiCredentials(config('paypal'));
+            $token = $paypal->getAccessToken();
+            $paypal->setAccessToken($token);
+
+            $response = $paypal->capturePaymentOrder($request['token']);
+
+            if (isset($response['status']) && $response['status'] == 'COMPLETED') {
+                return redirect()->route('courses.index')->with('success', 'Paiement réussi.');
+            }
+
+            return redirect()->route('courses.index')->with('error', 'Le paiement a échoué.');
+        }
+        public function handleCancelC()
+        {
+            return redirect()->route('map')->with('error', 'Le paiement a été annulé.');
+        }
 }

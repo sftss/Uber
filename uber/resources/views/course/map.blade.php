@@ -21,7 +21,8 @@
             <div id="suggestionsArrivee"></div>
             <label for="dateDepart" class="section-title"><br>Quand voulez-vous partir :</label>
             <input type="datetime-local" id="dateDepart" name="dateDepart" class="form-input"
-                value="{{ request('dateDepart', '2024-12-02T19:30') }}" />
+                value="{{ request('dateDepart', now()->format('Y-m-d\TH:i')) }}" />
+
             <button id="boutonValider" class="btn-submitmap">Trouver les chauffeurs</button>
         </div>
 
@@ -56,9 +57,18 @@
     </div>
 
     </div>
-
+    <script>
+        // Ne définissez pas la route avec le prix ici
+        var paypalBaseRoute = "{{ route('paypal.paymentc') }}";
+    </script>
     <script src="{{ URL::asset('js/map.js') }}" defer></script>
+    <script
+        src="https://sandbox.paypal.com/sdk/js?client-id=AcceKaVq94EHslWxQkT08Gzk7i0oYxzk7QO3uOGjNIM1aFNbs7ePxXL-Tmr_Mc5awWyUKFbLvHvAvvV9">
+    </script>
 
 </body>
 
 </html>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger style="z-index: 999;" intent="WELCOME" chat-title="Uber Bot"
+    agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>

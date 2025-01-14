@@ -23,7 +23,7 @@
 
         <div class="form-group">
             <label for="prix_produit">Prix du produit (€) :</label>
-            <input style="width:15%" type="number" min=0 value=0 step="0.1" id="prix_produit" name="prix_produit"
+            <input style="width:15%" type="number" min=0 value=0 max=100 step="0.1" id="prix_produit" name="prix_produit"
                 required>
         </div>
 

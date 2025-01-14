@@ -1117,16 +1117,12 @@ input[type="number"] {
   opacity: 0;
   pointer-events: none;
 }
-#panier {
-  font-weight: bold;
-  font-size: 1.5rem;
-  margin-left: 5%;
-}
 
 #panier {
-  z-index: 100000;
-  height: 50px;
-  width: 50px;
+  z-index: 10;
+  font-size: 1.6rem;
+  height: 65px;
+  width: 65px;
   padding: 0;
   border-radius: 50%;
   display: flex;
@@ -1134,8 +1130,8 @@ input[type="number"] {
   align-items: center;
   position: fixed;
   right: 0;
-  margin-right: 5%;
-  top: 20%;
+  margin: 0% 5% 0 5%;
+  top: 25%;
   cursor: pointer;
   border: 1px solid #ccc;
 }
@@ -1308,9 +1304,6 @@ input[type="number"] {
 
 #CreerRestauTxt:hover::after {
   opacity: 1;
-}
-#panier {
-  margin-left: 20px;
 }
 #AncienneCommandeTxt {
   display: flex;
@@ -1606,4 +1599,70 @@ select {
 .row {
   display: flex;
   gap: 20px; /* Espacement entre les colonnes */
+}
+.info-container {
+  display: flex;
+  gap: 20px;
+  position: relative;
+}
+
+.info-bubble {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #007bff;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.info-bubble:hover {
+  background-color: #0056b3;
+}
+
+.info-content {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  color: black;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+  max-width: 300px;
+  white-space: normal;
+  line-height: 1.5;
+}
+
+/* Overlay pour assurer que le contenu est au premier plan */
+.info-bubble.active::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+}
+
+.info-bubble.active .info-content {
+  display: block;
+  z-index: 9999; /* Valeur très élevée */
+}
+
+.info-content::after {
+  content: "Cliquez pour fermer";
+  display: block;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #666;
+  text-align: center;
 }

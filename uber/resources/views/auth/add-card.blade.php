@@ -6,10 +6,11 @@
 
     <form method="POST" action="{{ route('card.store', ['id_client' => auth()->user()->id_client]) }}">
         @csrf
-
+        <input type="hidden" name="from" value="{{ request('from', 'cart') }}">
         <div class="form-group">
             <label for="num_cb">Numéro de la carte</label>
-            <input type="text" id="num_cb" name="num_cb" class="form-control" value="{{ old('num_cb') }}" required>
+            <input type="text" id="num_cb" name="num_cb" class="form-control" value="{{ old('num_cb') }}"
+                required>
             @error('num_cb')
                 <div class="alert alert-danger">{{ $message }}</div>
             @enderror
@@ -45,3 +46,6 @@
         this.querySelector('button[type="submit"]').disabled = true;
     });
 </script>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger style="z-index: 999;" intent="WELCOME" chat-title="Uber Bot"
+    agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>

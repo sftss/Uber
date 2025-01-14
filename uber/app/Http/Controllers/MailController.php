@@ -91,7 +91,7 @@ public function SendNotifChauffeur(Request $request)
     }
 
     // Envoi à un autre destinataire (si nécessaire)
-    Mail::to("tanguyabdoulvaid@gmail.com")->send(new NotifChauffeur());
+    //Mail::to("tanguyabdoulvaid@gmail.com")->send(new NotifChauffeur());
 
     // Retourner une réponse de succès
     return response()->json([

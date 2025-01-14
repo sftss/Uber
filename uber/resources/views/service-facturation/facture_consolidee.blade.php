@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -128,10 +129,11 @@
         }
     </style>
 </head>
+
 <body>
-    
+
     <h1>{{ __('Facture pour les courses de la période') }}</h1>
-    
+
     <p>{{ __('Chauffeur') }} : {{ $chauffeur->nom_chauffeur }} {{ $chauffeur->prenom_chauffeur }}</p>
 
     <!-- Tableau des items (détails des courses et pourboires) -->
@@ -169,4 +171,5 @@
     <p><strong>{{ __('Total TTC') }} : {{ number_format($totalTTC, 2, ',', ' ') }} €</strong></p>
     <p><strong>{{ __('Pourboire total') }} : {{ number_format($pourboire, 2, ',', ' ') }} €</strong></p>
 </body>
+
 </html>

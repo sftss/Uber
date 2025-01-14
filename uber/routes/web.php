@@ -30,7 +30,7 @@ use App\Http\Controllers\MetricsController;
 
 Route::get('/metrics', [MetricsController::class, 'index']);
 
-Route::get('/system-metrics', [MetricsController::class, 'getMetrics']);
+//Route::get('/system-metrics', [MetricsController::class, 'getMetrics']);
 
 
 Route::get('/', function () {
@@ -52,9 +52,9 @@ Route::post('/planifier-rdv/{chauffeur_id}', [ChauffeurController::class, 'plani
 
 Route::post('/changer-statuts-rdv/{chauffeur_id}', [ChauffeurController::class, 'changerStatutRdv'])->name('changer-statuts-rdv');
 
-Route::post('/changer-statuts-vehicule/{vehicule_id}', [ChauffeurController::class, 'changerStatutVeh'])->name('changer-statuts-vehicule');
+Route::post('/changer-statuts-vehicule/{vehicule_id}', [VehiculeController::class, 'changerStatutVeh'])->name('changer-statuts-vehicule');
 
-Route::post('/ajouter-amenagement/{vehicule_id}', [ChauffeurController::class, 'ajoutAmenagement'])->name('ajouter-amenagement');
+Route::post('/ajouter-amenagement/{vehicule_id}', [VehiculeController::class, 'ajoutAmenagement'])->name('ajouter-amenagement');
 
 Route::get('/test-mail', [MailController::class, 'sendMail']);
 
@@ -122,10 +122,21 @@ Route::prefix('cart')->name('cart.')->group(function () {
     Route::patch('update/{id}', [CartController::class, 'update'])->name('update');
 });
 
+
+Route::get('/ubereats', function () {
+    return view('eats.choix-type');
+})->name('eats');
+
+
+
+
+
+
 Route::post('/profil/update-photo', [ClientController::class, 'updatePhoto'])->name('client.updatePhoto');
 
 Route::get('/profil/{id_client}', [ClientController::class, 'profil'])->name('profil');
 Route::get('/profil/{id_client}/add-card', [CBController::class, 'create'])->name('card.create');
+
 Route::post('/profil/{id_client}/add-card', [CBController::class, 'store'])->name('card.store');
 
 Route::get('/profil/{id_client}/delete-card/{id_cb}', [CBController::class, 'destroy'])->name('card.delete');
@@ -174,7 +185,7 @@ Route::get('/chauffeurs-a-valider', [ChauffeurController::class, 'AfficherChauff
 
 Route::match(['GET', 'POST'], '/traitement', [AdresseController::class, 'traitement'])->name('traitement');
 
-Route::post('/trouverchauffeurs', [ChauffeurController::class, 'trouverChauffeurs'])->name('trouverchauffeurs');
+Route::get('/voirchauffeur', [ChauffeurController::class, 'trouverChauffeurs'])->name('trouverchauffeurs');
 
 Route::get('/professionnel-main', function() {
     return view('/professionnel/professionnel-main');
@@ -286,6 +297,11 @@ Route::get('/service-facturation-visualisation', function () {
 Route::get('paypal/payment', [PayPalController::class, 'createPayment'])->name('paypal.payment');
 Route::get('paypal/success', [PayPalController::class, 'handleSuccess'])->name('paypal.success');
 Route::get('paypal/cancel', [PayPalController::class, 'handleCancel'])->name('paypal.cancel');
+
+Route::get('paypal/successc', [PayPalController::class, 'handleSuccessC'])->name('paypal.successc');
+Route::get('paypal/cancelc', [PayPalController::class, 'handleCancelC'])->name('paypal.cancelc');
+Route::get('/paypal/paymentc', [PayPalController::class, 'createPaymentC'])->name('paypal.paymentc');
+
 
 Route::get('/facturation', function () {
     return view('service-facturation/service-facturation-main');

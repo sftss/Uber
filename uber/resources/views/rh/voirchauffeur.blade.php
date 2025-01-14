@@ -12,38 +12,27 @@
 
 <body>
     <div class="container" style="margin: 3% 3%">
-        <form action="{{ route('trouverchauffeurs') }}" method="POST">
-            @csrf
-            <label for="departement">Numéro de département (1 à 95 ou 2A/2B) :</label>
-            <input type="text" id="departement" name="departement" pattern="^(0[1-9]|[1-8][0-9]|9[0-5]|2A|2B)$"
-                placeholder="Exemple : 75 ou 2A">
-            <br><br>
-            <button type="submit">Envoyer</button>
-        </form>
-        @if (isset($chauffeurs))
+        <!-- Plus besoin du formulaire pour le département -->
+        <h2>Chauffeurs en attente</h2>
+
+        @if (isset($chauffeurs) && count($chauffeurs) > 0)
             <script>
                 const chauffeurs = @json($chauffeurs);
-                console.log(chauffeurs)
+                console.log(chauffeurs);
             </script>
 
             @foreach ($chauffeurs as $chauffeur)
                 <div class="course_container">
-                    <h3 class="course_title">Chauffeur : {{ $chauffeur->prenom_chauffeur }}
-                        {{ $chauffeur->nom_chauffeur }}
-                    </h3>
+                    <h3 class="course_title">Chauffeur : {{ $chauffeur->prenom_chauffeur }} {{ $chauffeur->nom_chauffeur }}</h3>
                     <ul class="course_details">
-                        <li class="date_naissance">Date de naissance :
+                        <li class="date_naissance">Date de naissance : 
                             {{ \Carbon\Carbon::parse($chauffeur->date_naissance_chauffeur)->locale('fr')->isoFormat('LL') }}
                         </li>
-                        <li class="sexe">Sexe :
-                            @if ($chauffeur->sexe_chauffeur == 'H')
-                                Homme
-                            @elseif($chauffeur->sexe_chauffeur == 'F')
-                                Femme
-                            @elseif($chauffeur->sexe_chauffeur == 'A')
-                                Autre
-                            @else
-                                Non défini
+                        <li class="sexe">Sexe : 
+                            @if ($chauffeur->sexe_chauffeur == 'H') Homme
+                            @elseif($chauffeur->sexe_chauffeur == 'F') Femme
+                            @elseif($chauffeur->sexe_chauffeur == 'A') Autre
+                            @else Non défini
                             @endif
                         </li>
                         <li class="tel">Téléphone : {{ $chauffeur->tel_chauffeur }}</li>
@@ -62,16 +51,12 @@
                                     action="{{ route('changer-statuts-rdv', ['chauffeur_id' => $chauffeur->id_chauffeur]) }}"
                                     method="POST">
                                     @csrf
-                                    <button type="submit" name="statut" value="accepter"
-                                        class="btn btn-success">Accepter</button>
-                                    <button type="submit" name="statut" value="refuser"
-                                        class="btn btn-danger">Refuser</button>
+                                    <button type="submit" name="statut" value="accepter" class="btn btn-success">Accepter</button>
+                                    <button type="submit" name="statut" value="refuser" class="btn btn-danger">Refuser</button>
                                 </form>
                             @else
                                 <!-- Si la date n'est pas renseignée, afficher le formulaire pour planifier un RDV -->
-                                <form
-                                    action="{{ route('planifier-rdv', ['chauffeur_id' => $chauffeur->id_chauffeur]) }}"
-                                    method="POST">
+                                <form action="{{ route('planifier-rdv', ['chauffeur_id' => $chauffeur->id_chauffeur]) }}" method="POST">
                                     @csrf
                                     <label for="rdv_date">Choisir une date pour le rendez-vous :</label>
                                     <input type="date" id="rdv_date" name="rdv_date" required>
@@ -92,14 +77,12 @@
 </body>
 
 <script defer>
-    // Initialisation de Flatpickr pour un calendrier personnalisé (si tu souhaites un calendrier amélioré)
-    import flatpickr from "flatpickr";
-    import {
-        French
-    } from "flatpickr/dist/l10n/fr.js";
-
-    flatpickr("input[type='date']", {
-        dateFormat: "Y-m-d",
-        locale: French,
+document.addEventListener('DOMContentLoaded', function () {
+        // Initialisation de Flatpickr sur les champs de type "date"
+        flatpickr("input[type='date']", {
+            dateFormat: "Y-m-d", // Format d'affichage de la date
+            minDate: new Date() , // Empêche la sélection de dates antérieures à aujourd'hui
+            locale: "fr", // Définit la locale en français
+        });
     });
 </script>

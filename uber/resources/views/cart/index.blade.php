@@ -42,7 +42,8 @@
                                     <form action="{{ route('cart.remove', $key) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn-submit-sup" type="submit">Supprimer</button>
+                                        <button class="btn-submit-sup" type="submit"
+                                            onclick="return confirmDelete()">Supprimer</button>
                                     </form>
                                 </td>
                             </tr>
@@ -87,10 +88,11 @@
                                 </td>
                                 <td>{{ number_format($item['price'] * $item['quantity'], 2) }} €</td>
                                 <td>
-                                    <form action="{{ route('cart.remove', $key) }}" method="POST">
+                                    <form action="{{ route('cart.remove', $key) }}" method="POST" class="delete-form">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn-submit-sup" type="submit">Supprimer</button>
+                                        <button class="btn-submit-sup" type="submit"
+                                            onclick="return confirmDelete()">Supprimer</button>
                                     </form>
                                 </td>
                             </tr>
@@ -138,7 +140,8 @@
                                     <form action="{{ route('cart.remove', $key) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn-submit-sup" type="submit">Supprimer</button>
+                                        <button class="btn-submit-sup" type="submit"
+                                            onclick="return confirmDelete()">Supprimer</button>
                                     </form>
                                 </td>
                             </tr>
@@ -160,3 +163,12 @@
 </div>
 
 <script src="{{ asset('js/main.js') }}"></script>
+
+<script>
+    function confirmDelete() {
+        return confirm("Êtes-vous sûr de vouloir supprimer cet article du panier ?");
+    }
+</script>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger style="z-index: 999;" intent="WELCOME" chat-title="Uber Bot"
+    agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>

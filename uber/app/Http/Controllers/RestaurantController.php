@@ -322,7 +322,8 @@ class RestaurantController extends Controller
     // Filtrer les commandes si le filtre est activé
     if ($request->get('filter') === 'urgent') {
         $now = now()->format('H:i');
-        $query->havingRaw("TO_CHAR((c.horaire_livraison::time + INTERVAL '1 hour'), 'HH24:MI') >= ?", [$now]);
+        $query->whereRaw("c.horaire_livraison::time <= (NOW()::time + INTERVAL '1 hour')")
+        ->whereRaw("c.horaire_livraison::time >= NOW()::time");
     }
 
     $commandes = $query->get();
