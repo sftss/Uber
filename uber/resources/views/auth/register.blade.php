@@ -124,7 +124,7 @@
                                             <div class="info-content">
                                                 Le numéro de SIRET doit comporter 14 chiffres. Il est constitué du
                                                 numéro
-                                                SIREN (9 chiffres) suivi du code NIC (5 chiffres) pour identifier
+                                                SIRET (9 chiffres) suivi du code NIC (5 chiffres) pour identifier
                                                 précisément l'établissement.
                                             </div>
                                         </div>
@@ -231,6 +231,6 @@
         toggleProfessionnelFields();
     });
 </script>
-    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-    <df-messenger style="z-index: 999;"  chat-title="Chatbot" chat-icon="{{ asset('assets/img/chat.png') }}"
-        agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger style="z-index: 999;" chat-title="Chatbot" chat-icon="{{ asset('assets/img/chat.png') }}"
+    agent-id="bf5ac27d-e2ba-43f5-96e1-5dfbc6ad7745" language-code="fr"></df-messenger>

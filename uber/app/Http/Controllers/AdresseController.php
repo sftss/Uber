@@ -74,14 +74,12 @@ class AdresseController extends Controller
 
 
     
-        // Filtrage des chauffeurs à moins de 30 km
+        // Filtrage des chauffeurs suceptibles d'accepter la course
         $filteredChauffeurs = new Collection();
 
-
+        //version avec la liste de chauffeurs par département (plus rapide mais moins précis)
         foreach ($chauffeurs as $chauffeur) {
-            // Accéder à l'id_departement à partir de l'adresse liée
             $idDepartement = $chauffeur->adresse->id_departement;
-            // Vous pouvez maintenant utiliser l'id_departement comme nécessaire
             if($idDepartement == (int)$resultat)
             {
                 $filteredChauffeurs->push($chauffeur);
@@ -90,7 +88,7 @@ class AdresseController extends Controller
 
 
         
-
+        //version avec calcul d'itinéraire (moins rapide mais plus précis)
 /*
         foreach ($courses as $course) {
             $courseCoordinates = $this->getCoordinatesFromAddress($course->ville_depart);
@@ -117,50 +115,5 @@ class AdresseController extends Controller
         }*/
     
         return view('servicecourse/voircourse', compact('courses', 'chauffeurs', 'filteredChauffeurs'));
-    }
-    
-    private function getCoordinatesFromAddress($address)
-{
-    $url = "https://nominatim.openstreetmap.org/search?q=" . urlencode($address) . "&format=json&limit=1";
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'User-Agent: LaravelApp/1.0 (your-email@example.com)' // Remplace par ton email
-    ]);
-
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-
-    if ($httpCode === 200) {
-        $data = json_decode($response, true);
-        if (!empty($data) && isset($data[0])) {
-            return [
-                'lat' => $data[0]['lat'],
-                'lon' => $data[0]['lon']
-            ];
-        }
-    }
-
-    return null; // Retourne null si aucune donnée valide
-}
-
-    
-    private function calculateDistance($lat1, $lon1, $lat2, $lon2)
-    {
-        $earthRadius = 6371; // Rayon de la Terre en km
-    
-        $latDelta = deg2rad($lat2 - $lat1);
-        $lonDelta = deg2rad($lon2 - $lon1);
-    
-        $a = sin($latDelta / 2) * sin($latDelta / 2) +
-             cos(deg2rad($lat1)) * cos(deg2rad($lat2)) *
-             sin($lonDelta / 2) * sin($lonDelta / 2);
-    
-        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-    
-        return $earthRadius * $c; // Distance en km
     }
 }

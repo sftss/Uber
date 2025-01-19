@@ -68,7 +68,6 @@ class LoginController extends Controller
         Auth::guard('chauffeurs')->login($Chauffeur);
 
         if ($Chauffeur && Hash::check($request->mdp_chauffeur, $Chauffeur->mdp_chauffeur)) {
-            //session(['role' => $role]);
 
             return redirect()->route('home')->with('success', 'Inscription réussie. Un email de confirmation vous a été envoyé.');
         }

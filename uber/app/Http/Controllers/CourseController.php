@@ -21,53 +21,6 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 class CourseController extends Controller
 {
     public function index() {
-            //     $courses = DB::table("course")
-            // ->join(
-            //     "adresse as depart",
-            //     "course.id_lieu_depart",
-            //     "=",
-            //     "depart.id_adresse"
-            // )
-            // ->join(
-            //     "adresse as arrivee",
-            //     "course.id_lieu_arrivee",
-            //     "=",
-            //     "arrivee.id_adresse"
-            // )
-            // ->join(
-            //     "chauffeur as ch",
-            //     "course.id_chauffeur",
-            //     "=",
-            //     "ch.id_chauffeur"
-            // )
-            // ->select(
-            //     "course.id_course",
-            //     "course.id_chauffeur",
-            //     "course.prix_reservation",
-            //     "course.date_prise_en_charge",
-            //     "course.duree_course",
-            //     "course.heure_arrivee",
-            //     "course.terminee",
-            //     "course.id_velo",
-            //     "depart.ville as ville_depart",
-            //     "ch.prenom_chauffeur",
-            //     "ch.nom_chauffeur",
-            //     "arrivee.ville as ville_arrivee",
-            //     "course.acceptee"
-            // )
-            // ->orderBy("course.id_course", "desc") // Ordre décroissant pour afficher les plus récentes en premier
-            // ->paginate(5);
-
-        // $courses = Course::orderBy('id_course', "desc")->paginate(5);
-        // ->orderBy("id_course", "desc") // Ordre décroissant pour afficher les plus récentes en premier
-            // ->paginate(5);
-        // ->get();
-
-        // $clientId = Auth::id();
-        // $courses = Course::with('chauffeur') 
-        //     ->where('id_client', $clientId) 
-        //     ->orderBy('id_course', 'desc')
-        //     ->paginate(5);
 
         $clientId = Auth::user()->id_client;
         $courses = Course::with('chauffeur', 'lieuDepart', 'lieuArrivee')
@@ -75,7 +28,6 @@ class CourseController extends Controller
             ->orderBy('id_course', 'desc')
             ->paginate(5);
 
-        // dd($courses);
 
         return view("course/course-list", ["courses" => $courses]);
     }
@@ -98,11 +50,9 @@ class CourseController extends Controller
 
     public function accepter($id) {
         try {
-            // 1. Récupérer la ligne depuis `temp_course` où id_chauffeur = 7
             $tempCourse = DB::table('temp_course')->where('id_chauffeur', 7)->first();
         
             if ($tempCourse) {
-                // 2. Insérer dans `course` avec `acceptee` à true
                 DB::table('course')
                 ->where('id_course', $tempCourse->numcourse)
                 ->update([
@@ -111,7 +61,6 @@ class CourseController extends Controller
                 ]);
 
         
-                // 3. Supprimer la table `temp_course`
                 DB::statement('DROP TABLE IF EXISTS temp_course');
                 
                 return view('chauffeur/chauffeur-main');
@@ -121,29 +70,7 @@ class CourseController extends Controller
         } catch (\Exception $e) {
             return view('chauffeur/chauffeur-main');
         }
-        /*
-        $course = Course::findOrFail($id);
-        $acceptee = "true";
-        echo "<script>console.log(".$course.")</script>";
-
-        
-        //$course->update(["acceptee" => $acceptee]);
-        DB::table('course')
-        ->where('id_course', $course->id_course)
-        ->update([
-            'acceptee' => $acceptee
-        ]);
-        
-        echo "<script>console.log(".$course.")</script>";
-        $chauffeurId = $course->id_chauffeur;
-
-        echo $chauffeurId;
-
-        $chauffeurController = new ChauffeurController();
-
-        return $chauffeurController
-            ->AfficherPropositions($chauffeurId)
-            ->with("success", "Course acceptée");*/
+       
     }
 
     public function refuser($id) {
@@ -151,40 +78,10 @@ class CourseController extends Controller
         ->where('id_chauffeur', 7)
         ->delete();
 
-        /*
-                $course = Course::findOrFail($id);
-                $acceptee = "false";
-                echo "<script>console.log(".$course.")</script>";
-
-                
-                //$course->update(["acceptee" => $acceptee]);
-                DB::table('course')
-                ->where('id_course', $course->id_course)
-                ->update([
-                    'acceptee' => $acceptee
-                ]);
-                
-                
-                
-                echo "<script>console.log(".$course.")</script>";
-                $chauffeurId = $course->id_chauffeur;
-
-                echo $chauffeurId;
-
-                $chauffeurController = new ChauffeurController();
-
-
-                return $chauffeurController
-                    ->AfficherPropositions($chauffeurId)
-                    ->with("success", "Course acceptée");
-
-        */
-
         return view('chauffeur/chauffeur-main');
     }
 
     public function update(Request $request, $id) {
-        // Validation des données
         $validated = $request->validate([
             'chauffeur' => 'nullable|string|max:255', 
             'depart' => 'required|string|max:255',
@@ -246,7 +143,6 @@ class CourseController extends Controller
 
         $test = session()->flash('review_submitted_' . $courseId, true);
         
-        // dd($test);
         return redirect()->back()->with('success', 'Votre avis a été enregistré.');
     }
 
@@ -257,7 +153,6 @@ class CourseController extends Controller
 
 
     public function reserverCourse(Request $request) {
-        // Validation des données envoyées par le frontend
         $data = $request->validate([
             'chauffeur_nom' => 'required|string',
             'chauffeur_prenom' => 'required|string',
@@ -274,11 +169,9 @@ class CourseController extends Controller
         ]);
 
         try {
-            // Extraire les codes des départements à partir des codes postaux
             $code_departement_depart = substr($data['lieu_depart_cp'], 0, 2);
             $code_departement_arrivee = substr($data['lieu_arrivee_cp'], 0, 2);
 
-            // Récupérer les ID des départements
             $id_dep_depart = Departement::where('code_departement', (string)$code_departement_depart)->first();
             $id_dep_arrivee = Departement::where('code_departement', (string)$code_departement_arrivee)->first();
 
@@ -286,7 +179,6 @@ class CourseController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'Département non trouvé'], 400);
             }
 
-            // Insérer les adresses dans la base de données
             $adresseDepart = Adresse::create([
                 'id_departement' => $id_dep_depart->id_departement,
                 'rue' => $data['lieu_depart_rue'],
@@ -301,13 +193,11 @@ class CourseController extends Controller
                 'cp' => $data['lieu_arrivee_cp'],
             ]);
 
-            // Calculer la durée de la course en heures, minutes, secondes
             $heurescourse = floor($data['tempscourse'] / 3600);
             $minutescourse = floor(($data['tempscourse'] % 3600) / 60);
             $secondescourse = $data['tempscourse'] % 60;
             $duree_course = "{$heurescourse}:{$minutescourse}:{$secondescourse}";
             
-            // Insérer la course dans la table course
             $course = Course::create([
                 'chauffeur_nom' => $data['chauffeur_nom'],
                 'chauffeur_prenom' => $data['chauffeur_prenom'],
@@ -320,7 +210,6 @@ class CourseController extends Controller
                 'id_client' => $data['id_client'],
             ]);
 
-            // Retourner la réponse au client
             return response()->json([
                 'status' => 'success',
                 'date' => substr($data['date_trajet'], 0, 10),
@@ -328,7 +217,6 @@ class CourseController extends Controller
                 'course' => $course,
             ]);
         } catch (\Exception $e) {
-            // Gestion des erreurs
             return response()->json([
                 'status' => 'error',
                 'message' => 'Erreur serveur: ' . $e->getMessage(),
@@ -352,11 +240,9 @@ class CourseController extends Controller
         ]);
 
         try {
-            // Extraire les codes départements
             $code_dep_depart = substr($validated['lieu_depart_cp'], 0, 2);
             $code_dep_arrivee = substr($validated['lieu_arrivee_cp'], 0, 2);
 
-            // Récupérer les IDs des départements
             $id_dep_depart = Departement::where('CODE_DEPARTEMENT', $code_dep_depart)->value('id');
             $id_dep_arrivee = Departement::where('CODE_DEPARTEMENT', $code_dep_arrivee)->value('id');
 
@@ -364,7 +250,6 @@ class CourseController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'Département non trouvé.'], 404);
             }
 
-            // Créer ou récupérer les adresses
             $adresse_depart = Adresse::create([
                 'id_departement' => $id_dep_depart,
                 'rue' => $validated['lieu_depart_rue'],
@@ -379,7 +264,6 @@ class CourseController extends Controller
                 'cp' => $validated['lieu_arrivee_cp'],
             ]);
 
-            // Récupérer un chauffeur selon la catégorie
             $chauffeur = Chauffeur::whereHas('vehicule.categorie', function ($query) use ($validated) {
                 $query->where('lib_categorie_vehicule', $validated['categorie']);
             })->first();
@@ -388,17 +272,15 @@ class CourseController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'Chauffeur non disponible.'], 404);
             }
 
-            // Calculer la durée
             $tempscourse = $validated['tempscourse'];
             $duree_course = gmdate('H:i:s', $tempscourse);
 
-            // Créer la course
             $course = Course::create([
                 'id_chauffeur' => $chauffeur->id,
                 'id_velo' => null,
                 'id_lieu_depart' => $adresse_depart->id,
                 'id_lieu_arrivee' => $adresse_arrivee->id,
-                'id_client' => $validated['id_client'], // ID client exemple
+                'id_client' => $validated['id_client'],
                 'prix_reservation' => $validated['prix_reservation'],
                 'date_prise_en_charge' => substr($validated['date_trajet'], 0, 10),
                 'duree_course' => $duree_course,
@@ -423,7 +305,6 @@ class CourseController extends Controller
 
     public function modifierCourse(Request $request) {
         try {
-            // Valider les données entrantes
             $validatedData = $request->validate([
                 'categorie' => 'required|string',
                 'lieu_depart_rue' => 'required|string',
@@ -439,7 +320,6 @@ class CourseController extends Controller
                 'id_client' => 'required|integer',
             ]);
 
-            // Extraire les données validées
             $categorie = $validatedData['categorie'];
             $lieu_depart_rue = $validatedData['lieu_depart_rue'];
             $lieu_depart_ville = $validatedData['lieu_depart_ville'];
@@ -452,7 +332,6 @@ class CourseController extends Controller
             $date_trajet = $validatedData['date_trajet'];
             $id_course = $validatedData['id_course'];
 
-            // Calculs supplémentaires
             $code_departement_depart = substr($lieu_depart_cp, 0, 2);
             $code_departement_arrivee = substr($lieu_arrivee_cp, 0, 2);
             $heurescourse = floor($tempscourse / 3600);
@@ -460,7 +339,6 @@ class CourseController extends Controller
             $secondescourse = $tempscourse % 60;
             $duree_course = sprintf('%02d:%02d:%02d', $heurescourse, $minutescourse, $secondescourse);
 
-            // Rechercher les départements
             $id_dep_depart = DB::table('departement')
                 ->where('CODE_DEPARTEMENT', $code_departement_depart)
                 ->value('id_departement');
@@ -475,7 +353,6 @@ class CourseController extends Controller
                 ], 404);
             }
 
-            // Insérer les adresses
             $id_adresse_depart = DB::table('adresse')->insertGetId([
                 'id_departement' => $id_dep_depart,
                 'rue' => $lieu_depart_rue,
@@ -489,7 +366,6 @@ class CourseController extends Controller
                 'cp' => $lieu_arrivee_cp,
             ]);
 
-            // Récupérer un chauffeur
             $id_chauffeur = DB::table('chauffeur')
                 ->join('vehicule', 'chauffeur.id_chauffeur', '=', 'vehicule.id_chauffeur')
                 ->join('categorie_vehicule', 'vehicule.id_categorie_vehicule', '=', 'categorie_vehicule.id_categorie_vehicule')
@@ -503,7 +379,6 @@ class CourseController extends Controller
                 ], 404);
             }
 
-            // Mise à jour de la course
             DB::table('course')
                 ->where('id_course', $id_course)
                 ->update([
@@ -520,7 +395,6 @@ class CourseController extends Controller
                     'acceptee' => null,
                 ]);
 
-            // Répondre au client
             return response()->json([
                 'status' => 'success',
                 'message' => 'Course modifiée avec succès',

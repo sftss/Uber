@@ -7,6 +7,7 @@ use App\Models\CB;
 use App\Models\Possede;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
 
 
 class CBController extends Controller
@@ -34,7 +35,7 @@ class CBController extends Controller
 
         try {
             $card = new CB();
-            $card->num_cb = $validatedData['num_cb'];
+            $card->num_cb = Crypt::encryptString($validatedData['num_cb']);
             $card->nom_cb = $validatedData['nom_cb'];
             $card->date_fin_validite = $dateFinValidite; 
             $card->type_cb = $this->determineCardType($validatedData['num_cb']);
@@ -45,11 +46,10 @@ class CBController extends Controller
             $possede->id_cb = $card->id_cb;
             $possede->save();
 
-            $from = $request->input('from', 'profil'); // Par défaut : profil
+            $from = $request->input('from', 'profil');
 
-        // Redirection selon la valeur de 'from'
         if ($from === 'cart') {
-            return redirect()->route('cart.confirm') // Nom de la route de la page panier
+            return redirect()->route('cart.confirm') 
                 ->with('success', 'Carte bancaire ajoutée avec succès.');
         }
 

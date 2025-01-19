@@ -54,40 +54,24 @@ let durationInSeconds;
 
 geocodeAddress(inputDepart, suggestionsDepart, markerDepart, true);
 geocodeAddress(inputArrivee, suggestionsArrivee, markerArrivee, false);
-// Fonction pour obtenir les paramètres d'URL
+// Fonction pour obtenir les paramètres d'URL lors de la modification d'une course
 function getUrlParameter(name) {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(name);
 }
 
-// Function to fetch address details using the ID
-function fetchAddressDetails(id, callback) {
-  fetch(`/adresse/${id}`) // Make sure this endpoint is set up in your backend
-    .then((response) => response.json())
-    .then((data) => {
-      callback(data);
-    })
-    .catch((error) => {
-      console.error("Error fetching address details:", error);
-    });
-}
-
-///////MATHIEU C EST ICI
 document.addEventListener("DOMContentLoaded", function () {
   if (coursePourModification) {
-    // Pre-fill departure input
     const inputDepart = document.getElementById("inputDepart");
     inputDepart.value = coursePourModification.lieu_depart
       ? `${coursePourModification.lieu_depart.rue},${coursePourModification.lieu_depart.cp}, ${coursePourModification.lieu_depart.ville}, France `
       : "";
 
-    // Pre-fill arrival input
     const inputArrivee = document.getElementById("inputArrivee");
     inputArrivee.value = coursePourModification.lieu_arrivee
       ? `${coursePourModification.lieu_arrivee.rue}, ${coursePourModification.lieu_arrivee.cp}, ${coursePourModification.lieu_arrivee.ville}, France `
       : "";
 
-    // Pre-fill date and time
     const dateDepart = document.getElementById("dateDepart");
     dateDepart.value = formatDateForInput(
       coursePourModification.date_prise_en_charge,
@@ -97,7 +81,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-///////MATHIEU C EST ICI
 function setupAddressModification() {
   const inputDepart = document.getElementById("inputDepart");
   const inputArrivee = document.getElementById("inputArrivee");
@@ -177,7 +160,7 @@ function formatDateForInput(dateString) {
 }
 
 let isProcessing = false;
-//ajout de trouverchauffeur au clic du bouton valider de la view
+//ajout de trouver chauffeur au clic du bouton valider de la view
 document.getElementById("boutonValider").addEventListener("click", function () {
   if (isProcessing) {
     return;
@@ -310,7 +293,7 @@ function updateMarker(marker, result, suggestionText) {
 
 // géocoder l'adresse, afficher suggestions dans une liste, placer un marqueur
 function geocodeAddress(inputElement, suggestionsBox, marker, isdepart) {
-  console.log("ta mere celui qui a modif");
+
   inputElement.addEventListener(
     "input",
     debounce(function () {
@@ -469,8 +452,6 @@ function geocodeChauffeurs(chauffeurs) {
   // Démarrer le traitement du premier chauffeur
   traiterChauffeur();*/
   
-  let currentChauffeurIndex = 0;
-
   // Ajouter les chauffeurs proches dans le tableau
 chauffeurs.forEach((chauffeur) => {
   if (chauffeur.adresse.departement.code_departement == departementDepart) {
@@ -482,26 +463,21 @@ chauffeurs.forEach((chauffeur) => {
 if (chauffeursProches.length == 0) {
   AfficheAdresse("null");
 } else {
-  // Fonction pour calculer la distance du chauffeur
-  function calculerDistance(chauffeur) {
-    calculDistanceChauffeur(chauffeur, (trajet) => {
-      if (trajet !== null && trajet <= 60) {
-        // Ajouter le temps de trajet et afficher l'adresse si inférieur à 60 minutes
-        AfficheAdresse(chauffeur, trajet); // Passer le chauffeur et le temps de trajet à la fonction
-      }
-    });
-  }
-
   // Démarrer l'intervalle pour traiter chaque chauffeur un par un
   const intervalId = setInterval(() => {
-    if (currentChauffeurIndex < chauffeursProches.length) {
-      const chauffeur = chauffeursProches[currentChauffeurIndex];
-      calculerDistance(chauffeur); // Calculer la distance pour le chauffeur en cours
-      currentChauffeurIndex++; // Passer au chauffeur suivant
+    if (index < chauffeursProches.length) {
+      const chauffeur = chauffeursProches[index];
+      calculDistanceChauffeur(chauffeur, (trajet) => {
+        if (trajet !== null && trajet <= 60) {
+          // Ajouter le temps de trajet et afficher l'adresse si inférieur à 60 minutes
+          AfficheAdresse(chauffeur, trajet); // Passer le chauffeur et le temps de trajet à la fonction
+        }
+      }); // Calculer la distance pour le chauffeur en cours
+      index++; // Passer au chauffeur suivant
     } else {
       clearInterval(intervalId); // Arrêter l'intervalle quand tous les chauffeurs ont été traités
     }
-  }, 650); // Espacer chaque appel de 1 seconde (1000 ms)
+  }, 650); // Espacer chaque appel de 0.650 seconde
 }
 }
 
@@ -511,11 +487,10 @@ let courseDejaReservee = false;
 function AfficheAdresse(chauffeur, tempsDeTrajet) {
   if (chauffeur !== "null") {
     const div = document.createElement("div");
-    div.className = "proposition"; // Utilisez une classe, pas un ID
+    div.className = "proposition"; 
     let multiplicateurcourse = 1;
     var prixint = (durationInSeconds + tempsDeTrajet * 60) / 50;
 
-    // Créer un élément de liste pour afficher le chauffeur proche
     const titrechauffeur = document.createElement("h4");
     const tempsDeTrajetElement = document.createElement("p");
     const prix = document.createElement("p");
@@ -525,7 +500,6 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
     div.appendChild(titrechauffeur);
     div.appendChild(tempsDeTrajetElement);
 
-    // Logic for the pricing multiplier
     if (
       `${chauffeur.vehicule.categorie_vehicule.lib_categorie_vehicule}` ==
       "Uber X"
@@ -599,7 +573,7 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
     let detailsAffiches = false;
 
     voirDetailsBtn.addEventListener("click", function (event) {
-      event.stopPropagation(); // Empêcher le clic de propager à la div principale
+      event.stopPropagation(); 
 
       if (detailsAffiches) {
         const vehiculeInfo = div.querySelector(".vehicule-info");
@@ -633,7 +607,7 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
         chauffeurInfo.classList.add("chauffeur-info");
         chauffeurInfo.textContent = `Chauffeur: ${chauffeur.nom_chauffeur} ${chauffeur.prenom_chauffeur}`;
 
-        // Ajouter un bouton Réserver avec le même style que Voir détails
+
         const reserverBtn = document.createElement("button");
         reserverBtn.textContent = "Réserver";
         reserverBtn.style.marginTop = "10px";
@@ -651,12 +625,10 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
         infoBubble.className = "info-bubble";
         infoBubble.textContent = "?";
 
-    // Créer le contenu d'information
       const infoContent = document.createElement("div");
       infoContent.className = "info-content";
       infoContent.textContent = "Vous ne serez débité que si le chauffeur accepte la course. En cas de refus aucun prélèvement ne sera effectué.";
 
-    // Ajouter le contenu à la bulle
     infoBubble.appendChild(infoContent);
     
     infoBubble.addEventListener("click", function () {
@@ -680,7 +652,6 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
             getLieuDetails(departCoords.lat, departCoords.lng),
             getLieuDetails(arriveeCoords.lat, arriveeCoords.lng),
           ]).then(([lieuDepart, lieuArrivee]) => {
-            // Construire la course avec les données enrichies
             const course = {
               id_chauffeur: chauffeur.id_chauffeur,
               chauffeur_nom: chauffeur.nom_chauffeur,
@@ -751,20 +722,18 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
 
         var paypalUrl = `${paypalBaseRoute}?prix=${prixcourse}`;
 
-        // Créer le bouton PayPal
         var paypalBtn = document.createElement('a');
         paypalBtn.href = paypalUrl;
         paypalBtn.textContent = "Payer avec PayPal";
         paypalBtn.classList.add('paypal-button');
 
-        // Ajouter ces informations et le bouton à la div
+
         div.appendChild(vehiculeInfo);
         div.appendChild(chauffeurInfo);
         div.appendChild(reserverBtn);
         voirDetailsBtn.textContent = "Fermer les détails";
 
         
-        // Ajouter le bouton au DOM
         div.appendChild(paypalBtn);
         div.appendChild(infoBubble);
       }
@@ -782,7 +751,7 @@ function AfficheAdresse(chauffeur, tempsDeTrajet) {
 
 function AfficheCategorie(categorie) {
   const div = document.createElement("div");
-  div.className = "proposition"; // Utilisez une classe, pas un ID
+  div.className = "proposition"; 
   let multiplicateurcourse = 1;
   var prixint = durationInSeconds / 50;
 
@@ -808,7 +777,7 @@ function AfficheCategorie(categorie) {
   }
   prixint = roundToDecimals(prixint * multiplicateurcourse, 2);
 
-  //REGARDE BERKAN
+
   prixcourse = prixint;
 
   prix.textContent = `${prixint} €`;
@@ -845,16 +814,15 @@ function AfficheCategorie(categorie) {
   reserverBtn.style.cursor = "pointer";
   reserverBtn.style.borderRadius = "5px";
 
-  // Centrer verticalement le bouton
   reserverBtn.style.position = "absolute";
   reserverBtn.style.top = "50%";
   reserverBtn.style.right = "10px";
-  reserverBtn.style.transform = "translateY(-50%)"; // Centrer en hauteur
+  reserverBtn.style.transform = "translateY(-50%)"; 
   reserverBtn.classList.add("reserver-btn");
   reserverBtn.dataset.prix = prixint;
 
   reserverBtn.addEventListener("click", function () {
-    // Créer la course
+
     console.log(dateDepart);
     const departCoords = {
       lat: markerDepart.getLatLng().lat,
@@ -869,7 +837,6 @@ function AfficheCategorie(categorie) {
       getLieuDetails(departCoords.lat, departCoords.lng),
       getLieuDetails(arriveeCoords.lat, arriveeCoords.lng),
     ]).then(([lieuDepart, lieuArrivee]) => {
-      // Construire la course avec les données enrichies
       const coursecat = {
         categorie: categorie.lib_categorie_vehicule, 
       lieu_depart_rue: lieuDepart.rue,
@@ -929,10 +896,9 @@ function AfficheCategorie(categorie) {
         });
     }
   });
-    //creerCourseCategorie(categorie, this.dataset.prix);
+
     reserverBtn.classList.replace("reserver-btn", "courseclique");
 
-    // Mettre à jour le bouton pour afficher "Course réservée"
 
     if (coursePourModification) {
       const boutonReserver = document.querySelectorAll(".reserver-btn");
@@ -958,12 +924,10 @@ function AfficheCategorie(categorie) {
         infoBubble.className = "info-bubble";
         infoBubble.textContent = "?";
 
-    // Créer le contenu d'information
       const infoContent = document.createElement("div");
       infoContent.className = "info-content";
       infoContent.textContent = "Vous ne serez débité que si le chauffeur accepte la course. En cas de refus aucun prélèvement ne sera effectué.";
 
-    // Ajouter le contenu à la bulle
     infoBubble.appendChild(infoContent);
     
     infoBubble.addEventListener("click", function () {
@@ -1010,21 +974,17 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute
 
 
   function toggleInfo(element) {
-    // Ferme toutes les bulles actives
     document.querySelectorAll('.info-bubble.active').forEach(bubble => {
         if (bubble !== element) {
             bubble.classList.remove('active');
         }
     });
     
-    // Toggle la bulle cliquée
     element.classList.toggle('active');
     
-    // Empêche la propagation du clic
     event.stopPropagation();
 }
 
-// Ferme la bulle si on clique en dehors
 document.addEventListener('click', function(event) {
     if (!event.target.closest('.info-bubble')) {
         document.querySelectorAll('.info-bubble.active').forEach(bubble => {

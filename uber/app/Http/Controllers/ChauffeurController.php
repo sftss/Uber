@@ -190,31 +190,24 @@ class ChauffeurController extends Controller
 
     public function changerStatutRdv($chauffeur_id, Request $request)
     {
-        // Trouver le chauffeur par ID
         $chauffeur = Chauffeur::findOrFail($chauffeur_id);
         
-        // Si l'action est "accepter", mettre à jour validerrh à true
         if ($request->input('statut') == 'accepter') {
-            $chauffeur->validerrh = true; // Marquer comme accepté
+            $chauffeur->validerrh = true;
             $chauffeur->save();
         } elseif ($request->input('statut') == 'refuser') {
-            // Si l'action est "refuser", supprimer le chauffeur de la base de données
             $chauffeur->delete();
         }
         
-        // Rediriger vers la page précédente avec un message de succès
         return redirect()->back()->with('success', $request->input('statut') == 'accepter' ? 'Rendez-vous accepté.' : 'Chauffeur supprimé.');
     }
 
     public function createTempCourses(Request $request)
     {
         try {
-            // Récupérer les données envoyées
             $data = $request->all();
 
-            // Vérifier si l'opération demandée est "read_temp"
             if (isset($data['operation']) && $data['operation'] == 'read_temp') {
-                // Lire les données de la table temporaire
                 $courses = DB::table('temp_course')->get();
 
                 return response()->json([
@@ -223,7 +216,6 @@ class ChauffeurController extends Controller
                 ]);
             }
 
-            // Vérifier si le tableau de chauffeurs est présent
             if (!isset($data['chauffeurtab']) || !is_array($data['chauffeurtab'])) {
                 return response()->json([
                     'status' => 'error',
@@ -231,7 +223,6 @@ class ChauffeurController extends Controller
                 ], 400);
             }
 
-            // Créer la table temporaire si elle n'existe pas encore
             DB::statement("DROP TABLE IF EXISTS temp_course");
 
             DB::statement("
@@ -256,12 +247,10 @@ class ChauffeurController extends Controller
                 )
             ");
 
-            // Parcourir chaque chauffeur et créer une course
             foreach ($data['chauffeurtab'] as $chauffeur) {
                 $id_chauffeur = $chauffeur['id_chauffeur'] ?? null;
 
                 if (!$id_chauffeur) {
-                    // Si l'id du chauffeur est manquant, passer au suivant
                     continue;
                 }
 
@@ -270,7 +259,7 @@ class ChauffeurController extends Controller
                     'id_velo' => $data['id_velo'] ?? null,
                     'id_lieu_depart' => $data['id_lieu_depart'] ?? null,
                     'id_lieu_arrivee' => $data['id_lieu_arrivee'] ?? null,
-                    'id_client' => $data['id_client'] ?? 1, // Par défaut, client ID = 1
+                    'id_client' => $data['id_client'] ?? 1, 
                     'prix_reservation' => $data['prix_reservation'] ?? null,
                     'date_prise_en_charge' => $data['date_prise_en_charge'] ?? null,
                     'duree_course' => $data['duree_course'] ?? null,
@@ -285,7 +274,6 @@ class ChauffeurController extends Controller
                 'message' => 'Courses créées avec succès pour tous les chauffeurs.',
             ]);
         } catch (\Exception $e) {
-            // Gestion des erreurs
 
             return response()->json([
                 'status' => 'error',

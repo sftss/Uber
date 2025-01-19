@@ -9,6 +9,7 @@ use App\Models\Menu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;  // Utilisation de la session pour stocker le panier
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 
 
@@ -22,6 +23,7 @@ class CartController extends Controller
         $plats = [];
         $produits = [];
 
+        //sépare le panier en Menus Plats et Produits
         foreach ($cart as $key => $item) {
             $total += $item['price'] * $item['quantity'];
 
@@ -54,7 +56,7 @@ class CartController extends Controller
         $cart = session()->get('cart', []);
         $key = $type . '_' . $id;
 
-        $price = $item->prix_produit ?? $item->prix_menu ?? $item->prix_plat;
+        $price = $Witem->prix_produit ?? $item->prix_menu ?? $item->prix_plat;
         $quantity = 1;
         $totalAmount = $price * $quantity;
         if (isset($cart[$key])) {
@@ -100,7 +102,7 @@ class CartController extends Controller
                 $type = $item[0];
                 $idElement = $item[1];
 
-                // Supprimer l'élément de la base de données
+
                 if ($type === 'produit') {
                     DB::table('contient')->where('id_panier', $idPanier)->where('id_produit', $idElement)->delete();
                 } elseif ($type === 'menu') {
@@ -120,7 +122,7 @@ class CartController extends Controller
         $totalAmount = 0;
 
         foreach ($cart as $item) {
-            $totalAmount += $item['total'];  // Utiliser le montant total de chaque élément
+            $totalAmount += $item['total'];
         }
 
         DB::table('panier')
@@ -285,6 +287,9 @@ class CartController extends Controller
             ->where('c.id_client', $idClient)
             ->get();
 
+            foreach ($cartes as $c) {
+                $c->num_cb = Crypt::decryptString($c->num_cb);
+            }
             return view('cart.confirm', compact('client', 'menus', 'produits','cartes', 'plats', 'adresses', 'total'));
         }
         return redirect()->route('login');

@@ -27,16 +27,15 @@ class RegistrationController extends Controller
                 'required',
                 'email',
                 'max:70',
-                'unique:client,mail_client', // Contrainte d'unicité
+                'unique:client,mail_client', 
             ],
             'mdp_client' => 'required|string|min:8|confirmed',
             'tel_client' => 'nullable|string|max:15',
         ], [
-            // Messages d'erreur personnalisés
             'mail_client.unique' => 'Cette adresse email est déjà utilisée. Veuillez en choisir une autre.',
         ]);
 
-        // Nettoyage du numéro de téléphone
+
         $telClient = $validatedData['tel_client'] ?? null;
         if ($telClient) {
             $telClient = preg_replace('/\D/', '', $telClient);
@@ -45,7 +44,7 @@ class RegistrationController extends Controller
             }
         }
 
-        // Création du client dans la base de données
+
         $client = new Client();
         $client->PRENOM_CP = $validatedData['prenom_cp'];
         $client->NOM_CP = $validatedData['nom_cp'];
@@ -55,25 +54,23 @@ class RegistrationController extends Controller
         $client->DATE_NAISSANCE_CP = $request->input('date_naissance_cp', null);
         $client->SEXE_CP = $request->input('sexe_cp', null);
 
-        // Gestion des checkboxes
+        //checkboxes
         $client->EST_PARTICULIER = $request->has('est_particulier') ? true : false;
         $client->NEWSLETTER = $request->has('newsletter') ? true : false;
 
-        // Valeurs par défaut pour les champs restants
+
         $client->ID_SD = 1;
         $client->NUM_SIRET = null;
         $client->PHOTO = null;
 
-        $client->save(); // Enregistrer le client dans la base de données
+        $client->save(); 
 
         // Génération d'un code ou d'un lien de vérification
         $verificationLink = route('verify.email', ['code' => Str::random(32)]);
 
-        // Envoi de l'email de vérification
         $mailController = new MailController();
         $mailController->sendVerificationEmail($client->mail_client, $client->PRENOM_CP);
 
-        // Rediriger vers une page avec un message de succès
         return redirect()->route('home')->with('success', 'Inscription réussie. Veuillez vérifier votre email pour confirmer votre compte.');
     }
 

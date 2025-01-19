@@ -231,7 +231,7 @@
                     <h2 id="contact">4. Contact avec le support</h2>
                     <ul class="guide-list">
                         <li class="guide-item">
-                            <i class="icon-phone"></i>Vous retrouverez toutes les aides possible sur cette page à
+                            <i class="icon-phone"></i>Vous retrouverez toutes les aides possibles sur cette page à
                             l'aide de ce
                             bouton :
                             <div class="help-illustration">
@@ -243,7 +243,7 @@
                             <i class="icon-question-circle"></i>Vous pouvez aussi poser vos questions à l'assistant
                             virtuel :
                             <div class="help-illustration">
-                                <img src="{{ asset('assets/img/IMG_1022.jpg') }}" alt="" class="help-image">
+                                <img src="{{ asset('assets/img/ChatBot.PNG') }}" alt="" class="help-image">
                             </div>
                         </li>
                     </ul>

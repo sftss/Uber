@@ -152,7 +152,7 @@
             @if (isset($chauffeur))
                 <div class="section">
                     <h3>{{ __('facture.driver_info') }}</h3>
-                    <p><strong>{{ __('facture.client_name') }}:</strong> {{ $chauffeur->nom_chauffeur }}
+                    <p><strong>{{ __('facture.driver_name') }}:</strong> {{ $chauffeur->nom_chauffeur }}
                         {{ $chauffeur->prenom_chauffeur }}</p>
                     <p><strong>Email:</strong> {{ $chauffeur->mail_chauffeur }}</p>
                     <p><strong>{{ __('facture.driverTel') }}:</strong> +33 {{ $chauffeur->tel_chauffeur }}</p>

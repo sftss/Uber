@@ -55,6 +55,7 @@ class RegisterController extends Controller
             'sexe_cp.required' => 'Veuillez sélectionner un sexe.',
             'sexe_cp.in' => 'Le sexe sélectionné est invalide.',
             'num_siret.regex' => 'Le numéro SIRET doit être composé de 14 chiffres.',
+            'num_siret.max' => 'Le numéro SIRET ne peut pas dépasser 14 caractères.',
             'num_siret.required_if' => 'Le numéro SIRET est requis pour un client professionnel.',
             'secteur_activite.required_if' => 'Veuillez sélectionner un secteur d\'activité pour un client professionnel.',
             'secteur_activite.exists' => 'Le secteur d\'activité sélectionné est invalide.',
@@ -196,7 +197,6 @@ class RegisterController extends Controller
         $chauffeur->num_siret = $validatedData['num_siret'];
         $chauffeur->id_sd = $validatedData['secteur_activite'];
         $chauffeur->rib_chauffeur = $rib;
-        //$chauffeur->photo = null;
         $chauffeur->id_adresse_actuelle = $adresse->id_adresse;
         $chauffeur->newsletter = $request->has('newsletter') ? true : false; 
         $chauffeur->save();

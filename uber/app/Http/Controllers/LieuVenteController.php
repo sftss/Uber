@@ -9,6 +9,8 @@ use App\Models\Adresse;
 use App\Models\LieuVente;
 use App\Models\Jour;
 use App\Models\HorairesLieuVente;
+use App\Models\Chauffeur;
+use App\Models\CommandeRepas;
 use Illuminate\Support\Facades\Auth;
 
 class LieuVenteController extends Controller
@@ -55,7 +57,7 @@ public function filter(Request $request) {
             'horaires_lieu_vente.horaires_fermeture'
         )
         ->distinct()
-        ->paginate(10); // Utilisation de paginate pour créer un LengthAwarePaginator
+        ->paginate(10); 
 
     return view('lieux.filter', compact('lieux', 'recherche', 'horaireOuverture', 'horaireFermeture'));
 }
@@ -185,12 +187,11 @@ public function filter(Request $request) {
         ->where('lv.id_lieu_de_vente_pf', $id)
         ->first();
 
-    // Récupérer les commandes pour un restaurant donnée
     $query = DB::table('commande_repas as c')
     ->select(
         'c.id_commande_repas',
         'lv.nom_etablissement as lieu_de_vente',
-        DB::raw('STRING_AGG(p.nom_produit, \', \') as produits'), // Utiliser STRING_AGG pour PostgreSQL
+        DB::raw('STRING_AGG(p.nom_produit, \', \') as produits'), 
         'c.horaire_livraison',
         'c.temps_de_livraison',
         'c.id_chauffeur',
@@ -245,7 +246,6 @@ public function filter(Request $request) {
     {
         $commande = CommandeRepas::findOrFail($request->id_commande_repas);
 
-        // Si aucun chauffeur n'est attribué
         if ($request->id_chauffeur === 'null') {
             // Si un chauffeur était déjà attribué, on le remet disponible
             if ($commande->id_chauffeur !== null) {
@@ -254,10 +254,8 @@ public function filter(Request $request) {
                 $chauffeur->save();
             }
 
-            $commande->id_chauffeur = null; // Désattribution du chauffeur
+            $commande->id_chauffeur = null; 
         } else {
-            // Si un chauffeur est sélectionné
-            // Si un chauffeur était déjà attribué, on le remet disponible
             if ($commande->id_chauffeur !== null) {
                 $chauffeur = Chauffeur::findOrFail($commande->id_chauffeur);
                 $chauffeur->est_dispo = 'true'; // Remettre à disponible

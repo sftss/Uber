@@ -13,6 +13,8 @@ use App\Models\EstContenuDansMenu;
 use App\Models\EstContenuPlat;
 use App\Models\EstContenuDans;
 use App\Models\Course;
+use Illuminate\Support\Facades\Crypt;
+
 
 class ClientController extends Controller
 {
@@ -128,6 +130,9 @@ class ClientController extends Controller
         if ($client->isEmpty()) {
             return redirect("/")->with("error", "Utilisateur introuvable.");
         }
+        // foreach ($client as $c) {
+        //     $c->num_cb = Crypt::decryptString($c->num_cb);
+        // }
 
         return view("auth.profil", ["client" => $client]);
     }

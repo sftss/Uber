@@ -85,8 +85,8 @@ Route::post('/courses/{courseId}/review', [CourseController::class, 'submitRevie
 Route::post('/courses/{id_course}/review', [CourseController::class, 'submitReview'])->name('courses.submitReview');
 
 // Route::get('/facture', [FactureController::class, 'genererFacture']);
-Route::post('/courses/{id_course}/Facture', [FactureController::class, 'genererFacture'])
-    ->name('courses.Facture');
+// Route::post('/courses/{id_course}/Facture', [FactureController::class, 'genererFacture'])
+//     ->name('courses.Facture');
 Route::post('/courses/{id_course}/facture', [FactureController::class, 'genererFacture'])->name('courses.Facture'); //lang facture
 
 Route::get('/restaurants/filter', [RestaurantController::class, 'filter'])->name('restaurants.filter');
@@ -205,7 +205,7 @@ Route::patch('update/{id}', [CartController::class, 'update'])->name('update');
 Route::get('/panierclient', [ClientController::class, 'panierclient']);
 Route::get('/panier/confirm', [CartController::class, 'passercomande'])->name('cart.confirm');
 Route::post('/panier/valider', [ClientController::class, 'validerAvecAdresse'])->name('valider.panier');
-// Define a new route for success redirection
+
 Route::get('/panier/valider/success', [PayPalController::class, 'handlePaymentSuccess'])->name('valider.panier.success');
 
 Route::get('/ajoutercarte',[ClientController::class ,'ajtcarte'])->name('ajtcarte');
@@ -254,7 +254,8 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('loginch', [LoginController::class, 'showLoginFormch'])->name('loginch');
 Route::post('loginch', [LoginController::class, 'loginch'])->name('login.postch');
 Route::post('logoutch', [LoginController::class, 'logoutch'])->name('logoutch');
-// sélection connexion
+
+
 Route::get('pageconnexion', [LoginController::class, 'showLoginSelection'])->name('login.selection');
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::get('loginch', [LoginController::class, 'showLoginFormCh'])->name('loginch');
@@ -313,6 +314,5 @@ Route::get('/service-facturation-visualisation', function () {
 
 Route::get('service-facturation-courses/{id}', [ServiceFacturationController::class, 'afficherCoursesChauffeur']);
 Route::get('/courses/chauffeur/{id}/periode', [ServiceFacturationController::class, 'afficherCoursesChauffeurPeriode'])->name('courses-chauffeur');
-Route::post('/courses/facture', [FactureController::class, 'genererFactures'])->name('courses.Factures');
 
 Route::post('/send-notifications', [MailController::class, 'SendNotifChauffeur']);
