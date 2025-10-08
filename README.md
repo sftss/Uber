@@ -145,11 +145,5 @@ The goal of this project is to build a data management system that supports the 
 
 ---
 
-## **Conclusion**
-This project represents a full-stack solution for an Uber-like service, with emphasis on proper database design, data security, and system optimization. By combining SQL databases, modern web technologies, and performance testing, the system is ready for real-world deployment and business intelligence analysis.
-## Authors
-*  **A. Tanguy**
-*  **A. Eya**
-*  **A. Berkan**
 * **T. Sefer** - [Sefer](https://github.com/sftss)
 * **S. Matieu**
